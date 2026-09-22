@@ -15,7 +15,7 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  background: radial-gradient(circle at 50% 30%, #151f38 0%, #0c1424 55%, #060a12 100%);
+  background: radial-gradient(circle at 50% 15%, rgba(254, 107, 0, 0.14) 0%, transparent 55%), radial-gradient(circle at 50% 30%, #0d162c 0%, #080f1e 55%, #05070f 100%);
   color: #ffffff;
   font-family: 'Rajdhani', sans-serif;
   overflow: hidden;

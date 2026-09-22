@@ -3,15 +3,19 @@
    ========================================================================== */
 
 :root {
-  --bg-dark: #0a0e17;
-  --panel-bg: #131b2e;
-  --accent-gold: #ffd700;
-  --srm-blue: #1a2a6c;
-  --srm-orange: #ff6b35;
-  --text-light: #f5f0e1;
-  --text-dim: #8fa0be;
+  --bg-dark: #060810;
+  --panel-bg: #0c1222;
+  --accent-gold: #ffd602;
+  --accent-orange: #fe6b00;
+  --accent-cyan: #00f0ff;
+  --srm-blue: #0b1a38;
+  --text-light: #f8fafc;
+  --text-dim: #94a3b8;
   --canvas-w: 960px;
   --canvas-h: 640px;
+  --solar-glow: 0 0 25px rgba(255, 214, 2, 0.45);
+  --cyan-glow: 0 0 20px rgba(0, 240, 255, 0.4);
+  --orange-glow: 0 0 20px rgba(254, 107, 0, 0.45);
 }
 
 * {
@@ -46,11 +50,11 @@ html, body {
   position: relative;
   width: min(95vw, calc(95vh * (960 / 640)));
   aspect-ratio: 960 / 640;
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.75), 0 0 30px rgba(26, 42, 108, 0.4);
-  border-radius: 8px;
+  box-shadow: 0 12px 50px rgba(0, 0, 0, 0.85), 0 0 35px rgba(254, 107, 0, 0.25), 0 0 50px rgba(0, 240, 255, 0.15);
+  border-radius: 10px;
   overflow: hidden;
-  border: 2px solid rgba(255, 215, 0, 0.25);
-  background: #000;
+  border: 2px solid rgba(255, 214, 2, 0.35);
+  background: #060810;
 }
 
 #game-canvas {

@@ -24,21 +24,22 @@
 .leaderboard-card {
   width: 720px;
   max-height: 560px;
-  background: linear-gradient(135deg, rgba(13, 24, 48, 0.96) 0%, rgba(8, 14, 28, 0.98) 100%);
-  border: 2px solid #00e5ff;
-  box-shadow: 0 0 35px rgba(0, 229, 255, 0.35), inset 0 0 25px rgba(0, 229, 255, 0.1);
+  background: linear-gradient(135deg, rgba(12, 18, 36, 0.98) 0%, rgba(6, 10, 20, 0.98) 100%);
+  border: 1px solid #00f0ff;
+  border-top: 3px solid #ffd602;
+  box-shadow: 0 0 35px rgba(0, 240, 255, 0.35), 0 0 50px rgba(254, 107, 0, 0.15), inset 0 0 25px rgba(0, 240, 255, 0.08);
   border-radius: 12px;
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  font-family: 'Rajdhani', sans-serif;
+  font-family: 'Space Grotesk', 'Rajdhani', sans-serif;
   color: #ffffff;
 }
 
 .leaderboard-header {
   padding: 16px 24px;
-  background: rgba(6, 12, 26, 0.95);
-  border-bottom: 2px solid rgba(0, 229, 255, 0.3);
+  background: rgba(4, 9, 20, 0.96);
+  border-bottom: 1px solid rgba(0, 240, 255, 0.3);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -48,10 +49,10 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  font-family: 'Press Start 2P', monospace;
+  font-family: 'Orbitron', 'Press Start 2P', monospace;
   font-size: 13px;
-  color: #ffd700;
-  text-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
+  color: #ffd602;
+  text-shadow: 0 0 10px rgba(255, 214, 2, 0.7);
 }
 
 .db-status-pill {
@@ -142,9 +143,9 @@
   min-width: 28px;
 }
 
-.rank-1 { color: #ffd700; text-shadow: 0 0 8px #ffd700; }
-.rank-2 { color: #e2e8f0; text-shadow: 0 0 8px #cbd5e1; }
-.rank-3 { color: #cd7f32; text-shadow: 0 0 8px #b45309; }
+.rank-1 { color: #ffd602; text-shadow: 0 0 10px #ffd602; }
+.rank-2 { color: #00f0ff; text-shadow: 0 0 10px #00f0ff; }
+.rank-3 { color: #fe6b00; text-shadow: 0 0 10px #fe6b00; }
 
 .fighter-tag {
   display: flex;
@@ -156,7 +157,8 @@
   font-family: monospace;
   font-size: 15px;
   font-weight: 900;
-  color: #ffd700;
+  color: #ffd602;
+  text-shadow: 0 0 8px rgba(255, 214, 2, 0.4);
 }
 
 /* Config Tab */

@@ -66,7 +66,7 @@ export class LandingScene {
         vy: -0.4 - Math.random() * 0.8,
         size: 1.5 + Math.random() * 3.5,
         isSquare: Math.random() > 0.4,
-        color: Math.random() > 0.45 ? '#ffd700' : '#00e5ff',
+        color: ['#ffd602', '#fe6b00', '#00f0ff'][Math.floor(Math.random() * 3)],
         alpha: 0.2 + Math.random() * 0.7,
         pulseSpeed: 0.02 + Math.random() * 0.04,
         pulsePhase: Math.random() * Math.PI * 2,
@@ -285,23 +285,23 @@ export class LandingScene {
     ctx.save();
     this.screenShake.apply(ctx);
 
-    // 1. Primary Deep Charcoal/Navy to SRM Blue Radial Gradient
-    const bgGrad = ctx.createRadialGradient(w / 2, h * 0.38, 50, w / 2, h / 2, w * 0.75);
-    bgGrad.addColorStop(0, '#102042');
-    bgGrad.addColorStop(0.45, '#0c162c');
-    bgGrad.addColorStop(0.8, '#0a0e17');
-    bgGrad.addColorStop(1, '#05070d');
+    // 1. Primary Deep Charcoal/Navy with Solar Flare upper ambient
+    const bgGrad = ctx.createRadialGradient(w / 2, h * 0.35, 30, w / 2, h / 2, w * 0.78);
+    bgGrad.addColorStop(0, 'rgba(254, 107, 0, 0.16)');
+    bgGrad.addColorStop(0.35, '#0c162c');
+    bgGrad.addColorStop(0.75, '#070c18');
+    bgGrad.addColorStop(1, '#04060c');
     ctx.fillStyle = bgGrad;
     ctx.fillRect(0, 0, w, h);
 
-    // 3 Radial Pulse Rings
+    // 3 Radial Pulse Rings (Dual Solar Gold & Cyan)
     const pulseT = (this.time * 0.8) % 1;
     for (let i = 0; i < 3; i++) {
       const offset = (pulseT + i / 3) % 1;
       const r = offset * 340;
-      const a = (1 - offset) * 0.06;
+      const a = (1 - offset) * 0.08;
       ctx.save();
-      ctx.strokeStyle = `rgba(0, 229, 255, ${a})`;
+      ctx.strokeStyle = i % 2 === 0 ? `rgba(255, 214, 2, ${a})` : `rgba(0, 240, 255, ${a})`;
       ctx.lineWidth = 1.5;
       ctx.beginPath();
       ctx.arc(CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2, r, 0, Math.PI * 2);
@@ -475,9 +475,9 @@ export class LandingScene {
     const c2y = h + cyanLength * Math.sin(cyanAngle + cyanSpread / 2);
 
     const cyanGrad = ctx.createRadialGradient(0, h, 20, (c1x + c2x) / 2, (c1y + c2y) / 2, cyanLength);
-    cyanGrad.addColorStop(0, 'rgba(0, 229, 255, 0.28)');
-    cyanGrad.addColorStop(0.5, 'rgba(0, 229, 255, 0.12)');
-    cyanGrad.addColorStop(1, 'rgba(0, 229, 255, 0)');
+    cyanGrad.addColorStop(0, 'rgba(0, 240, 255, 0.32)');
+    cyanGrad.addColorStop(0.5, 'rgba(0, 240, 255, 0.14)');
+    cyanGrad.addColorStop(1, 'rgba(0, 240, 255, 0)');
 
     ctx.fillStyle = cyanGrad;
     ctx.beginPath();
@@ -487,7 +487,7 @@ export class LandingScene {
     ctx.closePath();
     ctx.fill();
 
-    // 2. Academic Gold Spotlight (anchored at bottom-right: w, h)
+    // 2. Solar Gold/Orange Spotlight (anchored at bottom-right: w, h)
     const goldLength = 880;
     const goldSpread = 0.28;
     const goldAngle = this.spotlightGoldAngle;
@@ -497,9 +497,9 @@ export class LandingScene {
     const g2y = h + goldLength * Math.sin(goldAngle + goldSpread / 2);
 
     const goldGrad = ctx.createRadialGradient(w, h, 20, (g1x + g2x) / 2, (g1y + g2y) / 2, goldLength);
-    goldGrad.addColorStop(0, 'rgba(255, 215, 0, 0.25)');
-    goldGrad.addColorStop(0.5, 'rgba(255, 215, 0, 0.10)');
-    goldGrad.addColorStop(1, 'rgba(255, 215, 0, 0)');
+    goldGrad.addColorStop(0, 'rgba(255, 214, 2, 0.32)');
+    goldGrad.addColorStop(0.5, 'rgba(254, 107, 0, 0.14)');
+    goldGrad.addColorStop(1, 'rgba(254, 107, 0, 0)');
 
     ctx.fillStyle = goldGrad;
     ctx.beginPath();
