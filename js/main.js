@@ -330,6 +330,11 @@ class CampusClashGame {
   setupListeners() {
     // Keyboard listeners
     window.addEventListener('keydown', (e) => {
+      const targetTag = (e.target && e.target.tagName) ? e.target.tagName.toLowerCase() : '';
+      if (targetTag === 'input' || targetTag === 'textarea' || targetTag === 'select' || (e.target && e.target.isContentEditable)) {
+        return;
+      }
+
       this.sound.init(); // Initialize Web Audio on first user interaction
 
       if (this.currentScreen === GAME_SCREENS.LANDING) {

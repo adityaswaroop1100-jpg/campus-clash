@@ -335,6 +335,9 @@
   font-family: 'Space Grotesk', sans-serif;
   outline: none;
   transition: all 0.2s ease;
+  user-select: text !important;
+  -webkit-user-select: text !important;
+  pointer-events: auto !important;
 }
 
 .portal-input-group input:focus {

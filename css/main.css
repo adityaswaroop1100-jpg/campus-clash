@@ -35,6 +35,11 @@ html, body {
   -webkit-user-select: none;
 }
 
+input, textarea, select {
+  user-select: text;
+  -webkit-user-select: text;
+}
+
 #app-container {
   display: flex;
   flex-direction: column;

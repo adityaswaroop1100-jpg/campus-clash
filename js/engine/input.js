@@ -80,6 +80,12 @@ export class InputHandler {
    * @param {KeyboardEvent} event
    */
   handleKeyDown(event) {
+    // Never intercept or preventDefault keystrokes if user is interacting with an input/form
+    const targetTag = (event.target && event.target.tagName) ? event.target.tagName.toLowerCase() : '';
+    if (targetTag === 'input' || targetTag === 'textarea' || targetTag === 'select' || (event.target && event.target.isContentEditable)) {
+      return;
+    }
+
     if (!this.rawKeys.has(event.code)) {
       this.justPressedKeys.add(event.code);
     }
@@ -103,6 +109,11 @@ export class InputHandler {
    * @param {KeyboardEvent} event
    */
   handleKeyUp(event) {
+    const targetTag = (event.target && event.target.tagName) ? event.target.tagName.toLowerCase() : '';
+    if (targetTag === 'input' || targetTag === 'textarea' || targetTag === 'select' || (event.target && event.target.isContentEditable)) {
+      return;
+    }
+
     this.rawKeys.delete(event.code);
     this.justPressedKeys.delete(event.code);
   }
