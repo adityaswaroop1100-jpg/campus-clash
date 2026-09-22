@@ -5,6 +5,7 @@
  */
 
 import { supabaseService } from '../database/supabaseClient.js';
+import { GAME_MODES } from '../utils/constants.js';
 
 export class EntryPortalManager {
   constructor(game) {
@@ -223,10 +224,11 @@ export class EntryPortalManager {
     if (this.game && this.game.landingScene && this.game.landingScene.updatePilotStatus) {
       this.game.landingScene.updatePilotStatus();
     }
-    // Smoothly open Combat Protocol selection modal
-    if (this.game && this.game.landingScene && this.game.landingScene.openModeSelectModal) {
+    // Smoothly enter chosen combat protocol
+    if (this.game && this.game.landingScene && this.game.landingScene.triggerFightTransition) {
+      const mode = this.game.landingScene.pendingMode || GAME_MODES.PVC;
       setTimeout(() => {
-        this.game.landingScene.openModeSelectModal();
+        this.game.landingScene.triggerFightTransition(mode);
       }, 200);
     }
   }

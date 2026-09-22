@@ -318,27 +318,36 @@
 
         <!-- Interactive Central Arcade Menu -->
         <nav class="cabinet-menu-overlay" aria-label="Arcade Menu Navigation">
-          <!-- Primary Action Button: FIGHT ! -->
-          <button id="menu-btn-fight" class="cabinet-menu-btn btn-fight selected" role="menuitem" data-index="0" tabindex="0">
+          <!-- Primary Action Button: VS COMPUTER (EXPERT AI) -->
+          <button id="menu-btn-pvc" class="cabinet-menu-btn btn-fight selected" role="menuitem" data-index="0" tabindex="0">
             <span class="btn-cursor-arrow left">◀</span>
-            <span class="btn-label">FIGHT !</span>
+            <div class="btn-fight-content">
+              <span class="btn-label">VS COMPUTER</span>
+              <span class="btn-sub-badge">EXPERT AI</span>
+            </div>
             <span class="btn-cursor-arrow right">▶</span>
           </button>
 
-          <!-- Secondary Action Button: TRAINING -->
-          <button id="menu-btn-training" class="cabinet-menu-btn btn-cyan" role="menuitem" data-index="1" tabindex="0">
-            <span class="btn-icon">🏋️</span>
-            <span class="btn-label">TRAINING</span>
+          <!-- Action Button: 2-PLAYER LOCAL -->
+          <button id="menu-btn-pvp" class="cabinet-menu-btn btn-cyan" role="menuitem" data-index="1" tabindex="0">
+            <span class="btn-icon">👥</span>
+            <span class="btn-label">2-PLAYER LOCAL</span>
           </button>
 
-          <!-- Secondary Action Button: LEADERBOARD -->
-          <button id="menu-btn-leaderboard" class="cabinet-menu-btn btn-cyan" role="menuitem" data-index="2" tabindex="0">
+          <!-- Action Button: TRAINING -->
+          <button id="menu-btn-training" class="cabinet-menu-btn btn-cyan" role="menuitem" data-index="2" tabindex="0">
+            <span class="btn-icon">🏋️</span>
+            <span class="btn-label">TRAINING DOJO</span>
+          </button>
+
+          <!-- Action Button: LEADERBOARD -->
+          <button id="menu-btn-leaderboard" class="cabinet-menu-btn btn-cyan" role="menuitem" data-index="3" tabindex="0">
             <span class="btn-icon">🏆</span>
             <span class="btn-label">LEADERBOARD</span>
           </button>
 
-          <!-- Secondary Action Button: CREDITS -->
-          <button id="menu-btn-credits" class="cabinet-menu-btn btn-cyan" role="menuitem" data-index="3" tabindex="0">
+          <!-- Action Button: CREDITS -->
+          <button id="menu-btn-credits" class="cabinet-menu-btn btn-cyan" role="menuitem" data-index="4" tabindex="0">
             <span class="btn-icon">⚙️</span>
             <span class="btn-label">CREDITS</span>
           </button>

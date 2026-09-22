@@ -309,9 +309,9 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 9px;
+  gap: 6.5px;
   z-index: 25;
-  margin-top: 8px;
+  margin-top: 4px;
 }
 
 /* General Cabinet Menu Button */
@@ -326,10 +326,10 @@
   user-select: none;
 }
 
-/* Primary FIGHT ! Button */
+/* Primary FIGHT / VS COMPUTER Button */
 .cabinet-menu-btn.btn-fight {
-  width: 236px;
-  height: 52px;
+  width: 252px;
+  height: 48px;
   border-radius: 9px;
   background: linear-gradient(180deg, #ffb300 0%, #ff8f00 48%, #e65100 100%);
   border: 2.5px solid #fff8e1;
@@ -339,12 +339,36 @@
     inset 0 2px 4px rgba(255, 255, 255, 0.7),
     inset 0 -3px 6px rgba(0, 0, 0, 0.4);
   color: #1a0800;
+  animation: fightBtnPulse 2s infinite ease-in-out alternate;
+}
+
+.btn-fight-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5px;
+}
+
+.btn-fight-content .btn-label {
   font-family: 'Press Start 2P', monospace;
-  font-size: 14px;
-  letter-spacing: 2.5px;
+  font-size: 11px;
+  letter-spacing: 1.2px;
   font-weight: 900;
   text-transform: uppercase;
-  animation: fightBtnPulse 2s infinite ease-in-out alternate;
+}
+
+.btn-fight-content .btn-sub-badge {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 9.5px;
+  font-weight: 900;
+  letter-spacing: 2px;
+  color: #1a0800;
+  background: rgba(255, 255, 255, 0.7);
+  padding: 1px 7px;
+  border-radius: 3px;
+  line-height: 1.1;
+  text-transform: uppercase;
 }
 
 @keyframes fightBtnPulse {
@@ -363,7 +387,7 @@
   background: linear-gradient(180deg, #ffe082 0%, #ffb300 45%, #ff6f00 100%);
   border-color: #ffffff;
   color: #000000;
-  transform: scale(1.06);
+  transform: scale(1.05);
   box-shadow: 
     0 0 38px rgba(255, 214, 2, 1),
     0 0 70px rgba(255, 111, 0, 0.9),
@@ -378,12 +402,12 @@
 }
 
 .cabinet-menu-btn.btn-fight .btn-cursor-arrow.left {
-  left: 14px;
+  left: 12px;
   animation: arrowLeftNudge 0.65s infinite alternate ease-in-out;
 }
 
 .cabinet-menu-btn.btn-fight .btn-cursor-arrow.right {
-  right: 14px;
+  right: 12px;
   animation: arrowRightNudge 0.65s infinite alternate ease-in-out;
 }
 
@@ -399,8 +423,8 @@
 
 /* Secondary Sleek Cyan Pill Buttons */
 .cabinet-menu-btn.btn-cyan {
-  width: 194px;
-  height: 38px;
+  width: 202px;
+  height: 35px;
   border-radius: 7px;
   background: rgba(5, 18, 34, 0.88);
   border: 1.8px solid rgba(0, 240, 255, 0.65);
@@ -409,9 +433,9 @@
     inset 0 0 10px rgba(0, 240, 255, 0.2);
   color: #e0f2fe;
   font-family: 'Orbitron', 'Rajdhani', sans-serif;
-  font-size: 11.5px;
+  font-size: 11px;
   font-weight: 800;
-  letter-spacing: 2px;
+  letter-spacing: 1.8px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -420,7 +444,7 @@
 }
 
 .cabinet-menu-btn.btn-cyan .btn-icon {
-  font-size: 13px;
+  font-size: 12.5px;
   filter: drop-shadow(0 0 4px #00f0ff);
 }
 

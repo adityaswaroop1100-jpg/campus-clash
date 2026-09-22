@@ -994,14 +994,11 @@ class CampusClashGame {
       this.charSelectStep = 0;
       return;
     }
-    if (e.code === 'KeyL') {
-      if (this.leaderboardManager) {
-        this.leaderboardManager.open();
-        this.sound.playLightHit();
+    if (e.code === 'Escape') {
+      if (this.leaderboardManager && this.leaderboardManager.isOpen) {
+        this.leaderboardManager.close();
         return;
       }
-    }
-    if (e.code === 'Escape') {
       this.sound.playBlock();
       this.currentScreen = GAME_SCREENS.LANDING;
       if (this.landingScene) this.landingScene.show();

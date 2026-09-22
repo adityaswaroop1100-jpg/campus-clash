@@ -44,6 +44,7 @@ export class LandingScene {
     this.isCreditsOpen = false;
     this.isClearanceOpen = false;
     this.isModeSelectOpen = false;
+    this.pendingMode = GAME_MODES.PVC;
 
     // Animation Timers & Parallax Offsets
     this.time = 0;
@@ -207,7 +208,7 @@ export class LandingScene {
     if (guestPlay) {
       guestPlay.addEventListener('click', () => {
         this.closeClearanceModal();
-        this.openModeSelectModal();
+        this.triggerFightTransition(this.pendingMode || GAME_MODES.PVC);
       });
     }
 
@@ -372,32 +373,41 @@ export class LandingScene {
   selectOption(index) {
     if (this.isTransitioning) return;
 
-    if (index === 0) {
-      // [ FIGHT ! ] Option
-      let hasRegistered = false;
-      try {
-        const stored = localStorage.getItem('campus_clash_current_participant');
-        if (stored) {
-          const p = JSON.parse(stored);
-          if (p && p.name && p.registration_number) hasRegistered = true;
-        }
-      } catch (e) {}
+    let hasRegistered = false;
+    try {
+      const stored = localStorage.getItem('campus_clash_current_participant');
+      if (stored) {
+        const p = JSON.parse(stored);
+        if (p && p.name && p.registration_number) hasRegistered = true;
+      }
+    } catch (e) {}
 
+    if (index === 0) {
+      // [ VS COMPUTER ] Option (Expert AI)
       if (!hasRegistered) {
+        this.pendingMode = GAME_MODES.PVC;
         this.openClearanceModal();
       } else {
-        this.openModeSelectModal();
+        this.triggerFightTransition(GAME_MODES.PVC);
       }
     } else if (index === 1) {
-      // [ TRAINING ] Option
-      this.triggerFightTransition(GAME_MODES.TRAINING);
+      // [ 2-PLAYER LOCAL ] Option
+      if (!hasRegistered) {
+        this.pendingMode = GAME_MODES.PVP;
+        this.openClearanceModal();
+      } else {
+        this.triggerFightTransition(GAME_MODES.PVP);
+      }
     } else if (index === 2) {
+      // [ TRAINING DOJO ] Option
+      this.triggerFightTransition(GAME_MODES.TRAINING);
+    } else if (index === 3) {
       // [ LEADERBOARD ] Option
       if (this.game.leaderboardManager) {
         this.game.leaderboardManager.open();
         this.sound.playLightHit();
       }
-    } else if (index === 3) {
+    } else if (index === 4) {
       // [ CREDITS ] Option
       this.openCredits();
     }
