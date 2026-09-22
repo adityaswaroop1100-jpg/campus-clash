@@ -7,8 +7,8 @@
 
 // Default configuration (can be updated with your Supabase credentials)
 export const DEFAULT_SUPABASE_CONFIG = {
-  // Replace with your project URL, e.g. "https://xyzcompany.supabase.co"
-  url: '',
+  // Supabase Project URL for Campus Clash
+  url: 'https://baiuvgmuwocvhhzmqyuf.supabase.co',
   // Replace with your public anon key
   anonKey: ''
 };
