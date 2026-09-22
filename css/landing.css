@@ -30,7 +30,7 @@
   background-size: 100% 100%;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
   box-sizing: border-box;
   opacity: 1;
@@ -80,20 +80,238 @@
 }
 
 /* ==========================================================================
-   INTERACTIVE CABINET MENU HOTSPOTS
-   Placed with pixel-perfect percentage coordinates over the artwork buttons
+   TOP MARQUEE HEADER (Inside Cabinet)
    ========================================================================== */
-.cabinet-menu-overlay {
-  position: absolute;
-  top: 45.8%;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 250px;
+.cabinet-marquee-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 18px 4px 18px;
+  box-sizing: border-box;
+  z-index: 35;
+  background: linear-gradient(180deg, rgba(6, 12, 24, 0.8) 0%, transparent 100%);
+}
+
+.marquee-badge-left {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(8, 14, 28, 0.85);
+  border: 1px solid rgba(0, 240, 255, 0.4);
+  border-radius: 4px;
+  padding: 3px 10px;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  color: #67e8f9;
+}
+
+.marquee-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #00f0ff;
+  box-shadow: 0 0 8px #00f0ff;
+  animation: rigPulse 1.4s infinite;
+}
+
+.marquee-badge-center {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8.5px;
+  gap: 2px;
+}
+
+.srm-presents-pill {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: #ffd602;
+  text-shadow: 0 0 8px rgba(255, 214, 2, 0.8);
+}
+
+.srm-location-pill {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  color: #94a3b8;
+}
+
+.marquee-controls-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cabinet-top-btn {
+  background: rgba(10, 20, 38, 0.85);
+  border: 1px solid rgba(0, 240, 255, 0.4);
+  color: #e0f2fe;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 3px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.cabinet-top-btn:hover {
+  border-color: #ffd602;
+  color: #ffd602;
+  box-shadow: 0 0 12px rgba(255, 214, 2, 0.5);
+  transform: translateY(-1px);
+}
+
+.cabinet-pilot-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(14, 24, 44, 0.9);
+  border: 1px solid rgba(255, 214, 2, 0.5);
+  border-radius: 4px;
+  padding: 3px 10px;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 11px;
+  font-weight: 800;
+  color: #ffd602;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.cabinet-pilot-chip:hover {
+  background: #ffd602;
+  color: #040812;
+  box-shadow: 0 0 16px rgba(255, 214, 2, 0.8);
+}
+
+.cabinet-stat-chip {
+  background: rgba(12, 18, 34, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #94a3b8;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 3px;
+}
+
+.cabinet-stat-chip.gold {
+  border-color: rgba(255, 214, 2, 0.4);
+  color: #ffd602;
+}
+
+/* ==========================================================================
+   CENTER GRAND TITLE: CAMPUS CLASH 2.0
+   ========================================================================== */
+.cabinet-title-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 14px;
+  margin-bottom: 4px;
   z-index: 25;
+  animation: titleBreathing 2.4s infinite ease-in-out;
+}
+
+@keyframes titleBreathing {
+  0% {
+    transform: scale(1);
+    filter: drop-shadow(0 0 14px rgba(255, 179, 0, 0.6));
+  }
+  50% {
+    transform: scale(1.025);
+    filter: drop-shadow(0 0 24px rgba(255, 179, 0, 0.95)) drop-shadow(0 0 40px rgba(0, 240, 255, 0.4));
+  }
+  100% {
+    transform: scale(1);
+    filter: drop-shadow(0 0 14px rgba(255, 179, 0, 0.6));
+  }
+}
+
+.cabinet-title-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 12px;
+}
+
+.cabinet-title-main {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 36px;
+  line-height: 1.1;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  background: linear-gradient(180deg, #ffffff 0%, #fff176 25%, #ffd600 50%, #ff6f00 80%, #bf360c 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -webkit-text-stroke: 2px #210700;
+  text-shadow: 
+    0 2.5px 0 #7f2b00,
+    0 4.5px 0 #4a1500,
+    0 6px 15px rgba(0, 0, 0, 0.95);
+  margin: 0;
+  position: relative;
+}
+
+.cabinet-title-version {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 26px;
+  font-style: italic;
+  color: #00f0ff;
+  -webkit-text-fill-color: #00f0ff;
+  -webkit-text-stroke: 1.5px #003747;
+  text-shadow: 
+    0 0 15px rgba(0, 240, 255, 0.9),
+    0 0 30px rgba(0, 240, 255, 0.6),
+    0 2px 0 #005b6a;
+  transform: rotate(-3deg) translateY(-4px);
+  display: inline-block;
+  animation: cyanFlicker 3s infinite ease-in-out;
+}
+
+@keyframes cyanFlicker {
+  0%, 100% { opacity: 1; filter: drop-shadow(0 0 10px #00f0ff); }
+  50% { opacity: 0.85; filter: drop-shadow(0 0 6px #00f0ff); }
+}
+
+.cabinet-title-tagline {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 13.5px;
+  font-weight: 800;
+  letter-spacing: 5px;
+  color: #00f0ff;
+  text-transform: uppercase;
+  margin-top: 6px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-shadow: 0 0 10px rgba(0, 240, 255, 0.7);
+}
+
+.cabinet-title-tagline .tagline-bar {
+  width: 36px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #00f0ff);
+}
+
+.cabinet-title-tagline .tagline-bar:last-child {
+  background: linear-gradient(90deg, #00f0ff, transparent);
+}
+
+/* ==========================================================================
+   INTERACTIVE CABINET MENU
+   ========================================================================== */
+.cabinet-menu-overlay {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 9px;
+  z-index: 25;
+  margin-top: 8px;
 }
 
 /* General Cabinet Menu Button */

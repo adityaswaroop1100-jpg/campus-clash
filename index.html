@@ -92,32 +92,7 @@
       </div>
     </div>
 
-    <!-- Rig Top Status & Fullscreen Header -->
-    <header class="rig-hud-header">
-      <div class="rig-hud-badge">
-        <span class="rig-hud-dot"></span>
-        <span class="rig-hud-title">★ SRM TECH PARK ARCADE // CYBER RIG v2.5</span>
-      </div>
-      <div class="rig-hud-controls">
-        <button type="button" id="rig-btn-briefing" class="rig-hud-btn briefing-btn" title="Mission Briefing & Rules">
-          <span>ⓘ BRIEFING</span>
-        </button>
-        <button type="button" id="rig-btn-sound" class="rig-hud-btn sound-btn" title="Toggle Audio (M)">
-          <span id="rig-sound-icon">🔊 SOUND</span>
-        </button>
-        <button type="button" id="rig-btn-fullscreen" class="rig-hud-btn" title="Toggle Fullscreen (F)">
-          <span>⛶ FULLSCREEN (F)</span>
-        </button>
-      </div>
-      <div class="rig-hud-meta">
-        <div id="pilot-status-chip" class="rig-hud-chip gold cursor-pointer" title="Click to view / enter SRM Participant Credentials">
-          <span class="pilot-icon">🎫</span>
-          <span id="pilot-status-text">PILOT: CLEARANCE PENDING</span>
-        </div>
-        <span class="rig-hud-chip">60 FPS</span>
-        <span class="rig-hud-chip gold">AARUUSH GRID</span>
-      </div>
-    </header>
+
 
     <!-- 960x640 Fixed Aspect Ratio Canvas Wrapper with Chamfered Screen Cut -->
     <div id="canvas-wrapper">
@@ -295,9 +270,53 @@
         Your browser does not support the HTML5 canvas element.
       </canvas>
 
-      <!-- Layer 1: Retro Arcade Landing Overlay (Matching the Cyber Rig Cabinet Design) -->
+      <!-- Layer 1: Retro Arcade Landing Overlay (Authentic Cyber Rig Cabinet) -->
       <div id="landing-overlay" class="landing-overlay" role="region" aria-label="Main Menu">
-        <!-- Interactive Menu Hotspots (Positioned directly over the central cabinet buttons) -->
+        <!-- Top Marquee Header Bar -->
+        <header class="cabinet-marquee-header">
+          <div class="marquee-badge-left">
+            <span class="marquee-dot"></span>
+            <span class="marquee-title">★ SRM TECH PARK ARCADE // CYBER RIG v2.5</span>
+          </div>
+
+          <div class="marquee-badge-center">
+            <div class="srm-presents-pill">★ SRM GAMES PRESENTS ★</div>
+            <div class="srm-location-pill">TECH PARK ARCADE • KATTANKULATHUR</div>
+          </div>
+
+          <div class="marquee-controls-right">
+            <button type="button" id="rig-btn-briefing" class="cabinet-top-btn" title="Mission Briefing & Rules">
+              <span>ⓘ BRIEFING</span>
+            </button>
+            <button type="button" id="rig-btn-sound" class="cabinet-top-btn" title="Toggle Audio (M)">
+              <span id="rig-sound-icon">🔊 SOUND</span>
+            </button>
+            <button type="button" id="rig-btn-fullscreen" class="cabinet-top-btn" title="Toggle Fullscreen (F)">
+              <span>⛶ FULLSCREEN</span>
+            </button>
+            <div id="pilot-status-chip" class="cabinet-pilot-chip gold cursor-pointer" title="Click to view / enter SRM Participant Credentials">
+              <span class="pilot-icon">🎫</span>
+              <span id="pilot-status-text">PILOT: CLEARANCE PENDING</span>
+            </div>
+            <span class="cabinet-stat-chip">60 FPS</span>
+            <span class="cabinet-stat-chip gold">AARUUSH GRID</span>
+          </div>
+        </header>
+
+        <!-- Center Grand Title: CAMPUS CLASH 2.0 (Pixel-Art 3D Gold & Neon Cyan) -->
+        <section class="cabinet-title-section" aria-label="Game Title">
+          <div class="cabinet-title-row">
+            <h1 class="cabinet-title-main">CAMPUS CLASH</h1>
+            <span class="cabinet-title-version">2.0</span>
+          </div>
+          <div class="cabinet-title-tagline">
+            <span class="tagline-bar"></span>
+            <span class="tagline-text">BRAWL FOR THE 10 CGPA</span>
+            <span class="tagline-bar"></span>
+          </div>
+        </section>
+
+        <!-- Interactive Central Arcade Menu -->
         <nav class="cabinet-menu-overlay" aria-label="Arcade Menu Navigation">
           <!-- Primary Action Button: FIGHT ! -->
           <button id="menu-btn-fight" class="cabinet-menu-btn btn-fight selected" role="menuitem" data-index="0" tabindex="0">
@@ -337,7 +356,7 @@
         </div>
 
         <!-- Bottom Arcade Machine Control Deck Hotspots -->
-        <div class="cabinet-deck-overlay">
+        <footer class="cabinet-deck-overlay">
           <!-- Left: Clickable Coin Slot -->
           <div id="deck-coin-slot" class="deck-coin-slot" title="Click to Insert Coin!">
             <span class="coin-icon">🪙</span>
@@ -349,7 +368,6 @@
           <div class="deck-center-rig">
             <div class="deck-joystick left" id="deck-stick-p1" title="Player 1 Stick">
               <div class="stick-ball"></div>
-              <div class="stick-shaft"></div>
             </div>
             <div class="deck-center-title">
               <span class="deck-brand">SRM KTR CAMPUS CLASH</span>
@@ -358,7 +376,6 @@
             </div>
             <div class="deck-joystick right" id="deck-stick-p2" title="Player 2 Stick">
               <div class="stick-ball"></div>
-              <div class="stick-shaft"></div>
             </div>
           </div>
 
@@ -376,7 +393,7 @@
               <span class="eq-bar b5"></span>
             </div>
           </div>
-        </div>
+        </footer>
       </div>
 
       <!-- Layer 1.5: High-End Retro Arcade Character Select Screen Overlay -->
@@ -1108,14 +1125,7 @@
       <canvas id="particles-canvas" width="960" height="640" class="fx-canvas" aria-hidden="true"></canvas>
     </div> <!-- End #canvas-wrapper -->
 
-  <!-- Chassis Bottom Telemetry Rail -->
-  <footer class="rig-bottom-rail" aria-hidden="true">
-    <span class="active">[ INSERT COIN // FREE PLAY ]</span>
-    <span>•</span>
-    <span>DETERMINISTIC 60 FPS • PROCEDURAL WEB AUDIO</span>
-    <span>•</span>
-    <span>SRM KTR CAMPUS CLASH • WEBNEXUS</span>
-  </footer>
+
 </main>
 
   <!-- Dynamic ES6 Module Entry Point (Zero Stale Cache Guarantee) -->

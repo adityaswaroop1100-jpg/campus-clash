@@ -259,7 +259,7 @@ input, textarea, select {
 /* Non-rectangular Cyber Screen Chassis */
 #canvas-wrapper {
   position: relative;
-  width: min(96vw, calc((94vh - 46px) * (1024 / 642)));
+  width: min(96vw, calc(96vh * (1024 / 642)));
   aspect-ratio: 1024 / 642;
   background: #060810;
   overflow: hidden;
