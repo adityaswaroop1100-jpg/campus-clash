@@ -522,11 +522,14 @@
 
       <!-- Layer 1.5: High-End Retro Arcade Character Select Screen Overlay -->
       <div id="characterSelectScreen" class="char-select-screen hidden" role="region" aria-label="Character Selection">
-        <!-- Top Banner (10% height) -->
+        <!-- Top Banner (Matching Arcade Artwork) -->
         <header class="char-top-banner">
-          <button id="char-select-back-btn" class="char-nav-btn" tabindex="0">
-            <span class="btn-icon">←</span> ESC: TITLE
-          </button>
+          <div class="char-banner-left">
+            <button id="char-select-back-btn" class="char-nav-btn" tabindex="0">
+              <span class="btn-icon">←</span> ESC: TITLE
+            </button>
+            <span class="char-banner-sub">/// SRM TECH PARK ARCADE /// v2.0 // CAMPUS CLASH</span>
+          </div>
 
           <div class="char-select-title-wrap">
             <span class="arcade-chevron chevron-left">&gt;&gt;&gt;</span>
@@ -534,9 +537,10 @@
             <span class="arcade-chevron chevron-right">&lt;&lt;&lt;</span>
           </div>
 
-          <div style="display: flex; align-items: center; gap: 10px;">
+          <div class="char-banner-right">
+            <span class="char-banner-quote">SAME CAMPUS. DIFFERENT WARRIORS. 👑</span>
             <button class="char-mode-pill venue-pill-btn" id="char-venue-pill" title="Choose Battle Venue" tabindex="0">
-              <span class="pill-dot" style="color: #ffd700;">🏛️</span>
+              <span class="pill-dot">🏛️</span>
               <span class="pill-text" id="char-venue-text">VENUE: TECH PARK</span>
             </button>
             <div class="char-mode-pill" id="char-mode-indicator">
@@ -546,332 +550,38 @@
           </div>
         </header>
 
-        <!-- Main 3x2 Grid (70% height) -->
+        <!-- Main 5x2 Grid (Exact Reference Roster) -->
         <section class="char-grid-section" aria-label="Fighter Roster">
           <div id="char-grid" class="char-grid" role="grid">
-            <!-- Card 0: The Topper -->
-            <article class="char-card selected-p1" data-index="0" data-id="topper" style="--card-primary: #1565c0; --card-accent: #ffd700;" tabindex="0">
+            <!-- Card 0: P1 — THE TOPPER -->
+            <article class="char-card selected-p1" data-index="0" data-id="topper" style="--card-primary: #ffd700; --card-accent: #ffd700;" tabindex="0">
               <div class="card-inner">
+                <div class="card-top-row">
+                  <span class="card-num-badge badge-p1">P1</span>
+                  <div class="card-slogan-wrap">
+                    <span class="slogan-crown">👑</span>
+                    <span class="card-slogan">IDEAS<br>DISCIPLINE<br>RESULTS</span>
+                    <span class="card-decor-icon">📚</span>
+                  </div>
+                </div>
                 <div class="card-badge p1-badge">P1 PICK</div>
                 <div class="card-badge p2-badge">P2 PICK</div>
                 <div class="card-portrait-wrap">
                   <canvas class="char-portrait-canvas" width="200" height="230"></canvas>
                   <div class="portrait-glow"></div>
-                </div>
-                <div class="card-stats">
-                  <div class="stat-bar-row">
-                    <span class="stat-label">ATK</span>
-                    <div class="stat-bar-track"><div class="stat-bar-fill atk" style="--val: 65%;"></div></div>
-                  </div>
-                  <div class="stat-bar-row">
-                    <span class="stat-label">DEF</span>
-                    <div class="stat-bar-track"><div class="stat-bar-fill def" style="--val: 80%;"></div></div>
-                  </div>
-                  <div class="stat-bar-row">
-                    <span class="stat-label">SPD</span>
-                    <div class="stat-bar-track"><div class="stat-bar-fill spd" style="--val: 90%;"></div></div>
-                  </div>
-                  <div class="stat-bar-row">
-                    <span class="stat-label">RCH</span>
-                    <div class="stat-bar-track"><div class="stat-bar-fill rch" style="--val: 60%;"></div></div>
-                  </div>
                 </div>
                 <div class="card-nameplate">
                   <div class="char-name">THE TOPPER</div>
-                  <div class="char-subtitle">ACADEMIC ZONER</div>
-                </div>
-              </div>
-            </article>
-
-            <!-- Card 1: The Backbencher -->
-            <article class="char-card selected-p2" data-index="1" data-id="backbencher" style="--card-primary: #ff6b35; --card-accent: #00e5ff;" tabindex="0">
-              <div class="card-inner">
-                <div class="card-badge p1-badge">P1 PICK</div>
-                <div class="card-badge p2-badge">P2 PICK</div>
-                <div class="card-portrait-wrap">
-                  <canvas class="char-portrait-canvas" width="200" height="230"></canvas>
-                  <div class="portrait-glow"></div>
+                  <div class="char-subtitle">ACADEMIC ASSASSIN</div>
                 </div>
                 <div class="card-stats">
                   <div class="stat-bar-row">
                     <span class="stat-label">ATK</span>
-                    <div class="stat-bar-track"><div class="stat-bar-fill atk" style="--val: 95%;"></div></div>
+                    <div class="stat-bar-track"><div class="stat-bar-fill atk" style="--val: 40%;"></div></div>
                   </div>
                   <div class="stat-bar-row">
                     <span class="stat-label">DEF</span>
                     <div class="stat-bar-track"><div class="stat-bar-fill def" style="--val: 60%;"></div></div>
-                  </div>
-                  <div class="stat-bar-row">
-                    <span class="stat-label">SPD</span>
-                    <div class="stat-bar-track"><div class="stat-bar-fill spd" style="--val: 75%;"></div></div>
-                  </div>
-                  <div class="stat-bar-row">
-                    <span class="stat-label">RCH</span>
-                    <div class="stat-bar-track"><div class="stat-bar-fill rch" style="--val: 70%;"></div></div>
-                  </div>
-                </div>
-                <div class="card-nameplate">
-                  <div class="char-name">BACKBENCHER</div>
-                  <div class="char-subtitle">CHAOS BRAWLER</div>
-                </div>
-              </div>
-            </article>
-
-            <!-- Card 2: The Hosteler -->
-            <article class="char-card" data-index="2" data-id="hosteler" style="--card-primary: #d84315; --card-accent: #ffab40;" tabindex="0">
-              <div class="card-inner">
-                <div class="card-badge p1-badge">P1 PICK</div>
-                <div class="card-badge p2-badge">P2 PICK</div>
-                <div class="card-portrait-wrap">
-                  <canvas class="char-portrait-canvas" width="200" height="230"></canvas>
-                  <div class="portrait-glow"></div>
-                </div>
-                <div class="card-stats">
-                  <div class="stat-bar-row">
-                    <span class="stat-label">ATK</span>
-                    <div class="stat-bar-track"><div class="stat-bar-fill atk" style="--val: 90%;"></div></div>
-                  </div>
-                  <div class="stat-bar-row">
-                    <span class="stat-label">DEF</span>
-                    <div class="stat-bar-track"><div class="stat-bar-fill def" style="--val: 95%;"></div></div>
-                  </div>
-                  <div class="stat-bar-row">
-                    <span class="stat-label">SPD</span>
-                    <div class="stat-bar-track"><div class="stat-bar-fill spd" style="--val: 50%;"></div></div>
-                  </div>
-                  <div class="stat-bar-row">
-                    <span class="stat-label">RCH</span>
-                    <div class="stat-bar-track"><div class="stat-bar-fill rch" style="--val: 55%;"></div></div>
-                  </div>
-                </div>
-                <div class="card-nameplate">
-                  <div class="char-name">THE HOSTELER</div>
-                  <div class="char-subtitle">TANK GRAPPLER</div>
-                </div>
-              </div>
-            </article>
-
-            <!-- Card 3: The Senior -->
-            <article class="char-card" data-index="3" data-id="senior" style="--card-primary: #1b4d3e; --card-accent: #ffd700;" tabindex="0">
-              <div class="card-inner">
-                <div class="card-badge p1-badge">P1 PICK</div>
-                <div class="card-badge p2-badge">P2 PICK</div>
-                <div class="card-portrait-wrap">
-                  <canvas class="char-portrait-canvas" width="200" height="230"></canvas>
-                  <div class="portrait-glow"></div>
-                </div>
-                <div class="card-stats">
-                  <div class="stat-bar-row">
-                    <span class="stat-label">ATK</span>
-                    <div class="stat-bar-track"><div class="stat-bar-fill atk" style="--val: 75%;"></div></div>
-                  </div>
-                  <div class="stat-bar-row">
-                    <span class="stat-label">DEF</span>
-                    <div class="stat-bar-track"><div class="stat-bar-fill def" style="--val: 75%;"></div></div>
-                  </div>
-                  <div class="stat-bar-row">
-                    <span class="stat-label">SPD</span>
-                    <div class="stat-bar-track"><div class="stat-bar-fill spd" style="--val: 70%;"></div></div>
-                  </div>
-                  <div class="stat-bar-row">
-                    <span class="stat-label">RCH</span>
-                    <div class="stat-bar-track"><div class="stat-bar-fill rch" style="--val: 90%;"></div></div>
-                  </div>
-                </div>
-                <div class="card-nameplate">
-                  <div class="char-name">THE SENIOR</div>
-                  <div class="char-subtitle">CONTROL ZONER</div>
-                </div>
-              </div>
-            </article>
-
-            <!-- Card 4: Placement Warrior -->
-            <article class="char-card" data-index="4" data-id="placementWarrior" style="--card-primary: #0d47a1; --card-accent: #00e5ff;" tabindex="0">
-              <div class="card-inner">
-                <div class="card-badge p1-badge">P1 PICK</div>
-                <div class="card-badge p2-badge">P2 PICK</div>
-                <div class="card-portrait-wrap">
-                  <canvas class="char-portrait-canvas" width="200" height="230"></canvas>
-                  <div class="portrait-glow"></div>
-                </div>
-                <div class="card-stats">
-                  <div class="stat-bar-row">
-                    <span class="stat-label">ATK</span>
-                    <div class="stat-bar-track"><div class="stat-bar-fill atk" style="--val: 80%;"></div></div>
-                  </div>
-                  <div class="stat-bar-row">
-                    <span class="stat-label">DEF</span>
-                    <div class="stat-bar-track"><div class="stat-bar-fill def" style="--val: 65%;"></div></div>
-                  </div>
-                  <div class="stat-bar-row">
-                    <span class="stat-label">SPD</span>
-                    <div class="stat-bar-track"><div class="stat-bar-fill spd" style="--val: 95%;"></div></div>
-                  </div>
-                  <div class="stat-bar-row">
-                    <span class="stat-label">RCH</span>
-                    <div class="stat-bar-track"><div class="stat-bar-fill rch" style="--val: 75%;"></div></div>
-                  </div>
-                </div>
-                <div class="card-nameplate">
-                  <div class="char-name">PLACEMENT WARRIOR</div>
-                  <div class="char-subtitle">RUSHDOWN COMBO</div>
-                </div>
-              </div>
-            </article>
-
-            <!-- Card 5: Sports Star -->
-            <article class="char-card" data-index="5" data-id="sportsStar" style="--card-primary: #00c853; --card-accent: #ffd700;" tabindex="0">
-              <div class="card-inner">
-                <div class="card-badge p1-badge">P1 PICK</div>
-                <div class="card-badge p2-badge">P2 PICK</div>
-                <div class="card-portrait-wrap">
-                  <canvas class="char-portrait-canvas" width="200" height="230"></canvas>
-                  <div class="portrait-glow"></div>
-                </div>
-                <div class="card-stats">
-                  <div class="stat-bar-row">
-                    <span class="stat-label">ATK</span>
-                    <div class="stat-bar-track"><div class="stat-bar-fill atk" style="--val: 85%;"></div></div>
-                  </div>
-                  <div class="stat-bar-row">
-                    <span class="stat-label">DEF</span>
-                    <div class="stat-bar-track"><div class="stat-bar-fill def" style="--val: 75%;"></div></div>
-                  </div>
-                  <div class="stat-bar-row">
-                    <span class="stat-label">SPD</span>
-                    <div class="stat-bar-track"><div class="stat-bar-fill spd" style="--val: 90%;"></div></div>
-                  </div>
-                  <div class="stat-bar-row">
-                    <span class="stat-label">RCH</span>
-                    <div class="stat-bar-track"><div class="stat-bar-fill rch" style="--val: 80%;"></div></div>
-                  </div>
-                </div>
-                <div class="card-nameplate">
-                  <div class="char-name">SPORTS STAR</div>
-                  <div class="char-subtitle">AGILE BRAWLER</div>
-                </div>
-              </div>
-            </article>
-
-            <!-- Card 6: Cypher -->
-            <article class="char-card" data-index="6" data-id="cypher" style="--card-primary: #00ff41; --card-accent: #00e5ff;" tabindex="0">
-              <div class="card-inner">
-                <div class="card-badge p1-badge">P1 PICK</div>
-                <div class="card-badge p2-badge">P2 PICK</div>
-                <div class="card-portrait-wrap">
-                  <canvas class="char-portrait-canvas" width="200" height="230"></canvas>
-                  <div class="portrait-glow"></div>
-                </div>
-                <div class="card-stats">
-                  <div class="stat-bar-row">
-                    <span class="stat-label">ATK</span>
-                    <div class="stat-bar-track"><div class="stat-bar-fill atk" style="--val: 70%;"></div></div>
-                  </div>
-                  <div class="stat-bar-row">
-                    <span class="stat-label">DEF</span>
-                    <div class="stat-bar-track"><div class="stat-bar-fill def" style="--val: 60%;"></div></div>
-                  </div>
-                  <div class="stat-bar-row">
-                    <span class="stat-label">SPD</span>
-                    <div class="stat-bar-track"><div class="stat-bar-fill spd" style="--val: 95%;"></div></div>
-                  </div>
-                  <div class="stat-bar-row">
-                    <span class="stat-label">RCH</span>
-                    <div class="stat-bar-track"><div class="stat-bar-fill rch" style="--val: 85%;"></div></div>
-                  </div>
-                </div>
-                <div class="card-nameplate">
-                  <div class="char-name">CYPHER</div>
-                  <div class="char-subtitle">CAMPUS HACKER</div>
-                </div>
-              </div>
-            </article>
-
-            <!-- Card 7: Gavel -->
-            <article class="char-card" data-index="7" data-id="gavel" style="--card-primary: #c8a84b; --card-accent: #ffd700;" tabindex="0">
-              <div class="card-inner">
-                <div class="card-badge p1-badge">P1 PICK</div>
-                <div class="card-badge p2-badge">P2 PICK</div>
-                <div class="card-portrait-wrap">
-                  <canvas class="char-portrait-canvas" width="200" height="230"></canvas>
-                  <div class="portrait-glow"></div>
-                </div>
-                <div class="card-stats">
-                  <div class="stat-bar-row">
-                    <span class="stat-label">ATK</span>
-                    <div class="stat-bar-track"><div class="stat-bar-fill atk" style="--val: 95%;"></div></div>
-                  </div>
-                  <div class="stat-bar-row">
-                    <span class="stat-label">DEF</span>
-                    <div class="stat-bar-track"><div class="stat-bar-fill def" style="--val: 90%;"></div></div>
-                  </div>
-                  <div class="stat-bar-row">
-                    <span class="stat-label">SPD</span>
-                    <div class="stat-bar-track"><div class="stat-bar-fill spd" style="--val: 50%;"></div></div>
-                  </div>
-                  <div class="stat-bar-row">
-                    <span class="stat-label">RCH</span>
-                    <div class="stat-bar-track"><div class="stat-bar-fill rch" style="--val: 70%;"></div></div>
-                  </div>
-                </div>
-                <div class="card-nameplate">
-                  <div class="char-name">GAVEL</div>
-                  <div class="char-subtitle">MOOT COURT LEGEND</div>
-                </div>
-              </div>
-            </article>
-
-            <!-- Card 8: Bolt -->
-            <article class="char-card" data-index="8" data-id="bolt" style="--card-primary: #00b4d8; --card-accent: #ffd700;" tabindex="0">
-              <div class="card-inner">
-                <div class="card-badge p1-badge">P1 PICK</div>
-                <div class="card-badge p2-badge">P2 PICK</div>
-                <div class="card-portrait-wrap">
-                  <canvas class="char-portrait-canvas" width="200" height="230"></canvas>
-                  <div class="portrait-glow"></div>
-                </div>
-                <div class="card-stats">
-                  <div class="stat-bar-row">
-                    <span class="stat-label">ATK</span>
-                    <div class="stat-bar-track"><div class="stat-bar-fill atk" style="--val: 80%;"></div></div>
-                  </div>
-                  <div class="stat-bar-row">
-                    <span class="stat-label">DEF</span>
-                    <div class="stat-bar-track"><div class="stat-bar-fill def" style="--val: 55%;"></div></div>
-                  </div>
-                  <div class="stat-bar-row">
-                    <span class="stat-label">SPD</span>
-                    <div class="stat-bar-track"><div class="stat-bar-fill spd" style="--val: 100%;"></div></div>
-                  </div>
-                  <div class="stat-bar-row">
-                    <span class="stat-label">RCH</span>
-                    <div class="stat-bar-track"><div class="stat-bar-fill rch" style="--val: 65%;"></div></div>
-                  </div>
-                </div>
-                <div class="card-nameplate">
-                  <div class="char-name">BOLT</div>
-                  <div class="char-subtitle">THE TRACK STAR</div>
-                </div>
-              </div>
-            </article>
-
-            <!-- Card 9: Palette -->
-            <article class="char-card" data-index="9" data-id="palette" style="--card-primary: #da70d6; --card-accent: #ff1493;" tabindex="0">
-              <div class="card-inner">
-                <div class="card-badge p1-badge">P1 PICK</div>
-                <div class="card-badge p2-badge">P2 PICK</div>
-                <div class="card-portrait-wrap">
-                  <canvas class="char-portrait-canvas" width="200" height="230"></canvas>
-                  <div class="portrait-glow"></div>
-                </div>
-                <div class="card-stats">
-                  <div class="stat-bar-row">
-                    <span class="stat-label">ATK</span>
-                    <div class="stat-bar-track"><div class="stat-bar-fill atk" style="--val: 75%;"></div></div>
-                  </div>
-                  <div class="stat-bar-row">
-                    <span class="stat-label">DEF</span>
-                    <div class="stat-bar-track"><div class="stat-bar-fill def" style="--val: 65%;"></div></div>
                   </div>
                   <div class="stat-bar-row">
                     <span class="stat-label">SPD</span>
@@ -879,17 +589,387 @@
                   </div>
                   <div class="stat-bar-row">
                     <span class="stat-label">RCH</span>
-                    <div class="stat-bar-track"><div class="stat-bar-fill rch" style="--val: 85%;"></div></div>
+                    <div class="stat-bar-track"><div class="stat-bar-fill rch" style="--val: 40%;"></div></div>
                   </div>
+                </div>
+              </div>
+            </article>
+
+            <!-- Card 1: P2 — BACKBENCHER -->
+            <article class="char-card selected-p2" data-index="1" data-id="backbencher" style="--card-primary: #00f0ff; --card-accent: #00f0ff;" tabindex="0">
+              <div class="card-inner">
+                <div class="card-top-row">
+                  <span class="card-num-badge badge-p2">P2</span>
+                  <div class="card-slogan-wrap">
+                    <span class="card-slogan">CODE<br>BUILD<br>REPEAT</span>
+                  </div>
+                </div>
+                <div class="card-badge p1-badge">P1 PICK</div>
+                <div class="card-badge p2-badge">P2 PICK</div>
+                <div class="card-portrait-wrap">
+                  <canvas class="char-portrait-canvas" width="200" height="230"></canvas>
+                  <div class="portrait-glow"></div>
+                </div>
+                <div class="card-nameplate">
+                  <div class="char-name">BACKBENCHER</div>
+                  <div class="char-subtitle">CHAOS BRAWLER</div>
+                </div>
+                <div class="card-stats">
+                  <div class="stat-bar-row">
+                    <span class="stat-label">ATK</span>
+                    <div class="stat-bar-track"><div class="stat-bar-fill atk" style="--val: 80%;"></div></div>
+                  </div>
+                  <div class="stat-bar-row">
+                    <span class="stat-label">DEF</span>
+                    <div class="stat-bar-track"><div class="stat-bar-fill def" style="--val: 60%;"></div></div>
+                  </div>
+                  <div class="stat-bar-row">
+                    <span class="stat-label">SPD</span>
+                    <div class="stat-bar-track"><div class="stat-bar-fill spd" style="--val: 80%;"></div></div>
+                  </div>
+                  <div class="stat-bar-row">
+                    <span class="stat-label">RCH</span>
+                    <div class="stat-bar-track"><div class="stat-bar-fill rch" style="--val: 60%;"></div></div>
+                  </div>
+                </div>
+              </div>
+            </article>
+
+            <!-- Card 2: P3 — THE HOSTELER -->
+            <article class="char-card" data-index="2" data-id="hosteler" style="--card-primary: #ff3333; --card-accent: #ff3333;" tabindex="0">
+              <div class="card-inner">
+                <div class="card-top-row">
+                  <span class="card-num-badge badge-p3">P3</span>
+                  <div class="card-slogan-wrap">
+                    <span class="card-slogan">EAT<br>PLAY<br>BRAWL<br>REPEAT</span>
+                  </div>
+                </div>
+                <div class="card-badge p1-badge">P1 PICK</div>
+                <div class="card-badge p2-badge">P2 PICK</div>
+                <div class="card-portrait-wrap">
+                  <canvas class="char-portrait-canvas" width="200" height="230"></canvas>
+                  <div class="portrait-glow"></div>
+                </div>
+                <div class="card-nameplate">
+                  <div class="char-name">THE HOSTELER</div>
+                  <div class="char-subtitle">TANK GRAPPLER</div>
+                </div>
+                <div class="card-stats">
+                  <div class="stat-bar-row">
+                    <span class="stat-label">ATK</span>
+                    <div class="stat-bar-track"><div class="stat-bar-fill atk" style="--val: 100%;"></div></div>
+                  </div>
+                  <div class="stat-bar-row">
+                    <span class="stat-label">DEF</span>
+                    <div class="stat-bar-track"><div class="stat-bar-fill def" style="--val: 80%;"></div></div>
+                  </div>
+                  <div class="stat-bar-row">
+                    <span class="stat-label">SPD</span>
+                    <div class="stat-bar-track"><div class="stat-bar-fill spd" style="--val: 60%;"></div></div>
+                  </div>
+                  <div class="stat-bar-row">
+                    <span class="stat-label">RCH</span>
+                    <div class="stat-bar-track"><div class="stat-bar-fill rch" style="--val: 40%;"></div></div>
+                  </div>
+                </div>
+              </div>
+            </article>
+
+            <!-- Card 3: P4 — THE SENIOR -->
+            <article class="char-card" data-index="3" data-id="senior" style="--card-primary: #00e676; --card-accent: #00e676;" tabindex="0">
+              <div class="card-inner">
+                <div class="card-top-row">
+                  <span class="card-num-badge badge-p4">P4</span>
+                  <div class="card-slogan-wrap">
+                    <span class="card-slogan">PLAN<br>EXECUTE<br>LEAD</span>
+                    <span class="card-decor-icon">📐</span>
+                  </div>
+                </div>
+                <div class="card-badge p1-badge">P1 PICK</div>
+                <div class="card-badge p2-badge">P2 PICK</div>
+                <div class="card-portrait-wrap">
+                  <canvas class="char-portrait-canvas" width="200" height="230"></canvas>
+                  <div class="portrait-glow"></div>
+                </div>
+                <div class="card-nameplate">
+                  <div class="char-name">THE SENIOR</div>
+                  <div class="char-subtitle">CONTROL ZONER</div>
+                </div>
+                <div class="card-stats">
+                  <div class="stat-bar-row">
+                    <span class="stat-label">ATK</span>
+                    <div class="stat-bar-track"><div class="stat-bar-fill atk" style="--val: 60%;"></div></div>
+                  </div>
+                  <div class="stat-bar-row">
+                    <span class="stat-label">DEF</span>
+                    <div class="stat-bar-track"><div class="stat-bar-fill def" style="--val: 80%;"></div></div>
+                  </div>
+                  <div class="stat-bar-row">
+                    <span class="stat-label">SPD</span>
+                    <div class="stat-bar-track"><div class="stat-bar-fill spd" style="--val: 60%;"></div></div>
+                  </div>
+                  <div class="stat-bar-row">
+                    <span class="stat-label">RCH</span>
+                    <div class="stat-bar-track"><div class="stat-bar-fill rch" style="--val: 80%;"></div></div>
+                  </div>
+                </div>
+              </div>
+            </article>
+
+            <!-- Card 4: P5 — PLACEMENT WARRIOR -->
+            <article class="char-card" data-index="4" data-id="placementWarrior" style="--card-primary: #b388ff; --card-accent: #b388ff;" tabindex="0">
+              <div class="card-inner">
+                <div class="card-top-row">
+                  <span class="card-num-badge badge-p5">P5</span>
+                  <div class="card-slogan-wrap">
+                    <span class="card-slogan">INTERNSHIPS<br>PLACEMENTS<br>NO LIMITS</span>
+                    <span class="card-decor-icon">📈</span>
+                  </div>
+                </div>
+                <div class="card-badge p1-badge">P1 PICK</div>
+                <div class="card-badge p2-badge">P2 PICK</div>
+                <div class="card-portrait-wrap">
+                  <canvas class="char-portrait-canvas" width="200" height="230"></canvas>
+                  <div class="portrait-glow"></div>
+                </div>
+                <div class="card-nameplate">
+                  <div class="char-name">PLACEMENT WARRIOR</div>
+                  <div class="char-subtitle">RUSHDOWN COMBO</div>
+                </div>
+                <div class="card-stats">
+                  <div class="stat-bar-row">
+                    <span class="stat-label">ATK</span>
+                    <div class="stat-bar-track"><div class="stat-bar-fill atk" style="--val: 80%;"></div></div>
+                  </div>
+                  <div class="stat-bar-row">
+                    <span class="stat-label">DEF</span>
+                    <div class="stat-bar-track"><div class="stat-bar-fill def" style="--val: 40%;"></div></div>
+                  </div>
+                  <div class="stat-bar-row">
+                    <span class="stat-label">SPD</span>
+                    <div class="stat-bar-track"><div class="stat-bar-fill spd" style="--val: 100%;"></div></div>
+                  </div>
+                  <div class="stat-bar-row">
+                    <span class="stat-label">RCH</span>
+                    <div class="stat-bar-track"><div class="stat-bar-fill rch" style="--val: 60%;"></div></div>
+                  </div>
+                </div>
+              </div>
+            </article>
+
+            <!-- Card 5: P6 — SPORTS STAR -->
+            <article class="char-card" data-index="5" data-id="sportsStar" style="--card-primary: #ff9100; --card-accent: #ff9100;" tabindex="0">
+              <div class="card-inner">
+                <div class="card-top-row">
+                  <span class="card-num-badge badge-p6">P6</span>
+                  <div class="card-slogan-wrap">
+                    <span class="card-slogan">FIT MIND<br>FIT FUTURE</span>
+                    <span class="card-decor-icon">🏋️</span>
+                  </div>
+                </div>
+                <div class="card-badge p1-badge">P1 PICK</div>
+                <div class="card-badge p2-badge">P2 PICK</div>
+                <div class="card-portrait-wrap">
+                  <canvas class="char-portrait-canvas" width="200" height="230"></canvas>
+                  <div class="portrait-glow"></div>
+                </div>
+                <div class="card-nameplate">
+                  <div class="char-name">SPORTS STAR</div>
+                  <div class="char-subtitle">AGILE BRAWLER</div>
+                </div>
+                <div class="card-stats">
+                  <div class="stat-bar-row">
+                    <span class="stat-label">ATK</span>
+                    <div class="stat-bar-track"><div class="stat-bar-fill atk" style="--val: 60%;"></div></div>
+                  </div>
+                  <div class="stat-bar-row">
+                    <span class="stat-label">DEF</span>
+                    <div class="stat-bar-track"><div class="stat-bar-fill def" style="--val: 60%;"></div></div>
+                  </div>
+                  <div class="stat-bar-row">
+                    <span class="stat-label">SPD</span>
+                    <div class="stat-bar-track"><div class="stat-bar-fill spd" style="--val: 80%;"></div></div>
+                  </div>
+                  <div class="stat-bar-row">
+                    <span class="stat-label">RCH</span>
+                    <div class="stat-bar-track"><div class="stat-bar-fill rch" style="--val: 40%;"></div></div>
+                  </div>
+                </div>
+              </div>
+            </article>
+
+            <!-- Card 6: P7 — CYPHER -->
+            <article class="char-card" data-index="6" data-id="cypher" style="--card-primary: #00e5ff; --card-accent: #00e5ff;" tabindex="0">
+              <div class="card-inner">
+                <div class="card-top-row">
+                  <span class="card-num-badge badge-p7">P7</span>
+                  <div class="card-slogan-wrap">
+                    <span class="card-slogan">HACK<br>ANALYZE<br>OVERRIDE</span>
+                    <span class="card-decor-icon">🧊</span>
+                  </div>
+                </div>
+                <div class="card-badge p1-badge">P1 PICK</div>
+                <div class="card-badge p2-badge">P2 PICK</div>
+                <div class="card-portrait-wrap">
+                  <canvas class="char-portrait-canvas" width="200" height="230"></canvas>
+                  <div class="portrait-glow"></div>
+                </div>
+                <div class="card-nameplate">
+                  <div class="char-name">CYPHER</div>
+                  <div class="char-subtitle">CAMPUS HACKER</div>
+                </div>
+                <div class="card-stats">
+                  <div class="stat-bar-row">
+                    <span class="stat-label">ATK</span>
+                    <div class="stat-bar-track"><div class="stat-bar-fill atk" style="--val: 80%;"></div></div>
+                  </div>
+                  <div class="stat-bar-row">
+                    <span class="stat-label">DEF</span>
+                    <div class="stat-bar-track"><div class="stat-bar-fill def" style="--val: 40%;"></div></div>
+                  </div>
+                  <div class="stat-bar-row">
+                    <span class="stat-label">SPD</span>
+                    <div class="stat-bar-track"><div class="stat-bar-fill spd" style="--val: 60%;"></div></div>
+                  </div>
+                  <div class="stat-bar-row">
+                    <span class="stat-label">RCH</span>
+                    <div class="stat-bar-track"><div class="stat-bar-fill rch" style="--val: 100%;"></div></div>
+                  </div>
+                </div>
+              </div>
+            </article>
+
+            <!-- Card 7: P8 — GAVEL -->
+            <article class="char-card" data-index="7" data-id="gavel" style="--card-primary: #ffb300; --card-accent: #ffb300;" tabindex="0">
+              <div class="card-inner">
+                <div class="card-top-row">
+                  <span class="card-num-badge badge-p8">P8</span>
+                  <div class="card-slogan-wrap">
+                    <span class="card-slogan">MEMES<br>MOOT<br>MAYHEM</span>
+                    <span class="card-decor-icon">⚖️</span>
+                  </div>
+                </div>
+                <div class="card-badge p1-badge">P1 PICK</div>
+                <div class="card-badge p2-badge">P2 PICK</div>
+                <div class="card-portrait-wrap">
+                  <canvas class="char-portrait-canvas" width="200" height="230"></canvas>
+                  <div class="portrait-glow"></div>
+                </div>
+                <div class="card-nameplate">
+                  <div class="char-name">GAVEL</div>
+                  <div class="char-subtitle">MOOT COURT LEGEND</div>
+                </div>
+                <div class="card-stats">
+                  <div class="stat-bar-row">
+                    <span class="stat-label">ATK</span>
+                    <div class="stat-bar-track"><div class="stat-bar-fill atk" style="--val: 80%;"></div></div>
+                  </div>
+                  <div class="stat-bar-row">
+                    <span class="stat-label">DEF</span>
+                    <div class="stat-bar-track"><div class="stat-bar-fill def" style="--val: 60%;"></div></div>
+                  </div>
+                  <div class="stat-bar-row">
+                    <span class="stat-label">SPD</span>
+                    <div class="stat-bar-track"><div class="stat-bar-fill spd" style="--val: 60%;"></div></div>
+                  </div>
+                  <div class="stat-bar-row">
+                    <span class="stat-label">RCH</span>
+                    <div class="stat-bar-track"><div class="stat-bar-fill rch" style="--val: 60%;"></div></div>
+                  </div>
+                </div>
+              </div>
+            </article>
+
+            <!-- Card 8: P9 — BOLT -->
+            <article class="char-card" data-index="8" data-id="bolt" style="--card-primary: #00b0ff; --card-accent: #00b0ff;" tabindex="0">
+              <div class="card-inner">
+                <div class="card-top-row">
+                  <span class="card-num-badge badge-p9">P9</span>
+                  <div class="card-slogan-wrap">
+                    <span class="card-slogan">BUILD<br>TINKER<br>INNOVATE</span>
+                    <span class="card-decor-icon">⚙️</span>
+                  </div>
+                </div>
+                <div class="card-badge p1-badge">P1 PICK</div>
+                <div class="card-badge p2-badge">P2 PICK</div>
+                <div class="card-portrait-wrap">
+                  <canvas class="char-portrait-canvas" width="200" height="230"></canvas>
+                  <div class="portrait-glow"></div>
+                </div>
+                <div class="card-nameplate">
+                  <div class="char-name">BOLT</div>
+                  <div class="char-subtitle">THE TRACK STAR</div>
+                </div>
+                <div class="card-stats">
+                  <div class="stat-bar-row">
+                    <span class="stat-label">ATK</span>
+                    <div class="stat-bar-track"><div class="stat-bar-fill atk" style="--val: 60%;"></div></div>
+                  </div>
+                  <div class="stat-bar-row">
+                    <span class="stat-label">DEF</span>
+                    <div class="stat-bar-track"><div class="stat-bar-fill def" style="--val: 40%;"></div></div>
+                  </div>
+                  <div class="stat-bar-row">
+                    <span class="stat-label">SPD</span>
+                    <div class="stat-bar-track"><div class="stat-bar-fill spd" style="--val: 100%;"></div></div>
+                  </div>
+                  <div class="stat-bar-row">
+                    <span class="stat-label">RCH</span>
+                    <div class="stat-bar-track"><div class="stat-bar-fill rch" style="--val: 80%;"></div></div>
+                  </div>
+                </div>
+              </div>
+            </article>
+
+            <!-- Card 9: P10 — PALETTE -->
+            <article class="char-card" data-index="9" data-id="palette" style="--card-primary: #ff4081; --card-accent: #ff4081;" tabindex="0">
+              <div class="card-inner">
+                <div class="card-top-row">
+                  <span class="card-num-badge badge-p10">P10</span>
+                  <div class="card-slogan-wrap">
+                    <span class="card-slogan">CREATE<br>EXPRESS<br>INSPIRE</span>
+                    <span class="card-decor-icon">🎨</span>
+                  </div>
+                </div>
+                <div class="card-badge p1-badge">P1 PICK</div>
+                <div class="card-badge p2-badge">P2 PICK</div>
+                <div class="card-portrait-wrap">
+                  <canvas class="char-portrait-canvas" width="200" height="230"></canvas>
+                  <div class="portrait-glow"></div>
                 </div>
                 <div class="card-nameplate">
                   <div class="char-name">PALETTE</div>
                   <div class="char-subtitle">FINE ARTS MAJOR</div>
                 </div>
+                <div class="card-stats">
+                  <div class="stat-bar-row">
+                    <span class="stat-label">ATK</span>
+                    <div class="stat-bar-track"><div class="stat-bar-fill atk" style="--val: 60%;"></div></div>
+                  </div>
+                  <div class="stat-bar-row">
+                    <span class="stat-label">DEF</span>
+                    <div class="stat-bar-track"><div class="stat-bar-fill def" style="--val: 60%;"></div></div>
+                  </div>
+                  <div class="stat-bar-row">
+                    <span class="stat-label">SPD</span>
+                    <div class="stat-bar-track"><div class="stat-bar-fill spd" style="--val: 80%;"></div></div>
+                  </div>
+                  <div class="stat-bar-row">
+                    <span class="stat-label">RCH</span>
+                    <div class="stat-bar-track"><div class="stat-bar-fill rch" style="--val: 80%;"></div></div>
+                  </div>
+                </div>
               </div>
             </article>
           </div>
         </section>
+
+        <!-- Showcase Arcade Rail (Matching Reference Artwork Bottom) -->
+        <div class="char-arcade-rail">
+          <span class="rail-left">CAMPUS CLASH 2.0 ///</span>
+          <div class="rail-pill">BRAWL FOR THE 10 CGPA</div>
+          <span class="rail-right">&gt;&gt;&gt; SRM TECH PARK ARCADE</span>
+        </div>
 
         <!-- Bottom Versus Bar (20% height) -->
         <footer class="char-bottom-bar">

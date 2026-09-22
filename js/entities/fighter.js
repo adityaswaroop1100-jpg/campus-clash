@@ -1064,12 +1064,15 @@ export class Fighter {
     ctx.closePath();
     ctx.fill();
 
-    // Formal Shoes
-    ctx.fillStyle = '#0a0a0a';
-    ctx.fillRect(lFootX - 12, lFootY - 6, 24, 6);
-    ctx.fillRect(rFootX - 12, rFootY - 6, 26, 6);
+    // White Sneakers with Navy Soles
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(lFootX - 12, lFootY - 7, 24, 7);
+    ctx.fillRect(rFootX - 12, rFootY - 7, 26, 7);
+    ctx.fillStyle = '#1a2a6c';
+    ctx.fillRect(lFootX - 12, lFootY - 2, 24, 2);
+    ctx.fillRect(rFootX - 12, rFootY - 2, 26, 2);
 
-    // 3. V-Taper Muscular Torso (White Fitted Formal Shirt) — Volumetric radial gradient
+    // 3. Torso: Pure White Hoodie with Navy SRM Logo & Backpack Straps
     const torsoY = isBlock ? -60 : -66 + breath;
     const torsoTilt = isHurt ? -0.22 : (isAttack ? 0.18 : 0);
 
@@ -1077,88 +1080,83 @@ export class Fighter {
     ctx.translate(0, torsoY);
     ctx.rotate(torsoTilt);
 
-    // Volumetric shirt — radial gradient for cylindrical 3D shading
-    const shirtBaseColor = isHurt ? '#ef9a9a' : '#ffffff';
-    const shirtHighlight = isHurt ? '#ffcdd2' : '#ffffff';
-    const shirtGrad = ctx.createRadialGradient(-8, -40, 4, 0, -22, 38);
-    shirtGrad.addColorStop(0, shirtHighlight);
-    shirtGrad.addColorStop(0.5, shirtBaseColor);
-    shirtGrad.addColorStop(1, isHurt ? '#b71c1c' : '#b0bec5');
-    ctx.fillStyle = shirtGrad;
+    // Backpack Straps on Shoulders
+    ctx.fillStyle = '#1a1f2c';
+    ctx.fillRect(-22, -48, 6, 42);
+    ctx.fillRect(16, -48, 6, 42);
 
-    // Muscular chest & waist taper
+    // Volumetric White Hoodie
+    const hoodieBaseColor = isHurt ? '#ef9a9a' : '#f8fafc';
+    const hoodieGrad = ctx.createRadialGradient(-6, -30, 6, 0, -20, 36);
+    hoodieGrad.addColorStop(0, '#ffffff');
+    hoodieGrad.addColorStop(0.6, hoodieBaseColor);
+    hoodieGrad.addColorStop(1, isHurt ? '#c62828' : '#cbd5e1');
+    ctx.fillStyle = hoodieGrad;
+
     ctx.beginPath();
-    ctx.moveTo(-24, -48); // Left shoulder
-    ctx.lineTo(24, -48);  // Right shoulder
-    ctx.lineTo(13, 8);    // Right waist
-    ctx.lineTo(-13, 8);   // Left waist
+    ctx.moveTo(-24, -48);
+    ctx.lineTo(24, -48);
+    ctx.lineTo(14, 8);
+    ctx.lineTo(-14, 8);
     ctx.closePath();
     ctx.fill();
 
-    // Dark Belt & Gold Buckle
-    ctx.fillStyle = '#111111';
-    ctx.fillRect(-13, 4, 26, 5);
-    ctx.fillStyle = '#ffd700';
-    ctx.fillRect(-3, 3, 6, 7);
-
-    // Tie (SRM Blue with Gold Tie-Bar)
-    ctx.fillStyle = '#0d47a1';
+    // Hoodie Kangaroo Pocket
+    ctx.fillStyle = '#e2e8f0';
     ctx.beginPath();
-    ctx.moveTo(-4, -44);
-    ctx.lineTo(4, -44);
-    ctx.lineTo(5, -12);
-    ctx.lineTo(0, -6);
-    ctx.lineTo(-5, -12);
+    ctx.moveTo(-11, -8);
+    ctx.lineTo(11, -8);
+    ctx.lineTo(13, 6);
+    ctx.lineTo(-13, 6);
     ctx.closePath();
     ctx.fill();
-    ctx.fillStyle = '#ffd700';
-    ctx.fillRect(-4, -28, 8, 3); // Gold Tie Clip
 
-    // 4. Arms & Hands (The Critical Animations!)
+    // SRM Chest Logo
+    ctx.font = '900 8.5px "Arial Black", sans-serif';
+    ctx.fillStyle = '#1a2a6c';
+    ctx.textAlign = 'center';
+    ctx.fillText('SRM', 0, -28);
+
+    // Hoodie Drawstrings
+    ctx.strokeStyle = '#94a3b8';
+    ctx.lineWidth = 1.8;
+    ctx.beginPath();
+    ctx.moveTo(-3, -44); ctx.lineTo(-3, -18);
+    ctx.moveTo(3, -44); ctx.lineTo(3, -18);
+    ctx.stroke();
+
+    // 4. Arms, Attacks & Laptop Prop
     if (isBlock) {
-      // DEFENSE GUARD: Both arms crossed over chest and face!
-      ctx.fillStyle = '#ffffff';
-      // Crossed Left Forearm
-      ctx.save();
-      ctx.translate(-14, -36);
-      ctx.rotate(0.55);
-      ctx.fillRect(0, -6, 32, 11);
-      ctx.fillStyle = '#ffd180';
-      ctx.fillRect(28, -7, 10, 13); // Clenched Fist
-      ctx.restore();
-
-      // Crossed Right Forearm
-      ctx.fillStyle = '#ffffff';
-      ctx.save();
-      ctx.translate(14, -36);
-      ctx.rotate(-0.55);
-      ctx.fillRect(-32, -6, 32, 11);
-      ctx.fillStyle = '#ffd180';
-      ctx.fillRect(-36, -7, 10, 13); // Clenched Fist
-      ctx.restore();
+      // DEFENSE GUARD: Open Laptop Held Up As Shield
+      ctx.fillStyle = '#475569';
+      ctx.fillRect(-16, -48, 32, 28);
+      ctx.strokeStyle = '#00e5ff';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(-16, -48, 32, 28);
+      // Glowing Cyan Screen
+      ctx.fillStyle = '#00f0ff';
+      ctx.fillRect(-13, -45, 26, 22);
+      ctx.fillStyle = '#061124';
+      ctx.font = 'bold 6px monospace';
+      ctx.fillText('SHIELD:100%', 0, -32);
     } else if (isAttack && this.currentMove) {
       if (this.currentMove.name === 'Pen Jab') {
         // LIGHT ATTACK: Explosive forward jab with gold pen thrust!
         const ext = Math.sin((this.moveFrame / this.currentMove.getTotalFrames()) * Math.PI) * 38;
 
-        // Rear Arm (guarded at chin)
-        ctx.fillStyle = '#e0e0e0';
+        ctx.fillStyle = '#e2e8f0';
         ctx.fillRect(-18, -38, 14, 24);
 
-        // Lead Arm (Fully extended forward thrust!)
         ctx.fillStyle = '#ffffff';
         ctx.fillRect(10, -42, 28 + ext, 11);
-        // Muscular Forearm
         ctx.fillStyle = '#ffd180';
         ctx.fillRect(36 + ext, -43, 14, 13);
 
-        // Gold Pen Weapon with Laser Thrust Trail
         ctx.fillStyle = '#ffd700';
         ctx.fillRect(48 + ext, -40, 24, 6);
         ctx.fillStyle = '#00e5ff';
         ctx.fillRect(72 + ext, -39, 12, 4);
 
-        // Speed Lines
         ctx.strokeStyle = 'rgba(255, 215, 0, 0.75)';
         ctx.lineWidth = 2;
         ctx.beginPath();
@@ -1166,38 +1164,59 @@ export class Fighter {
         ctx.moveTo(15, -46); ctx.lineTo(75 + ext, -46);
         ctx.stroke();
       } else {
-        // HEAVY ATTACK: Calculator Throw / Heavy Roundhouse Windup
+        // HEAVY ATTACK: Laptop Shockwave Slam
         const ext = Math.sin((this.moveFrame / this.currentMove.getTotalFrames()) * Math.PI) * 44;
         ctx.fillStyle = '#ffffff';
         ctx.fillRect(10, -42, 32 + ext, 13);
         ctx.fillStyle = '#ffd180';
         ctx.fillRect(40 + ext, -44, 16, 15);
 
-        // Flying Heavy Calculator Prop
-        ctx.fillStyle = '#263238';
-        ctx.fillRect(52 + ext, -55, 24, 28);
-        ctx.fillStyle = '#00e5ff';
-        ctx.fillRect(56 + ext, -51, 16, 8); // Glowing digital screen
-        ctx.fillStyle = '#ffd700';
-        ctx.fillText('999', 58 + ext, -45);
+        // Open Laptop Prop Slamming
+        ctx.fillStyle = '#334155';
+        ctx.fillRect(52 + ext, -55, 28, 22);
+        ctx.fillStyle = '#00f0ff';
+        ctx.fillRect(54 + ext, -53, 24, 18);
+        ctx.fillStyle = '#061124';
+        ctx.font = 'bold 7px monospace';
+        ctx.fillText('10 CGPA', 66 + ext, -41);
       }
     } else {
-      // IDLE GUARD: Martial arts boxing stance with bobbing fists
-      const guardBob = Math.sin(performance.now() * 0.008) * 3;
+      // IDLE: Confident Stance Holding Open Sleek Laptop
+      const guardBob = Math.sin(performance.now() * 0.008) * 2;
       // Rear Arm
-      ctx.fillStyle = '#e0e0e0';
+      ctx.fillStyle = '#e2e8f0';
       ctx.fillRect(-18, -38 + guardBob, 14, 22);
       ctx.fillStyle = '#ffd180';
-      ctx.fillRect(-16, -20 + guardBob, 12, 12);
+      ctx.fillRect(-14, -18 + guardBob, 10, 10);
 
-      // Lead Arm
+      // Lead Arm holding laptop
       ctx.fillStyle = '#ffffff';
-      ctx.fillRect(12, -40 - guardBob, 18, 22);
+      ctx.fillRect(10, -40 - guardBob, 14, 20);
       ctx.fillStyle = '#ffd180';
-      ctx.fillRect(24, -24 - guardBob, 13, 13);
+      ctx.fillRect(12, -22 - guardBob, 10, 10);
+
+      // Sleek Open Silver Laptop held in front
+      ctx.save();
+      ctx.translate(6, -28 - guardBob);
+      // Laptop Base
+      ctx.fillStyle = '#94a3b8';
+      ctx.fillRect(-6, 8, 26, 4);
+      // Keyboard area
+      ctx.fillStyle = '#1e293b';
+      ctx.fillRect(-4, 9, 22, 2);
+      // Screen (angled open)
+      ctx.fillStyle = '#64748b';
+      ctx.fillRect(12, -14, 4, 24);
+      // Glowing Cyan Display
+      ctx.fillStyle = '#00f0ff';
+      ctx.shadowColor = '#00f0ff';
+      ctx.shadowBlur = 8;
+      ctx.fillRect(10, -12, 3, 20);
+      ctx.shadowBlur = 0;
+      ctx.restore();
     }
 
-    // 5. Head, Styled Hair & Gold Glasses
+    // 5. Head, Styled Dark Hair & Gold Glasses
     ctx.fillStyle = '#ffd180';
     ctx.beginPath();
     ctx.arc(0, -62, 15, 0, Math.PI * 2);
@@ -1222,7 +1241,7 @@ export class Fighter {
     ctx.moveTo(6, -65); ctx.lineTo(13, -59);
     ctx.stroke();
 
-    // Rage Mode Eye Glow — pulsing red iris over the glasses region
+    // Rage Mode Eye Glow
     if (this.rage && this.rage.isRage) {
       const eyePulse = (Math.sin(performance.now() * 0.02) + 1) * 0.5;
       const eyeGrad = ctx.createRadialGradient(8, -63, 0, 8, -63, 9);
@@ -1288,15 +1307,15 @@ export class Fighter {
     ctx.closePath();
     ctx.fill();
 
-    // High-Top Sneakers (Neon Orange + Mint Green)
-    ctx.fillStyle = '#ff6b35';
-    ctx.fillRect(lFootX - 14, lFootY - 7, 26, 7);
-    ctx.fillRect(rFootX - 14, rFootY - 7, 28, 7);
-    ctx.fillStyle = '#00d4aa';
-    ctx.fillRect(lFootX - 4, lFootY - 4, 10, 4);
-    ctx.fillRect(rFootX - 4, rFootY - 4, 10, 4);
+    // High-Top Red Sneakers with White Soles
+    ctx.fillStyle = '#e53935';
+    ctx.fillRect(lFootX - 14, lFootY - 8, 26, 8);
+    ctx.fillRect(rFootX - 14, rFootY - 8, 28, 8);
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(lFootX - 14, lFootY - 3, 26, 3);
+    ctx.fillRect(rFootX - 14, rFootY - 3, 28, 3);
 
-    // 3. Heavy Tactical Backpack (Strapped behind torso)
+    // 3. Heavy Red Tactical Backpack (Strapped behind torso)
     const torsoY = isBlock ? -60 : -66 + breath;
     const torsoTilt = isHurt ? -0.22 : (isAttack ? 0.2 : 0);
 
@@ -1304,49 +1323,62 @@ export class Fighter {
     ctx.translate(0, torsoY);
     ctx.rotate(torsoTilt);
 
-    ctx.fillStyle = '#ff6b35';
+    // Red Backpack on back
+    ctx.fillStyle = '#d32f2f';
     ctx.fillRect(-38, -52, 20, 44);
-    ctx.fillStyle = '#d84315';
+    ctx.fillStyle = '#b71c1c';
     ctx.fillRect(-40, -42, 6, 24); // Side pockets
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(-34, -40, 12, 2); // White zip strip
 
-    // Muscular Sleeveless Dark Hoodie (Showing defined biceps)
-    ctx.fillStyle = isHurt ? '#ffab91' : '#262626';
+    // Charcoal/Black Hoodie
+    ctx.fillStyle = isHurt ? '#ef5350' : '#1e1e24';
     ctx.beginPath();
     ctx.moveTo(-26, -48);
     ctx.lineTo(24, -48);
-    ctx.lineTo(12, 8);
+    ctx.lineTo(13, 8);
     ctx.lineTo(-14, 8);
     ctx.closePath();
     ctx.fill();
 
-    // Neon Orange Drawstrings
-    ctx.strokeStyle = '#ff6b35';
-    ctx.lineWidth = 2.5;
+    // Hoodie Kangaroo Pocket
+    ctx.fillStyle = '#16161b';
     ctx.beginPath();
-    ctx.moveTo(-4, -44); ctx.lineTo(-4, -18);
-    ctx.moveTo(4, -44); ctx.lineTo(4, -18);
+    ctx.moveTo(-11, -8);
+    ctx.lineTo(11, -8);
+    ctx.lineTo(13, 6);
+    ctx.lineTo(-13, 6);
+    ctx.closePath();
+    ctx.fill();
+
+    // Bold Red SRM Chest Logo
+    ctx.font = '900 8.5px "Arial Black", sans-serif';
+    ctx.fillStyle = '#ff1744';
+    ctx.textAlign = 'center';
+    ctx.fillText('SRM', 0, -28);
+
+    // Red Drawstrings
+    ctx.strokeStyle = '#ff1744';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(-3, -44); ctx.lineTo(-3, -20);
+    ctx.moveTo(3, -44); ctx.lineTo(3, -20);
     ctx.stroke();
 
-    // 4. Muscular Brawler Arms & Dynamic Moves
+    // 4. Arms, Gaming Laptop & Moves
     if (isBlock) {
-      // DEFENSE GUARD: Crossed forearms with muscle definition
-      ctx.fillStyle = '#ffcc80';
-      ctx.save();
-      ctx.translate(-14, -36);
-      ctx.rotate(0.6);
-      ctx.fillRect(0, -6, 32, 13);
-      ctx.fillStyle = '#2c2c2c';
-      ctx.fillRect(26, -8, 12, 15); // Tactical glove
-      ctx.restore();
-
-      ctx.fillStyle = '#ffcc80';
-      ctx.save();
-      ctx.translate(14, -36);
-      ctx.rotate(-0.6);
-      ctx.fillRect(-32, -6, 32, 13);
-      ctx.fillStyle = '#2c2c2c';
-      ctx.fillRect(-36, -8, 12, 15);
-      ctx.restore();
+      // DEFENSE GUARD: Open Gaming Laptop Held Up As Shield
+      ctx.fillStyle = '#1a1a1a';
+      ctx.fillRect(-16, -48, 32, 28);
+      ctx.strokeStyle = '#ff1744';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(-16, -48, 32, 28);
+      // Glowing Neon Red Matrix Screen
+      ctx.fillStyle = '#ff1744';
+      ctx.fillRect(-13, -45, 26, 22);
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 6px monospace';
+      ctx.fillText('OVERCLOCK', 0, -32);
     } else if (isAttack && this.currentMove) {
       if (this.currentMove.name === 'Backpack Swing') {
         // HEAVY ATTACK: Massive 360 Backpack Slam with Fiery Arc!
@@ -1355,31 +1387,27 @@ export class Fighter {
 
         ctx.save();
         ctx.rotate(swingAngle);
-        // Swinging Arm
         ctx.fillStyle = '#ffcc80';
         ctx.fillRect(0, -40, 48, 14);
-        // Weighted Backpack Slam Head
-        ctx.fillStyle = '#ff6b35';
+        ctx.fillStyle = '#d32f2f';
         ctx.fillRect(40, -56, 36, 44);
         ctx.fillStyle = '#ffd700';
         ctx.fillRect(48, -48, 20, 28);
         ctx.restore();
 
-        // Fiery Motion Arc
-        ctx.strokeStyle = 'rgba(255, 107, 53, 0.8)';
+        ctx.strokeStyle = 'rgba(255, 23, 68, 0.8)';
         ctx.lineWidth = 6;
         ctx.beginPath();
         ctx.arc(0, -30, 68, -0.6, 1.4);
         ctx.stroke();
       } else {
-        // LIGHT ATTACK: Street Brawler Paper Plane Sniping Thrust
+        // LIGHT ATTACK: Fast Code Beam Jab / Paper Plane Thrust
         const ext = Math.sin((this.moveFrame / this.currentMove.getTotalFrames()) * Math.PI) * 36;
         ctx.fillStyle = '#ffcc80';
         ctx.fillRect(10, -42, 28 + ext, 13);
         ctx.fillStyle = '#2c2c2c';
         ctx.fillRect(36 + ext, -44, 14, 15);
 
-        // Razor Folded Paper Plane
         ctx.fillStyle = '#ffffff';
         ctx.beginPath();
         ctx.moveTo(48 + ext, -44);
@@ -1388,34 +1416,53 @@ export class Fighter {
         ctx.closePath();
         ctx.fill();
 
-        ctx.strokeStyle = 'rgba(0, 212, 170, 0.8)';
+        ctx.strokeStyle = 'rgba(255, 23, 68, 0.8)';
         ctx.lineWidth = 2;
         ctx.stroke();
       }
     } else {
-      // IDLE BRAWLER STANCE: Swaying clenched fists
-      const guardBob = Math.sin(performance.now() * 0.008) * 3;
-      // Rear Arm (Showing Muscular Bicep)
+      // IDLE: Street stance holding gaming laptop with glowing neon red keys
+      const guardBob = Math.sin(performance.now() * 0.008) * 2;
+      // Rear Arm
+      ctx.fillStyle = '#262626';
+      ctx.fillRect(-18, -40 + guardBob, 14, 22);
       ctx.fillStyle = '#ffcc80';
-      ctx.fillRect(-20, -40 + guardBob, 16, 22);
-      ctx.fillStyle = '#2c2c2c';
-      ctx.fillRect(-18, -20 + guardBob, 14, 13);
+      ctx.fillRect(-14, -20 + guardBob, 10, 10);
 
       // Lead Arm
+      ctx.fillStyle = '#262626';
+      ctx.fillRect(10, -40 - guardBob, 14, 20);
       ctx.fillStyle = '#ffcc80';
-      ctx.fillRect(14, -42 - guardBob, 18, 24);
-      ctx.fillStyle = '#2c2c2c';
-      ctx.fillRect(26, -22 - guardBob, 14, 14);
+      ctx.fillRect(12, -22 - guardBob, 10, 10);
+
+      // Black Gaming Laptop held in front
+      ctx.save();
+      ctx.translate(6, -28 - guardBob);
+      ctx.fillStyle = '#111111';
+      ctx.fillRect(-6, 8, 26, 4);
+      // Red LED keyboard
+      ctx.fillStyle = '#ff1744';
+      ctx.fillRect(-4, 9, 22, 2);
+      // Screen open
+      ctx.fillStyle = '#222222';
+      ctx.fillRect(12, -14, 4, 24);
+      // Glowing Matrix Screen
+      ctx.fillStyle = '#ff1744';
+      ctx.shadowColor = '#ff1744';
+      ctx.shadowBlur = 8;
+      ctx.fillRect(10, -12, 3, 20);
+      ctx.shadowBlur = 0;
+      ctx.restore();
     }
 
-    // 5. Head & Styled Spiky Hair
+    // 5. Head, Jet-Black Spiky Hair & Red Gaming Headphones
     ctx.fillStyle = '#ffcc80';
     ctx.beginPath();
     ctx.arc(0, -62, 15, 0, Math.PI * 2);
     ctx.fill();
 
-    // Spiky textured hair
-    ctx.fillStyle = '#3e2723';
+    // Jet-Black spiky textured hair
+    ctx.fillStyle = '#111111';
     ctx.beginPath();
     ctx.arc(0, -66, 17, Math.PI, Math.PI * 2);
     ctx.lineTo(17, -56);
@@ -1425,7 +1472,35 @@ export class Fighter {
     ctx.closePath();
     ctx.fill();
 
-    // Confident Smirk & Eyes
+    // Red Gaming Headphones with Boom Mic
+    ctx.strokeStyle = '#d32f2f';
+    ctx.lineWidth = 3.5;
+    ctx.beginPath();
+    ctx.arc(0, -64, 18, Math.PI * 0.9, Math.PI * 2.1);
+    ctx.stroke();
+
+    // Red Ear Pads
+    ctx.fillStyle = '#ff1744';
+    ctx.shadowColor = '#ff1744';
+    ctx.shadowBlur = 6;
+    ctx.fillRect(-18, -66, 5, 10);
+    ctx.fillRect(13, -66, 5, 10);
+    ctx.shadowBlur = 0;
+
+    // Boom Microphone extending towards mouth
+    ctx.strokeStyle = '#111111';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(15, -60);
+    ctx.lineTo(12, -54);
+    ctx.lineTo(6, -54);
+    ctx.stroke();
+    ctx.fillStyle = '#ff1744';
+    ctx.beginPath();
+    ctx.arc(5, -54, 2.5, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Smirking Face
     ctx.fillStyle = '#111111';
     ctx.fillRect(4, -64, 4, 3); // Eye
     ctx.beginPath();
@@ -1449,7 +1524,7 @@ export class Fighter {
     ctx.ellipse(0, 0, isJumping ? 22 : 36, isJumping ? 5 : 9, 0, 0, Math.PI * 2);
     ctx.fill();
 
-    // Legs & Flip-Flops
+    // Athletic Legs with Black Compression Sleeves & Basketball Sneakers
     let lFootX = -15, lFootY = 0, rFootX = 17, rFootY = 0;
     if (state === FIGHTER_STATES.WALKING) {
       lFootX = -15 - walkSwing;
@@ -1460,37 +1535,42 @@ export class Fighter {
       lFootY = -16; rFootY = -10;
     }
 
-    // Bare Legs (Tanned Skin)
+    // Muscular Legs (Tanned Skin)
     ctx.fillStyle = '#c99667';
     ctx.beginPath();
     ctx.moveTo(-7, -42);
-    ctx.lineTo(lFootX - 8, lFootY - 4);
-    ctx.lineTo(lFootX + 8, lFootY - 4);
+    ctx.lineTo(lFootX - 8, lFootY - 6);
+    ctx.lineTo(lFootX + 8, lFootY - 6);
     ctx.lineTo(5, -42);
     ctx.closePath();
     ctx.fill();
 
     ctx.beginPath();
     ctx.moveTo(-3, -42);
-    ctx.lineTo(rFootX - 8, rFootY - 4);
-    ctx.lineTo(rFootX + 8, rFootY - 4);
+    ctx.lineTo(rFootX - 8, rFootY - 6);
+    ctx.lineTo(rFootX + 8, rFootY - 6);
     ctx.lineTo(9, -42);
     ctx.closePath();
     ctx.fill();
 
-    // Flip-Flops (Blue/Black Soles with strap)
-    ctx.fillStyle = '#1e293b';
-    ctx.fillRect(lFootX - 12, lFootY - 4, 24, 4);
-    ctx.fillRect(rFootX - 12, rFootY - 4, 24, 4);
-    ctx.strokeStyle = '#0288d1';
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    ctx.moveTo(lFootX - 4, lFootY - 4); ctx.lineTo(lFootX + 2, lFootY - 8); ctx.lineTo(lFootX + 6, lFootY - 4);
-    ctx.moveTo(rFootX - 4, rFootY - 4); ctx.lineTo(rFootX + 2, rFootY - 8); ctx.lineTo(rFootX + 6, rFootY - 4);
-    ctx.stroke();
+    // Black Compression Knee Sleeves
+    ctx.fillStyle = '#1e1e1e';
+    ctx.fillRect(lFootX - 7, lFootY - 24, 14, 12);
+    ctx.fillRect(rFootX - 7, rFootY - 24, 14, 12);
 
-    // Beige Sleep Shorts (Baggy with food stains)
-    ctx.fillStyle = '#f5deb3';
+    // Red & Black Basketball High-Top Sneakers
+    ctx.fillStyle = '#d32f2f';
+    ctx.fillRect(lFootX - 12, lFootY - 8, 24, 8);
+    ctx.fillRect(rFootX - 12, rFootY - 8, 26, 8);
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(lFootX - 12, lFootY - 3, 24, 3);
+    ctx.fillRect(rFootX - 12, rFootY - 3, 26, 3);
+    ctx.fillStyle = '#111111';
+    ctx.fillRect(lFootX - 6, lFootY - 8, 10, 4);
+    ctx.fillRect(rFootX - 6, rFootY - 8, 10, 4);
+
+    // Red Basketball Shorts with White Side Stripes
+    ctx.fillStyle = '#d32f2f';
     ctx.beginPath();
     ctx.moveTo(-20, -56);
     ctx.lineTo(20, -56);
@@ -1498,13 +1578,12 @@ export class Fighter {
     ctx.lineTo(-16, -34);
     ctx.closePath();
     ctx.fill();
-    // Subtle food stain
-    ctx.fillStyle = 'rgba(180, 80, 20, 0.4)';
-    ctx.beginPath();
-    ctx.arc(6, -42, 4, 0, Math.PI * 2);
-    ctx.fill();
+    // White Side Stripes
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(-19, -56, 3, 22);
+    ctx.fillRect(16, -56, 3, 22);
 
-    // Torso: Maroon Hostel T-Shirt
+    // Torso: Red Basketball Jersey (#7 SRM)
     const torsoY = isBlock ? -58 : -64 + breath;
     const torsoTilt = isHurt ? -0.2 : (isAttack ? 0.2 : 0);
 
@@ -1513,129 +1592,120 @@ export class Fighter {
     ctx.rotate(torsoTilt);
 
     const shirtGrad = ctx.createLinearGradient(-26, -46, 26, 8);
-    shirtGrad.addColorStop(0, isHurt ? '#ef5350' : '#8b0000');
-    shirtGrad.addColorStop(1, isHurt ? '#e53935' : '#5c0000');
+    shirtGrad.addColorStop(0, isHurt ? '#ef5350' : '#e53935');
+    shirtGrad.addColorStop(1, isHurt ? '#d32f2f' : '#b71c1c');
     ctx.fillStyle = shirtGrad;
 
-    // Muscular / Heavy Build
+    // Muscular Athletic Jersey
     ctx.beginPath();
-    ctx.moveTo(-26, -46);
-    ctx.lineTo(26, -46);
-    ctx.lineTo(18, 8);
-    ctx.lineTo(-18, 8);
+    ctx.moveTo(-24, -46);
+    ctx.lineTo(24, -46);
+    ctx.lineTo(16, 8);
+    ctx.lineTo(-16, 8);
     ctx.closePath();
     ctx.fill();
 
-    // Hostel Merch Text
-    ctx.font = 'bold 9px monospace';
-    ctx.fillStyle = '#ffcc80';
-    ctx.textAlign = 'center';
-    ctx.fillText('SRM HOSTEL', 0, -22);
-
-    // Mess Card Lanyard hanging from neck
-    ctx.strokeStyle = '#90a4ae';
-    ctx.lineWidth = 1.5;
+    // White Jersey Trim around collar & armholes
+    ctx.strokeStyle = '#ffffff';
+    ctx.lineWidth = 2.5;
     ctx.beginPath();
-    ctx.moveTo(-4, -46); ctx.lineTo(0, -10); ctx.lineTo(4, -46);
+    ctx.arc(0, -46, 8, 0, Math.PI);
     ctx.stroke();
-    ctx.fillStyle = '#ffffff';
-    ctx.fillRect(-6, -10, 12, 16);
-    ctx.fillStyle = '#8b0000';
-    ctx.fillRect(-5, -9, 10, 5);
 
-    // Arms, Tiffin & Tray Attacks
+    // #7 SRM on Chest
+    ctx.font = '900 9px "Arial Black", sans-serif';
+    ctx.fillStyle = '#ffffff';
+    ctx.textAlign = 'center';
+    ctx.fillText('#7 SRM', 0, -22);
+
+    // Arms & Basketball
     if (isBlock) {
-      // BLOCK: Holds up steel mess tray covering vitals
-      ctx.fillStyle = '#90a4ae';
-      ctx.strokeStyle = '#ffffff';
-      ctx.lineWidth = 2;
-      ctx.fillRect(10, -50, 16, 56);
-      ctx.strokeRect(10, -50, 16, 56);
-      // Tray compartments
-      ctx.fillStyle = '#37474f';
-      ctx.fillRect(13, -46, 10, 12);
-      ctx.fillRect(13, -30, 10, 12);
+      // BLOCK: Two-Handed Basketball Guard
+      ctx.fillStyle = '#c99667';
+      ctx.fillRect(-16, -44, 12, 28);
+      ctx.fillRect(8, -44, 12, 28);
+      // Basketball Held Front & Center
+      ctx.fillStyle = '#e65100';
+      ctx.beginPath();
+      ctx.arc(2, -34, 14, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = '#111111';
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(-12, -34); ctx.lineTo(16, -34);
+      ctx.moveTo(2, -48); ctx.lineTo(2, -20);
+      ctx.stroke();
     } else if (isAttack && this.currentMove) {
-      if (this.currentMove.name === 'Tiffin Slam') {
-        const ext = Math.sin((this.moveFrame / this.currentMove.getTotalFrames()) * Math.PI);
-        // Raised arms holding steel tiffin slamming down
+      if (this.currentMove.name === 'Tiffin Slam' || true) {
+        // Basketball Windup / Slam Dunk
+        const ext = Math.sin((this.moveFrame / (this.currentMove.getTotalFrames ? this.currentMove.getTotalFrames() : 20)) * Math.PI);
         ctx.fillStyle = '#c99667';
         ctx.fillRect(8, -50 + ext * 24, 26, 14);
-        // Steel Tiffin Box
-        ctx.fillStyle = '#78909c';
-        ctx.strokeStyle = '#ffd700';
-        ctx.lineWidth = 1.5;
-        ctx.fillRect(28, -56 + ext * 34, 28, 22);
-        ctx.strokeRect(28, -56 + ext * 34, 28, 22);
-        // Orange shockwave spark
-        if (ext > 0.6) {
-          ctx.fillStyle = '#ff9800';
-          ctx.beginPath();
-          ctx.arc(56, -45 + ext * 34, 18, 0, Math.PI * 2);
-          ctx.fill();
-        }
-      } else {
-        // Mess Tray Baseball Swing
-        const ext = Math.sin((this.moveFrame / this.currentMove.getTotalFrames()) * Math.PI);
-        ctx.save();
-        ctx.translate(14, -30);
-        ctx.rotate(-1.2 + ext * 2.8);
-        // Mess Tray
-        ctx.fillStyle = '#b0bec5';
-        ctx.strokeStyle = '#ffffff';
-        ctx.lineWidth = 2;
-        ctx.fillRect(0, -18, 56, 26);
-        ctx.strokeRect(0, -18, 56, 26);
-        // Curry/Rice splatters trailing
-        ctx.fillStyle = '#ff6f00';
+
+        // Slamming Basketball with fire trail
+        ctx.fillStyle = '#e65100';
         ctx.beginPath();
-        ctx.arc(42, -5, 8, 0, Math.PI * 2);
+        ctx.arc(36 + ext * 24, -45 + ext * 20, 15, 0, Math.PI * 2);
         ctx.fill();
-        ctx.restore();
+        ctx.strokeStyle = '#111111';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+
+        if (ext > 0.5) {
+          ctx.strokeStyle = 'rgba(255, 87, 34, 0.8)';
+          ctx.lineWidth = 4;
+          ctx.beginPath();
+          ctx.arc(36 + ext * 24, -45 + ext * 20, 20, 0, Math.PI * 2);
+          ctx.stroke();
+        }
       }
     } else {
-      // Idle: Holding steel tiffin in left hand, tray under right arm
+      // IDLE: Athletic stance holding basketball firmly under arm
       ctx.fillStyle = '#c99667';
-      ctx.fillRect(-22, -38, 16, 22);
-      // Tiffin Box
-      ctx.fillStyle = '#78909c';
-      ctx.strokeStyle = '#ffd700';
-      ctx.lineWidth = 1;
-      ctx.fillRect(-26, -18, 20, 18);
-      ctx.strokeRect(-26, -18, 20, 18);
+      ctx.fillRect(-20, -40, 14, 22);
 
-      // Lead Arm with Tray tucked
+      // Lead Arm
       ctx.fillStyle = '#c99667';
-      ctx.fillRect(16, -40, 14, 24);
-      ctx.fillStyle = '#90a4ae';
-      ctx.fillRect(24, -34, 8, 38);
+      ctx.fillRect(12, -42, 14, 24);
+
+      // Textured Orange Basketball held under right arm
+      ctx.save();
+      ctx.translate(20, -26);
+      ctx.fillStyle = '#e65100';
+      ctx.beginPath();
+      ctx.arc(0, 0, 13, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = '#111111';
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+      // Black basketball ribbing lines
+      ctx.beginPath();
+      ctx.moveTo(-13, 0); ctx.lineTo(13, 0);
+      ctx.moveTo(0, -13); ctx.lineTo(0, 13);
+      ctx.arc(0, 0, 8, -Math.PI * 0.4, Math.PI * 0.4);
+      ctx.stroke();
+      ctx.restore();
     }
 
-    // Head, Bedhead Messy Hair & Sleepy Eyes
+    // Head, Short Fade Hair & Confident Athlete Face
     ctx.fillStyle = '#c99667';
     ctx.beginPath();
     ctx.arc(0, -60, 16, 0, Math.PI * 2);
     ctx.fill();
 
-    // Bedhead dark hair
-    ctx.fillStyle = '#2a1810';
+    // Clean fade haircut
+    ctx.fillStyle = '#1a100a';
     ctx.beginPath();
-    ctx.arc(0, -66, 18, Math.PI * 0.9, Math.PI * 2.1);
-    ctx.lineTo(16, -58);
-    ctx.lineTo(8, -64);
-    ctx.lineTo(0, -70);
-    ctx.lineTo(-8, -64);
-    ctx.lineTo(-16, -58);
-    ctx.closePath();
+    ctx.arc(0, -65, 17, Math.PI * 0.85, Math.PI * 2.15);
     ctx.fill();
 
-    // Sleepy eyes with subtle dark circles
-    ctx.fillStyle = 'rgba(60, 30, 20, 0.35)';
-    ctx.beginPath();
-    ctx.arc(6, -56, 6, 0, Math.PI * 2);
-    ctx.fill();
+    // Determined athletic eyes
     ctx.fillStyle = '#111111';
-    ctx.fillRect(4, -58, 5, 2); // Half-closed eye
+    ctx.fillRect(3, -62, 5, 3);
+    ctx.beginPath();
+    ctx.arc(5, -55, 5, 0, Math.PI * 0.7);
+    ctx.stroke();
 
     ctx.restore();
   }
@@ -1684,12 +1754,15 @@ export class Fighter {
     ctx.closePath();
     ctx.fill();
 
-    // Worn Brown Leather Shoes
-    ctx.fillStyle = '#4e342e';
-    ctx.fillRect(lFootX - 12, lFootY - 6, 24, 6);
-    ctx.fillRect(rFootX - 12, rFootY - 6, 26, 6);
+    // Dark Green Casual Sneakers with White Soles
+    ctx.fillStyle = '#1b4d3e';
+    ctx.fillRect(lFootX - 12, lFootY - 7, 24, 7);
+    ctx.fillRect(rFootX - 12, rFootY - 7, 26, 7);
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(lFootX - 12, lFootY - 2, 24, 2);
+    ctx.fillRect(rFootX - 12, rFootY - 2, 26, 2);
 
-    // Torso: Dark Green Varsity Jacket & Off-White Shirt
+    // Torso: Dark Forest-Green Overshirt & Crisp White Inner T-Shirt
     const torsoY = isBlock ? -58 : -64 + breath;
     const torsoTilt = isHurt ? -0.18 : (isAttack ? 0.16 : -0.05);
 
@@ -1697,33 +1770,26 @@ export class Fighter {
     ctx.translate(0, torsoY);
     ctx.rotate(torsoTilt);
 
-    // Inner Off-White Shirt (unbuttoned top collar)
-    ctx.fillStyle = '#f5f0e1';
+    // Inner White Crew-Neck T-Shirt
+    ctx.fillStyle = '#ffffff';
     ctx.beginPath();
-    ctx.moveTo(-10, -46);
-    ctx.lineTo(10, -46);
-    ctx.lineTo(0, -20);
+    ctx.moveTo(-12, -46);
+    ctx.lineTo(12, -46);
+    ctx.lineTo(10, 8);
+    ctx.lineTo(-10, 8);
     ctx.closePath();
     ctx.fill();
 
-    // Gold Chain
-    ctx.strokeStyle = '#ffd700';
-    ctx.lineWidth = 1.5;
-    ctx.beginPath();
-    ctx.arc(0, -38, 7, 0, Math.PI);
-    ctx.stroke();
-
-    // Dark Green College Jacket
+    // Dark Forest-Green Open Chore Jacket / Overshirt
     ctx.fillStyle = '#1b4d3e';
     // Left Flap
-    ctx.fillRect(-24, -48, 14, 52);
+    ctx.fillRect(-24, -48, 13, 54);
     // Right Flap
-    ctx.fillRect(10, -48, 14, 52);
-    // Gold Trim & Patches
-    ctx.fillStyle = '#c9a84c';
-    ctx.fillRect(-24, -48, 2, 52);
-    ctx.fillRect(22, -48, 2, 52);
-    ctx.fillRect(-22, -40, 8, 8); // Gold Senior Crest
+    ctx.fillRect(11, -48, 13, 54);
+    // Jacket collar
+    ctx.fillStyle = '#14382d';
+    ctx.fillRect(-24, -48, 8, 8);
+    ctx.fillRect(16, -48, 8, 8);
 
     // Arms & Props (Chai Cup & Notes Folder)
     if (isBlock) {
@@ -1790,29 +1856,37 @@ export class Fighter {
       ctx.fillRect(22, -34, 12, 32);
     }
 
-    // Head, Groomed Beard & Sunglasses on forehead
+    // Head, Groomed Beard & Round Wire-Rimmed Glasses
     ctx.fillStyle = '#d6a374';
     ctx.beginPath();
     ctx.arc(0, -60, 15, 0, Math.PI * 2);
     ctx.fill();
 
-    // Dark Hair & Beard Stubble
+    // Dark Wavy Hair & Subtle Stubble
     ctx.fillStyle = '#141414';
     ctx.beginPath();
     ctx.arc(0, -64, 16, Math.PI * 0.9, Math.PI * 2.1);
     ctx.fill();
-    // Stubble jawline
-    ctx.fillStyle = 'rgba(20, 20, 20, 0.4)';
+    ctx.fillStyle = 'rgba(20, 20, 20, 0.35)';
     ctx.beginPath();
-    ctx.arc(2, -54, 10, 0, Math.PI * 0.9);
+    ctx.arc(2, -54, 9, 0, Math.PI * 0.9);
     ctx.fill();
 
-    // Sunglasses pushed onto forehead
-    ctx.fillStyle = '#0a0a0a';
-    ctx.fillRect(-10, -70, 10, 5);
-    ctx.fillRect(2, -70, 10, 5);
-    ctx.fillStyle = '#ffd700';
-    ctx.fillRect(-1, -69, 3, 3); // Gold bridge
+    // Round Wire-Rimmed Spectacles (Reference Artwork)
+    ctx.strokeStyle = '#2b2b2b';
+    ctx.lineWidth = 1.6;
+    ctx.beginPath();
+    ctx.arc(-5, -61, 5, 0, Math.PI * 2);
+    ctx.arc(5, -61, 5, 0, Math.PI * 2);
+    ctx.moveTo(0, -61); ctx.lineTo(1, -61); // Bridge
+    ctx.stroke();
+
+    // Calm knowing smile
+    ctx.strokeStyle = '#141414';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.arc(1, -54, 4, 0.1, Math.PI * 0.8);
+    ctx.stroke();
 
     ctx.restore();
   }
@@ -1868,7 +1942,7 @@ export class Fighter {
     ctx.fillRect(lFootX - 5, lFootY - 6, 8, 2);
     ctx.fillRect(rFootX - 5, rFootY - 6, 8, 2);
 
-    // Torso: Navy Blue Formal Blazer & Crimson Tie
+    // Torso: Sharp Black Suit Blazer, White Shirt, Red Tie & SRM ID Lanyard
     const torsoY = isBlock ? -60 : -66 + breath;
     const torsoTilt = isHurt ? -0.2 : (isAttack ? 0.22 : 0);
 
@@ -1876,10 +1950,10 @@ export class Fighter {
     ctx.translate(0, torsoY);
     ctx.rotate(torsoTilt);
 
-    // Blazer Body
+    // Black Business Suit Blazer Body
     const blazerGrad = ctx.createLinearGradient(-24, -48, 24, 8);
-    blazerGrad.addColorStop(0, isHurt ? '#c2185b' : '#1b2a4a');
-    blazerGrad.addColorStop(1, isHurt ? '#880e4f' : '#0d1829');
+    blazerGrad.addColorStop(0, isHurt ? '#c2185b' : '#222228');
+    blazerGrad.addColorStop(1, isHurt ? '#880e4f' : '#141418');
     ctx.fillStyle = blazerGrad;
 
     ctx.beginPath();
@@ -1897,12 +1971,27 @@ export class Fighter {
     ctx.closePath();
     ctx.fill();
 
-    // Crimson Silk Tie
-    ctx.fillStyle = '#8b0000';
+    // Bold Corporate Red Silk Tie
+    ctx.fillStyle = '#c62828';
     ctx.beginPath();
-    ctx.moveTo(-3, -46); ctx.lineTo(3, -46); ctx.lineTo(4, -12); ctx.lineTo(0, -6); ctx.lineTo(-4, -12);
+    ctx.moveTo(-3.5, -46); ctx.lineTo(3.5, -46); ctx.lineTo(4.5, -12); ctx.lineTo(0, -6); ctx.lineTo(-4.5, -12);
     ctx.closePath();
     ctx.fill();
+
+    // Royal Blue SRM ID Card Lanyard around neck
+    ctx.strokeStyle = '#1976d2';
+    ctx.lineWidth = 1.8;
+    ctx.beginPath();
+    ctx.moveTo(-6, -46); ctx.lineTo(-1, -22); ctx.lineTo(6, -46);
+    ctx.stroke();
+
+    // Dangling SRM Student ID Card
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(-5, -22, 10, 14);
+    ctx.fillStyle = '#1565c0';
+    ctx.fillRect(-5, -22, 10, 4); // Blue top banner
+    ctx.fillStyle = '#111111';
+    ctx.fillRect(-3, -16, 6, 2); // Photo box
 
     // Luxury Gold Wristwatch
     ctx.fillStyle = '#ffd700';
@@ -1916,16 +2005,13 @@ export class Fighter {
       ctx.lineWidth = 2;
       ctx.fillRect(10, -50, 16, 50);
       ctx.strokeRect(10, -50, 16, 50);
-      // Silver Zip line
       ctx.fillStyle = '#c0c0c0';
       ctx.fillRect(17, -50, 2, 50);
     } else if (isAttack && this.currentMove) {
       if (this.currentMove.name === 'Resume Slap') {
         const ext = Math.sin((this.moveFrame / this.currentMove.getTotalFrames()) * Math.PI);
-        // Fast rolled resume thrust
         ctx.fillStyle = '#e0ac69';
         ctx.fillRect(12, -38, 22, 12);
-        // White resume cylinder with text flash
         ctx.fillStyle = '#f8f9fa';
         ctx.strokeStyle = '#0288d1';
         ctx.lineWidth = 1.5;
@@ -1943,30 +2029,34 @@ export class Fighter {
         ctx.moveTo(12, -36);
         ctx.quadraticCurveTo(45 + ext * 30, -55, 80 + ext * 40, -32);
         ctx.stroke();
-        // Whip crack star
         ctx.fillStyle = '#00e5ff';
         ctx.beginPath();
         ctx.arc(80 + ext * 40, -32, 10, 0, Math.PI * 2);
         ctx.fill();
       }
     } else {
-      // Idle: Leather portfolio in right hand, adjusting tie
+      // Idle: Professional stance with black leather portfolio tucked under right arm
       ctx.fillStyle = '#e0ac69';
       ctx.fillRect(-18, -38, 12, 20);
-      ctx.fillStyle = '#1f2937';
-      ctx.fillRect(-24, -20, 16, 24);
 
+      // Lead arm holding black leather folder
       ctx.fillStyle = '#e0ac69';
       ctx.fillRect(14, -40, 12, 22);
+
+      // Sleek Black Leather Portfolio Folder under arm
+      ctx.fillStyle = '#111111';
+      ctx.fillRect(20, -34, 12, 34);
+      ctx.fillStyle = '#ffd700';
+      ctx.fillRect(20, -22, 12, 2); // Gold corner clip
     }
 
-    // Head & Slicked-back Hair
+    // Head & Executive Haircut
     ctx.fillStyle = '#e0ac69';
     ctx.beginPath();
     ctx.arc(0, -62, 15, 0, Math.PI * 2);
     ctx.fill();
 
-    // Slicked-back hair
+    // Clean slicked executive hair
     ctx.fillStyle = '#0a0a0a';
     ctx.beginPath();
     ctx.arc(0, -66, 16, Math.PI * 0.9, Math.PI * 2.1);
@@ -2025,22 +2115,22 @@ export class Fighter {
     ctx.closePath();
     ctx.fill();
 
-    // Athletic Black Shorts with Neon Cyan Stripe
+    // Athletic Black Shorts with White Stripe
     ctx.fillStyle = '#1a1a1a';
     ctx.fillRect(-18, -58, 36, 20);
-    ctx.fillStyle = '#00d4ff';
+    ctx.fillStyle = '#ffffff';
     ctx.fillRect(-18, -58, 3, 20);
     ctx.fillRect(15, -58, 3, 20);
 
-    // High Performance Sneakers (Neon Orange Soles)
+    // High Performance Running Shoes (White with Royal Blue Stripes)
     ctx.fillStyle = '#ffffff';
     ctx.fillRect(lFootX - 11, lFootY - 6, 22, 6);
     ctx.fillRect(rFootX - 11, rFootY - 6, 24, 6);
-    ctx.fillStyle = '#ff6b35';
+    ctx.fillStyle = '#1565c0';
     ctx.fillRect(lFootX - 11, lFootY - 2, 22, 3);
     ctx.fillRect(rFootX - 11, rFootY - 2, 24, 3);
 
-    // Torso: Neon Cyan SRM Jersey
+    // Torso: Royal Blue SRM Athletic Jersey
     const torsoY = isBlock ? -60 : -66 + breath;
     const torsoTilt = isHurt ? -0.2 : (isAttack ? 0.22 : 0);
 
@@ -2048,8 +2138,8 @@ export class Fighter {
     ctx.translate(0, torsoY);
     ctx.rotate(torsoTilt);
 
-    // Neon Blue Jersey
-    ctx.fillStyle = '#00d4ff';
+    // Royal Blue Jersey
+    ctx.fillStyle = '#1565c0';
     ctx.beginPath();
     ctx.moveTo(-24, -48);
     ctx.lineTo(24, -48);
@@ -2059,35 +2149,39 @@ export class Fighter {
     ctx.fill();
 
     // SRM Athletic Text
-    ctx.font = '900 12px "Arial Black", sans-serif';
+    ctx.font = '900 11px "Arial Black", sans-serif';
     ctx.fillStyle = '#ffffff';
     ctx.textAlign = 'center';
-    ctx.fillText('SRM', 0, -20);
+    ctx.fillText('SRM', 0, -22);
 
-    // Orange Shoulder Accent
-    ctx.fillStyle = '#ff6b35';
-    ctx.fillRect(-24, -48, 6, 12);
-    ctx.fillRect(18, -48, 6, 12);
+    // White Shoulder Trim
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(-24, -48, 4, 12);
+    ctx.fillRect(20, -48, 4, 12);
 
-    // Arms & Props (Cricket Bat, Boxing Guard)
+    // Arms & Props (Cricket Bat, Boxing Guard, Sports Ball)
     if (isBlock) {
-      // Athletic Boxing Guard with Forearms
+      // Athletic Boxing Guard with Forearms & White Wristbands
       ctx.fillStyle = '#c68642';
       ctx.fillRect(8, -48, 14, 32);
       ctx.fillRect(18, -48, 14, 32);
-      // Neon blue protective energy shield
+      // White Wristbands
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(8, -28, 14, 8);
+      ctx.fillRect(18, -28, 14, 8);
+      // Protective energy shield
       ctx.strokeStyle = '#00d4ff';
       ctx.lineWidth = 3;
       ctx.strokeRect(6, -50, 28, 36);
     } else if (isAttack && this.currentMove) {
       if (this.currentMove.name === 'Quick Jab') {
         const ext = Math.sin((this.moveFrame / this.currentMove.getTotalFrames()) * Math.PI);
-        // Fast boxing punch
         ctx.fillStyle = '#c68642';
         ctx.fillRect(12, -40, 26 + ext * 28, 14);
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(28 + ext * 28, -40, 8, 14); // Wristband
         ctx.fillStyle = '#ff6b35';
-        ctx.fillRect(36 + ext * 28, -42, 14, 18); // Clenched boxing glove
-        // Cyan air shockwave
+        ctx.fillRect(36 + ext * 28, -42, 14, 18);
         ctx.strokeStyle = '#00d4ff';
         ctx.lineWidth = 2;
         ctx.beginPath();
@@ -2099,13 +2193,10 @@ export class Fighter {
         ctx.save();
         ctx.translate(14, -30);
         ctx.rotate(-1.0 + ext * 2.6);
-        // Cricket Bat Blade (Willow Wood)
         ctx.fillStyle = '#d7ccc8';
         ctx.fillRect(0, -14, 60, 16);
-        // Neon Green Grip
         ctx.fillStyle = '#39ff14';
         ctx.fillRect(-16, -10, 18, 8);
-        // Green spark trail
         ctx.strokeStyle = '#39ff14';
         ctx.lineWidth = 3;
         ctx.beginPath();
@@ -2114,12 +2205,17 @@ export class Fighter {
         ctx.restore();
       }
     } else {
-      // Idle: Cricket bat resting in hand, bouncing stance
+      // Idle: Athletic stance with white wristbands, resting cricket bat / sports ball
       ctx.fillStyle = '#c68642';
       ctx.fillRect(-18, -38, 12, 22);
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(-18, -24, 12, 6); // Wristband
 
       ctx.fillStyle = '#c68642';
       ctx.fillRect(14, -40, 12, 22);
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(14, -26, 12, 6); // Wristband
+
       // Cricket bat blade
       ctx.fillStyle = '#d7ccc8';
       ctx.fillRect(20, -22, 12, 42);
@@ -2173,23 +2269,28 @@ export class Fighter {
     ctx.ellipse(0, 0, isJumping ? 18 : 30, isJumping ? 3 : 7, 0, 0, Math.PI * 2);
     ctx.fill();
 
-    // Legs — black cargo pants
+    // Legs — black tactical combat pants with cyan utility straps
     let lFX = -12, rFX = 14;
     if (state === FIGHTER_STATES.WALKING) { lFX -= walkSwing * 0.5; rFX += walkSwing * 0.5; }
-    ctx.fillStyle = '#0a0a1a';
+    ctx.fillStyle = '#080812';
     ctx.fillRect(-16, -60, 14, 62);
-    ctx.fillStyle = '#111130';
+    ctx.fillStyle = '#0e0e1c';
     ctx.fillRect(4, -60, 14, 62);
-    // Green ankle trim
-    ctx.fillStyle = '#00ff41';
+    // Cyan utility straps
+    ctx.fillStyle = '#00f0ff';
+    ctx.shadowColor = '#00f0ff';
+    ctx.shadowBlur = 6;
+    ctx.fillRect(-16, -42, 14, 2);
+    ctx.fillRect(4, -42, 14, 2);
     ctx.fillRect(-16, -4, 14, 4);
     ctx.fillRect(4, -4, 14, 4);
+    ctx.shadowBlur = 0;
 
-    // Body — oversized black hoodie
+    // Body — cyber-tactical hoodie with neon cyan circuit traces
     const torsoGrad = ctx.createLinearGradient(-22, -115, 22, -115);
-    torsoGrad.addColorStop(0, '#1a1a2e');
-    torsoGrad.addColorStop(0.5, '#0d0d1a');
-    torsoGrad.addColorStop(1, '#1a1a2e');
+    torsoGrad.addColorStop(0, '#121220');
+    torsoGrad.addColorStop(0.5, '#080812');
+    torsoGrad.addColorStop(1, '#121220');
     ctx.fillStyle = torsoGrad;
     ctx.beginPath();
     ctx.moveTo(-22, -58 + breath);
@@ -2199,90 +2300,110 @@ export class Fighter {
     ctx.closePath();
     ctx.fill();
 
-    // Hood
-    ctx.fillStyle = '#111120';
-    ctx.beginPath();
-    ctx.ellipse(0, -118 + breath, 18, 14, 0, Math.PI, Math.PI * 2);
-    ctx.fill();
-
-    // Green kangaroo pocket
-    ctx.strokeStyle = '#00ff41';
+    // Cyan Circuitry Traces on Chest & Sleeves
+    ctx.strokeStyle = '#00f0ff';
     ctx.lineWidth = 1.5;
-    ctx.strokeRect(-10, -80 + breath, 20, 16);
+    ctx.shadowColor = '#00f0ff';
+    ctx.shadowBlur = 8;
+    ctx.beginPath();
+    ctx.moveTo(-16, -100 + breath); ctx.lineTo(-8, -80 + breath); ctx.lineTo(-8, -65 + breath);
+    ctx.moveTo(16, -100 + breath); ctx.lineTo(8, -80 + breath); ctx.lineTo(8, -65 + breath);
+    ctx.stroke();
+    ctx.shadowBlur = 0;
 
-    // Arms
+    // Arms & Cyberdeck Laptop
     if (isBlock) {
-      // Crossed arms block
-      ctx.fillStyle = '#0d0d1a';
+      // Hexagonal Holographic Data Shield
+      ctx.fillStyle = '#080812';
       ctx.fillRect(-30, -90 + breath, 14, 30);
       ctx.fillRect(16, -90 + breath, 14, 30);
-      // Green matrix shield ripple
-      ctx.strokeStyle = '#00ff41';
-      ctx.lineWidth = 2;
-      ctx.shadowColor = '#00ff41';
-      ctx.shadowBlur = 14;
+      ctx.strokeStyle = '#00f0ff';
+      ctx.lineWidth = 2.5;
+      ctx.shadowColor = '#00f0ff';
+      ctx.shadowBlur = 16;
       ctx.beginPath();
-      ctx.arc(0, -80 + breath, 34, 0, Math.PI * 2);
+      // Draw cyber hex barrier
+      for (let h = 0; h < 6; h++) {
+        const hAngle = (h / 6) * Math.PI * 2;
+        const hx = Math.cos(hAngle) * 32;
+        const hy = -80 + breath + Math.sin(hAngle) * 32;
+        if (h === 0) ctx.moveTo(hx, hy);
+        else ctx.lineTo(hx, hy);
+      }
+      ctx.closePath();
       ctx.stroke();
+      ctx.fillStyle = 'rgba(0, 240, 255, 0.15)';
+      ctx.fill();
       ctx.shadowBlur = 0;
     } else if (isAttack && this.currentMove) {
       const ext = Math.sin((this.moveFrame / (this.currentMove.getTotalFrames ? this.currentMove.getTotalFrames() : 20)) * Math.PI);
-      // Keyboard claw thrust
-      ctx.fillStyle = '#1a1a2e';
+      ctx.fillStyle = '#121220';
       ctx.fillRect(14, -95 + breath, 14, 28 + ext * 20);
-      // Keyboard claw
-      ctx.fillStyle = '#222244';
+      // Cyberdeck claw strike
+      ctx.fillStyle = '#1e1e30';
       ctx.fillRect(26 + ext * 22, -95 + breath, 22, 14);
-      // RGB LED keys
-      const ledColors = ['#00ff41', '#00e5ff', '#ff69b4'];
-      for (let k = 0; k < 3; k++) {
-        ctx.fillStyle = ledColors[k];
-        ctx.fillRect(28 + k * 7 + ext * 22, -92 + breath, 5, 5);
-      }
-      // Binary flash VFX
-      ctx.globalAlpha = ext * 0.8;
+      ctx.fillStyle = '#00f0ff';
+      ctx.shadowColor = '#00f0ff';
+      ctx.shadowBlur = 10;
+      ctx.fillRect(28 + ext * 22, -92 + breath, 18, 8);
+      // Binary Data Stream Blast
       ctx.font = '900 10px monospace';
-      ctx.fillStyle = '#00ff41';
+      ctx.fillStyle = '#00f0ff';
       ctx.textAlign = 'center';
-      ctx.fillText('01', 52 + ext * 22, -88 + breath);
-      ctx.globalAlpha = 1;
+      ctx.fillText('>_PWN', 60 + ext * 24, -88 + breath);
+      ctx.shadowBlur = 0;
     } else {
-      // Idle: arms at sides
-      ctx.fillStyle = '#0d0d1a';
-      ctx.fillRect(-30, -95 + breath, 12, 28);
-      ctx.fillRect(18, -95 + breath, 12, 28);
-      // Keyboard dangling at right side
-      ctx.fillStyle = '#222244';
-      ctx.fillRect(18, -78 + breath, 18, 12);
-      ctx.fillStyle = '#00ff41';
-      ctx.fillRect(20, -76 + breath, 4, 4);
-      ctx.fillStyle = '#00e5ff';
-      ctx.fillRect(26, -76 + breath, 4, 4);
+      // Idle: Holding cyberdeck laptop glowing with cyan matrix terminal code
+      const guardBob = Math.sin(performance.now() * 0.008) * 2;
+      ctx.fillStyle = '#080812';
+      ctx.fillRect(-22, -95 + breath + guardBob, 12, 28);
+      ctx.fillRect(10, -95 + breath - guardBob, 12, 28);
+
+      // Open Cyberdeck / Laptop in hands
+      ctx.save();
+      ctx.translate(0, -82 + breath);
+      ctx.fillStyle = '#0d0d18';
+      ctx.fillRect(-14, 0, 28, 6); // Base
+      ctx.fillStyle = '#151528';
+      ctx.fillRect(8, -18, 4, 22); // Screen
+      // Glowing Cyan Matrix Display
+      ctx.fillStyle = '#00f0ff';
+      ctx.shadowColor = '#00f0ff';
+      ctx.shadowBlur = 10;
+      ctx.fillRect(6, -16, 3, 18);
+      ctx.font = 'bold 5px monospace';
+      ctx.fillText('0101', -2, 4);
+      ctx.shadowBlur = 0;
+      ctx.restore();
     }
 
-    // Head (hood shadow — dark face)
-    ctx.fillStyle = isHurt ? '#553333' : '#1a1225';
+    // Deep Shadow Hood pulled over head
+    ctx.fillStyle = '#080814';
     ctx.beginPath();
-    ctx.ellipse(0, -118 + breath, 15, 16, 0, 0, Math.PI * 2);
+    ctx.arc(0, -118 + breath, 18, Math.PI * 0.8, Math.PI * 2.2);
+    ctx.lineTo(16, -104 + breath);
+    ctx.lineTo(-16, -104 + breath);
+    ctx.closePath();
     ctx.fill();
 
-    // Cyber visor (glowing neon shades)
-    const visorGrad = ctx.createLinearGradient(-14, -120, 14, -116);
-    visorGrad.addColorStop(0, '#00e5ff');
-    visorGrad.addColorStop(0.5, '#00ff41');
-    visorGrad.addColorStop(1, '#00e5ff');
-    ctx.fillStyle = visorGrad;
-    ctx.shadowColor = '#00e5ff';
-    ctx.shadowBlur = 12;
-    ctx.fillRect(-14, -122 + breath, 28, 6);
-    ctx.shadowBlur = 0;
+    // Dark Face Void inside hood
+    ctx.fillStyle = '#030308';
+    ctx.beginPath();
+    ctx.ellipse(0, -118 + breath, 14, 15, 0, 0, Math.PI * 2);
+    ctx.fill();
 
-    // Neon outline on hoodie
-    ctx.strokeStyle = '#00ff41';
-    ctx.lineWidth = 1;
-    ctx.globalAlpha = 0.4;
-    ctx.strokeRect(-22, -110 + breath, 44, 52);
-    ctx.globalAlpha = 1;
+    // Glowing Cyan Matrix Digital Visor / Skull Face Mask
+    const visorY = -120 + breath;
+    ctx.fillStyle = '#00f0ff';
+    ctx.shadowColor = '#00f0ff';
+    ctx.shadowBlur = 14;
+    // Glowing cyber visor strip
+    ctx.fillRect(-12, visorY, 24, 6);
+    // Digital matrix teeth / grid
+    ctx.fillRect(-8, visorY + 9, 3, 3);
+    ctx.fillRect(-2, visorY + 9, 4, 3);
+    ctx.fillRect(5, visorY + 9, 3, 3);
+    ctx.shadowBlur = 0;
   }
 
   // ─── GAVEL — The Moot Court Legend ──────────────────────────────────────
@@ -2340,21 +2461,17 @@ export class Fighter {
     ctx.closePath();
     ctx.fill();
 
-    // White shirt + barrister tabs
+    // White shirt + gold SRM crest
     ctx.fillStyle = '#f5f5f5';
     ctx.fillRect(-6, -108 + breath, 12, 20);
-    // Tabs
-    ctx.fillStyle = '#ffffff';
-    ctx.fillRect(-5, -95 + breath, 4, 12);
-    ctx.fillRect(1, -95 + breath, 4, 12);
 
-    // Gold lapel pin
+    // Gold SRM Moot Court Crest
+    ctx.font = '900 7px sans-serif';
     ctx.fillStyle = '#ffd700';
     ctx.shadowColor = '#ffd700';
     ctx.shadowBlur = 6;
-    ctx.beginPath();
-    ctx.arc(-20, -95 + breath, 3, 0, Math.PI * 2);
-    ctx.fill();
+    ctx.textAlign = 'center';
+    ctx.fillText('SRM', -18, -94 + breath);
     ctx.shadowBlur = 0;
 
     // Arms / Weapon
@@ -2369,7 +2486,6 @@ export class Fighter {
       ctx.strokeStyle = '#c8a84b';
       ctx.lineWidth = 2;
       ctx.strokeRect(-40, -72 + breath, 18, 22);
-      // Gold lock
       ctx.fillStyle = '#ffd700';
       ctx.fillRect(-34, -63 + breath, 6, 4);
     } else if (isAttack && this.currentMove) {
@@ -2383,14 +2499,11 @@ export class Fighter {
       // Gavel head
       ctx.fillStyle = '#8B4513';
       ctx.fillRect(-6, -24, 12, 28);
-      // Gold ring bands
       ctx.fillStyle = '#ffd700';
       ctx.fillRect(-7, -24, 14, 5);
       ctx.fillRect(-7, 0, 14, 5);
-      // Handle
       ctx.fillStyle = '#a0522d';
       ctx.fillRect(-3, 4, 6, 28);
-      // Shockwave on heavy
       if (this.currentMove.name === 'Contempt of Court' && ext > 0.5) {
         ctx.globalAlpha = ext;
         ctx.strokeStyle = '#ffd700';
@@ -2405,21 +2518,27 @@ export class Fighter {
       }
       ctx.restore();
     } else {
-      // Idle: gavel resting on shoulder
+      // Idle: Firm authoritative stance holding solid mahogany Judge's Gavel upright
       ctx.fillStyle = '#1a1a2e';
       ctx.fillRect(-28, -92 + breath, 12, 25);
-      ctx.fillRect(18, -100 + breath, 12, 35);
-      // Resting gavel on right shoulder
+      ctx.fillRect(16, -95 + breath, 12, 28);
+
+      // Raised Solid Mahogany Judge's Gavel held upright
       ctx.save();
-      ctx.translate(22, -108 + breath);
-      ctx.rotate(0.4);
-      ctx.fillStyle = '#8B4513';
-      ctx.fillRect(-4, -20, 10, 24);
+      ctx.translate(22, -94 + breath);
+      // Handle
+      ctx.fillStyle = '#5c2c16';
+      ctx.fillRect(0, -10, 5, 26);
+      // Gavel head horizontal
+      ctx.fillStyle = '#3e1a0b';
+      ctx.fillRect(-8, -22, 22, 12);
+      // Polished Gold Ring Bands on Gavel Head
       ctx.fillStyle = '#ffd700';
-      ctx.fillRect(-5, -20, 12, 4);
-      ctx.fillRect(-5, 0, 12, 4);
-      ctx.fillStyle = '#a0522d';
-      ctx.fillRect(0, 4, 5, 22);
+      ctx.shadowColor = '#ffd700';
+      ctx.shadowBlur = 6;
+      ctx.fillRect(-8, -22, 4, 12);
+      ctx.fillRect(10, -22, 4, 12);
+      ctx.shadowBlur = 0;
       ctx.restore();
     }
 
@@ -2506,16 +2625,19 @@ export class Fighter {
     ctx.lineTo(lFX - 3, lFY);
     ctx.stroke();
 
-    // Running spikes
-    ctx.fillStyle = '#ff3400';
-    ctx.fillRect(lFX - 9, lFY - 2, 16, 6);
-    ctx.fillRect(rFX - 7, rFY - 2, 16, 6);
+    // Running spikes (Sky Blue & White)
+    ctx.fillStyle = '#00b0ff';
+    ctx.fillRect(lFX - 9, lFY - 4, 18, 6);
+    ctx.fillRect(rFX - 7, rFY - 4, 18, 6);
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(lFX - 9, lFY - 1, 18, 2);
+    ctx.fillRect(rFX - 7, rFY - 1, 18, 2);
 
-    // Torso — sleeveless athletic singlet
+    // Torso — Sky-blue athletic shirt with white side panels
     const singletGrad = ctx.createRadialGradient(-8, -90 + breath, 2, 0, -90 + breath, 24);
-    singletGrad.addColorStop(0, '#00b4d8');
-    singletGrad.addColorStop(0.6, '#0077b6');
-    singletGrad.addColorStop(1, '#005f8a');
+    singletGrad.addColorStop(0, '#00b0ff');
+    singletGrad.addColorStop(0.6, '#0288d1');
+    singletGrad.addColorStop(1, '#01579b');
     ctx.fillStyle = singletGrad;
     ctx.beginPath();
     ctx.moveTo(-22, -62 + breath);
@@ -2525,118 +2647,140 @@ export class Fighter {
     ctx.closePath();
     ctx.fill();
 
+    // White Side Panels
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(-24, -110 + breath, 4, 46);
+    ctx.fillRect(20, -110 + breath, 4, 46);
+
     // SRM logo on chest
     ctx.font = '900 10px "Arial Black", sans-serif';
-    ctx.fillStyle = '#ffd700';
+    ctx.fillStyle = '#ffffff';
     ctx.textAlign = 'center';
-    ctx.fillText('SRM', 0, -90 + breath);
+    ctx.fillText('SRM', 0, -88 + breath);
 
-    // Wristbands
-    ctx.fillStyle = '#ffd700';
+    // Cyan Wristbands
+    ctx.fillStyle = '#00e5ff';
     ctx.fillRect(-28, -72 + breath, 10, 8);
     ctx.fillRect(18, -72 + breath, 10, 8);
 
-    // Arms and Dumbbells
+    // Arms, Drone Controller & Hovering Drone
     if (isBlock) {
-      // X-Guard crossed dumbbells
+      // Protective Drone Forcefield
       ctx.fillStyle = '#a0522d';
-      ctx.fillRect(-28, -88 + breath, 12, 28);
-      ctx.fillRect(16, -88 + breath, 12, 28);
-      // X cross
-      ctx.strokeStyle = '#00e5ff';
+      ctx.fillRect(-22, -88 + breath, 10, 24);
+      ctx.fillRect(12, -88 + breath, 10, 24);
+      // Drone Shield Energy
+      ctx.strokeStyle = '#00b0ff';
       ctx.lineWidth = 3;
-      ctx.shadowColor = '#00e5ff';
-      ctx.shadowBlur = 16;
+      ctx.shadowColor = '#00b0ff';
+      ctx.shadowBlur = 18;
       ctx.beginPath();
-      ctx.moveTo(-22, -90 + breath); ctx.lineTo(22, -70 + breath);
-      ctx.moveTo(22, -90 + breath); ctx.lineTo(-22, -70 + breath);
+      ctx.arc(0, -82 + breath, 36, 0, Math.PI * 2);
       ctx.stroke();
       ctx.shadowBlur = 0;
-      // Dumbbell blocks
-      ctx.fillStyle = '#555';
-      ctx.fillRect(-30, -96 + breath, 14, 10);
-      ctx.fillRect(16, -96 + breath, 14, 10);
     } else if (isAttack && this.currentMove) {
       const ext = Math.sin((this.moveFrame / (this.currentMove.getTotalFrames ? this.currentMove.getTotalFrames() : 20)) * Math.PI);
-      const moveName = this.currentMove.name || '';
-      if (moveName === 'Piston Jab' || moveName === 'Code Slice') {
-        // Double rapid jabs
-        ctx.fillStyle = '#a0522d';
-        ctx.fillRect(16, -92 + breath, 12, 24 + ext * 22);
-        // Dumbbell
-        ctx.fillStyle = '#333';
-        ctx.fillRect(26 + ext * 22, -92 + breath, 16, 10);
-        ctx.fillRect(26 + ext * 22, -86 + breath, 16, 10);
-        // Cyan spark
-        ctx.strokeStyle = '#00e5ff';
-        ctx.lineWidth = 2;
-        ctx.shadowColor = '#00e5ff';
-        ctx.shadowBlur = 10;
-        ctx.beginPath();
-        ctx.arc(42 + ext * 22, -87 + breath, 10, 0, Math.PI * 2);
-        ctx.stroke();
-        ctx.shadowBlur = 0;
-      } else {
-        // Lariat spin — 360° dumbbell swing
-        ctx.save();
-        ctx.translate(12, -84 + breath);
-        ctx.rotate(ext * Math.PI * 2);
-        // Arm
-        ctx.fillStyle = '#a0522d';
-        ctx.fillRect(0, -8, 24, 10);
-        // Dumbbell weight plates
-        ctx.fillStyle = '#444';
-        ctx.fillRect(22, -12, 16, 18);
-        ctx.fillRect(22, -16, 16, 6);
-        // Gold wind tunnel
-        ctx.strokeStyle = '#ffd700';
-        ctx.lineWidth = 2.5;
-        ctx.globalAlpha = 0.6;
-        ctx.beginPath();
-        ctx.arc(0, 0, 32, 0, Math.PI * 1.4);
-        ctx.stroke();
-        ctx.globalAlpha = 1;
-        ctx.restore();
-      }
-    } else {
-      // Idle: arms down with dumbbells
+      // Drone Dive Strike / Lightning Dash
       ctx.fillStyle = '#a0522d';
-      ctx.fillRect(-28, -92 + breath, 12, 26);
-      ctx.fillRect(16, -92 + breath, 12, 26);
-      // Dumbbells
-      ctx.fillStyle = '#333';
-      ctx.fillRect(-34, -76 + breath, 16, 10);
-      ctx.fillRect(18, -76 + breath, 16, 10);
+      ctx.fillRect(14, -92 + breath, 14, 24 + ext * 24);
+
+      // Fast attacking drone thrust
+      ctx.save();
+      ctx.translate(34 + ext * 34, -94 + breath);
+      ctx.fillStyle = '#1e293b';
+      ctx.fillRect(-10, -6, 20, 12);
+      // 4 rotors spinning
+      ctx.fillStyle = '#00b0ff';
+      ctx.shadowColor = '#00b0ff';
+      ctx.shadowBlur = 10;
+      ctx.beginPath();
+      ctx.arc(-10, -8, 6, 0, Math.PI * 2);
+      ctx.arc(10, -8, 6, 0, Math.PI * 2);
+      ctx.arc(-10, 8, 6, 0, Math.PI * 2);
+      ctx.arc(10, 8, 6, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.shadowBlur = 0;
+      ctx.restore();
+    } else {
+      // Idle: Holding drone remote controller + Hovering mini quadcopter drone
+      const droneBob = Math.sin(performance.now() * 0.009) * 4;
+      ctx.fillStyle = '#a0522d';
+      ctx.fillRect(-16, -88 + breath, 10, 22);
+      ctx.fillRect(6, -88 + breath, 10, 22);
+
+      // Drone Remote Controller in hands
+      ctx.fillStyle = '#1e293b';
+      ctx.fillRect(-8, -78 + breath, 16, 12);
+      ctx.strokeStyle = '#00b0ff';
+      ctx.lineWidth = 1.5;
+      // Dual antennae
+      ctx.beginPath();
+      ctx.moveTo(-4, -78 + breath); ctx.lineTo(-7, -86 + breath);
+      ctx.moveTo(4, -78 + breath); ctx.lineTo(7, -86 + breath);
+      ctx.stroke();
+
+      // Hovering Mini Quadcopter Drone (beside him at right)
+      ctx.save();
+      ctx.translate(32, -100 + breath + droneBob);
+      // Drone Central Chassis
+      ctx.fillStyle = '#0f172a';
+      ctx.fillRect(-8, -5, 16, 10);
       ctx.fillStyle = '#00e5ff';
-      ctx.fillRect(-32, -72 + breath, 12, 3);
-      ctx.fillRect(20, -72 + breath, 12, 3);
+      ctx.fillRect(-2, -3, 4, 4); // Status light
+      // 4 Rotor Arms
+      ctx.strokeStyle = '#475569';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(-12, -8); ctx.lineTo(12, 8);
+      ctx.moveTo(-12, 8); ctx.lineTo(12, -8);
+      ctx.stroke();
+      // 4 Spinning Cyan Glowing Rotors
+      ctx.fillStyle = 'rgba(0, 229, 255, 0.75)';
+      ctx.shadowColor = '#00e5ff';
+      ctx.shadowBlur = 8;
+      ctx.beginPath();
+      ctx.ellipse(-12, -8, 7, 2, 0, 0, Math.PI * 2);
+      ctx.ellipse(12, -8, 7, 2, 0, 0, Math.PI * 2);
+      ctx.ellipse(-12, 8, 7, 2, 0, 0, Math.PI * 2);
+      ctx.ellipse(12, 8, 7, 2, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.shadowBlur = 0;
+      ctx.restore();
     }
 
-    // Head — athletic cut
+    // Head, Sport Sunglasses & Neck Headphones
     ctx.fillStyle = isHurt ? '#7a3a1f' : '#a0522d';
     ctx.beginPath();
     ctx.ellipse(0, -120 + breath, 13, 15, 0, 0, Math.PI * 2);
     ctx.fill();
 
-    // Short hair
+    // Short sporty hair
     ctx.fillStyle = '#111111';
     ctx.beginPath();
     ctx.arc(0, -124 + breath, 14, Math.PI * 0.85, Math.PI * 2.15);
     ctx.fill();
 
-    // Sweatband
-    ctx.fillStyle = '#00b4d8';
-    ctx.fillRect(-12, -126 + breath, 24, 5);
-    ctx.fillStyle = '#ffd700';
-    ctx.fillRect(-3, -127 + breath, 6, 2);
+    // Cool Sport Sunglasses / Visor
+    ctx.fillStyle = '#0f172a';
+    ctx.fillRect(-11, -122 + breath, 22, 6);
+    // Cyan Lens Reflection
+    ctx.fillStyle = '#00e5ff';
+    ctx.shadowColor = '#00e5ff';
+    ctx.shadowBlur = 6;
+    ctx.fillRect(-9, -121 + breath, 8, 3);
+    ctx.fillRect(1, -121 + breath, 8, 3);
+    ctx.shadowBlur = 0;
 
-    // Eyes (determined look)
-    ctx.fillStyle = '#ffffff';
-    ctx.fillRect(-7, -120 + breath, 5, 3);
-    ctx.fillRect(2, -120 + breath, 5, 3);
-    ctx.fillStyle = '#111';
-    ctx.fillRect(-5, -120 + breath, 3, 3);
-    ctx.fillRect(4, -120 + breath, 3, 3);
+    // Blue Sport Headphones around neck
+    ctx.strokeStyle = '#0288d1';
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.arc(0, -112 + breath, 14, 0.2, Math.PI * 0.8);
+    ctx.stroke();
+    // Ear pads on neck
+    ctx.fillStyle = '#00b0ff';
+    ctx.fillRect(-15, -114 + breath, 5, 8);
+    ctx.fillRect(10, -114 + breath, 5, 8);
 
     // Speed lines (in motion)
     if (state === FIGHTER_STATES.WALKING || isJumping) {
@@ -2669,165 +2813,172 @@ export class Fighter {
     ctx.ellipse(0, 0, isJumping ? 18 : 28, isJumping ? 3 : 7, 0, 0, Math.PI * 2);
     ctx.fill();
 
-    // Legs — paint-speckled wide pants
-    ctx.fillStyle = '#d4c5a9';
-    ctx.fillRect(-18, -62, 14, 63);
-    ctx.fillStyle = '#c8b8a2';
-    ctx.fillRect(4, -62, 14, 63);
-    // Paint speckles on pants
-    const speckColors = ['#ff69b4', '#9b59b6', '#00e5ff', '#ffd700'];
-    for (let i = 0; i < 8; i++) {
-      ctx.fillStyle = speckColors[i % 4];
-      ctx.beginPath();
-      ctx.arc(-14 + (i % 3) * 4, -40 + Math.floor(i / 3) * 14, 2, 0, Math.PI * 2);
-      ctx.fill();
-    }
-
-    // Apron (paint-stained)
-    ctx.fillStyle = '#5c3d99';
+    // Legs — dark skirt / fitted tights & chic white-pink sneaker boots
+    ctx.fillStyle = '#212121';
+    ctx.fillRect(-16, -62, 12, 60);
+    ctx.fillRect(4, -62, 12, 60);
+    // Dark Pleated Skirt
+    ctx.fillStyle = '#1a1a1a';
     ctx.beginPath();
-    ctx.moveTo(-14, -62 + breath);
-    ctx.lineTo(-16, -108 + breath);
-    ctx.lineTo(16, -108 + breath);
-    ctx.lineTo(14, -62 + breath);
+    ctx.moveTo(-18, -62);
+    ctx.lineTo(18, -62);
+    ctx.lineTo(21, -44);
+    ctx.lineTo(-21, -44);
     ctx.closePath();
     ctx.fill();
 
-    // Paint stains on apron (chromatic)
-    for (let i = 0; i < 6; i++) {
-      const splashHue = (hueShift + i * 60) % 360;
-      ctx.fillStyle = `hsla(${splashHue}, 100%, 65%, 0.6)`;
-      ctx.beginPath();
-      ctx.arc(-8 + (i % 3) * 8, -90 + Math.floor(i / 3) * 18 + breath, 5 + i * 1.5, 0, Math.PI * 2);
-      ctx.fill();
-    }
+    // White & Pink Sneaker Boots
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(-18, -6, 15, 6);
+    ctx.fillRect(3, -6, 15, 6);
+    ctx.fillStyle = '#ff4081';
+    ctx.fillRect(-18, -2, 15, 2);
+    ctx.fillRect(3, -2, 15, 2);
 
-    // Scarf — flowing coral/orange
-    ctx.save();
-    ctx.strokeStyle = '#ff7f50';
-    ctx.lineWidth = 8;
-    ctx.lineCap = 'round';
-    ctx.globalAlpha = 0.85;
-    ctx.shadowColor = '#ff7f50';
-    ctx.shadowBlur = 6;
-    // Flowing S-curve
+    // Canvas Tote Bag Strap hanging on shoulder
+    ctx.strokeStyle = '#d7ccc8';
+    ctx.lineWidth = 2.5;
     ctx.beginPath();
-    ctx.moveTo(-10, -108 + breath);
-    ctx.bezierCurveTo(-20, -115 + breath, 10, -118 + breath, 5, -110 + breath);
-    ctx.bezierCurveTo(0, -102 + breath, -28, -100 + breath, -22, -92 + breath);
+    ctx.moveTo(-22, -108 + breath); ctx.lineTo(-24, -68 + breath);
     ctx.stroke();
-    ctx.shadowBlur = 0;
-    ctx.globalAlpha = 1;
-    ctx.restore();
+    // Canvas Tote Bag Body
+    ctx.fillStyle = '#f5f5f0';
+    ctx.fillRect(-28, -68 + breath, 14, 24);
+    // Cute Art Emblem on Tote
+    ctx.fillStyle = '#ff4081';
+    ctx.beginPath();
+    ctx.arc(-21, -56 + breath, 3, 0, Math.PI * 2);
+    ctx.fill();
 
-    // Arms
+    // Torso: Pastel Pink Oversized Cozy Hoodie
+    const hoodieGrad = ctx.createLinearGradient(-22, -112, 22, -58);
+    hoodieGrad.addColorStop(0, '#f8bbd0');
+    hoodieGrad.addColorStop(0.5, '#f48fb1');
+    hoodieGrad.addColorStop(1, '#f06292');
+    ctx.fillStyle = hoodieGrad;
+    ctx.beginPath();
+    ctx.moveTo(-24, -58 + breath);
+    ctx.lineTo(-26, -110 + breath);
+    ctx.lineTo(26, -110 + breath);
+    ctx.lineTo(24, -58 + breath);
+    ctx.closePath();
+    ctx.fill();
+
+    // White Hoodie Drawstrings
+    ctx.strokeStyle = '#ffffff';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(-4, -108 + breath); ctx.lineTo(-4, -86 + breath);
+    ctx.moveTo(4, -108 + breath); ctx.lineTo(4, -86 + breath);
+    ctx.stroke();
+
+    // Kangaroo Pocket
+    ctx.fillStyle = '#f48fb1';
+    ctx.beginPath();
+    ctx.moveTo(-12, -78 + breath);
+    ctx.lineTo(12, -78 + breath);
+    ctx.lineTo(14, -64 + breath);
+    ctx.lineTo(-14, -64 + breath);
+    ctx.closePath();
+    ctx.fill();
+
+    // Arms, Digital Tablet & Stylus
     if (isBlock) {
-      // Opaque canvas shield
-      ctx.fillStyle = '#f5f5dc';
-      ctx.shadowColor = '#da70d6';
-      ctx.shadowBlur = 16;
-      ctx.fillRect(-36, -108 + breath, 28, 44);
-      ctx.strokeStyle = '#da70d6';
-      ctx.lineWidth = 3;
-      ctx.strokeRect(-36, -108 + breath, 28, 44);
-      ctx.shadowBlur = 0;
-      // Paint smear on shield
-      ctx.fillStyle = `hsl(${hueShift}, 90%, 60%)`;
-      ctx.globalAlpha = 0.6;
-      ctx.beginPath();
-      ctx.arc(-22, -88 + breath, 14, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.globalAlpha = 1;
+      // Digital Tablet Holographic Barrier
+      ctx.fillStyle = '#c68642';
+      ctx.fillRect(-20, -96 + breath, 10, 24);
+      ctx.fillRect(10, -96 + breath, 10, 24);
+      // Digital drawing tablet held up
+      ctx.fillStyle = '#1e1e24';
+      ctx.fillRect(-16, -102 + breath, 32, 40);
+      ctx.strokeStyle = '#ff4081';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(-16, -102 + breath, 32, 40);
+      // Glowing Neon Palette Art Barrier
+      ctx.fillStyle = `hsla(${hueShift}, 90%, 65%, 0.25)`;
+      ctx.fillRect(-13, -99 + breath, 26, 34);
     } else if (isAttack && this.currentMove) {
       const ext = Math.sin((this.moveFrame / (this.currentMove.getTotalFrames ? this.currentMove.getTotalFrames() : 22)) * Math.PI);
-      const moveName = this.currentMove.name || '';
-      // Arm
+      // Stylus slash drawing glowing rainbow trail
       ctx.fillStyle = '#c68642';
-      ctx.fillRect(16, -100 + breath, 12, 28);
+      ctx.fillRect(14, -98 + breath, 12, 26);
       ctx.save();
-      ctx.translate(20, -95 + breath);
-      ctx.rotate(-0.8 + ext * 2.0);
-      if (moveName === 'Brush Stroke' || true) {
-        // Paintbrush shaft
-        ctx.fillStyle = '#8B4513';
-        ctx.fillRect(-3, -8, 6, 52);
-        // Ferrule (metal band)
-        ctx.fillStyle = '#aaaaaa';
-        ctx.fillRect(-4, -10, 8, 6);
-        // Wet bristles (dripping paint)
-        const bristleHue = (hueShift + ext * 120) % 360;
-        ctx.fillStyle = `hsl(${bristleHue}, 100%, 60%)`;
+      ctx.translate(22, -92 + breath);
+      ctx.rotate(-0.8 + ext * 2.2);
+      // Digital Stylus
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(-2, -6, 4, 38);
+      ctx.fillStyle = '#ff4081';
+      ctx.fillRect(-2, 30, 4, 6);
+      // Rainbow light trail
+      if (ext > 0.2) {
+        ctx.strokeStyle = `hsl(${(hueShift + ext * 180) % 360}, 100%, 65%)`;
+        ctx.lineWidth = 4;
+        ctx.shadowColor = '#ff4081';
+        ctx.shadowBlur = 12;
         ctx.beginPath();
-        ctx.moveTo(-6, 42);
-        ctx.lineTo(-8, 56);
-        ctx.lineTo(8, 56);
-        ctx.lineTo(6, 42);
-        ctx.closePath();
-        ctx.fill();
-        // Rainbow streak trail
-        if (ext > 0.3) {
-          ctx.globalAlpha = ext * 0.7;
-          for (let s = 0; s < 4; s++) {
-            const sh = (bristleHue + s * 30) % 360;
-            ctx.strokeStyle = `hsl(${sh}, 100%, 65%)`;
-            ctx.lineWidth = 3;
-            ctx.beginPath();
-            ctx.moveTo(-4 + s * 2, 50);
-            ctx.lineTo(-10 + s * 4, 65 + ext * 15);
-            ctx.stroke();
-          }
-          ctx.globalAlpha = 1;
-        }
+        ctx.arc(0, 36, 26, 0, Math.PI);
+        ctx.stroke();
+        ctx.shadowBlur = 0;
       }
       ctx.restore();
     } else {
-      // Idle: arms natural, brush held casually
+      // Idle: Left hand cradling digital tablet, right hand holding fine stylus
+      const guardBob = Math.sin(performance.now() * 0.008) * 2;
       ctx.fillStyle = '#c68642';
-      ctx.fillRect(-26, -95 + breath, 11, 25);
-      ctx.fillRect(15, -100 + breath, 11, 30);
-      // Brush in right hand
-      ctx.fillStyle = '#8B4513';
-      ctx.fillRect(20, -98 + breath, 5, 40);
-      // Brush tip
-      ctx.fillStyle = `hsl(${hueShift}, 100%, 65%)`;
-      ctx.fillRect(18, -62 + breath, 9, 10);
+      ctx.fillRect(-18, -94 + breath + guardBob, 10, 20);
+      ctx.fillRect(10, -94 + breath - guardBob, 10, 20);
+
+      // Sleek Digital Drawing Tablet cradled in left arm
+      ctx.save();
+      ctx.translate(-8, -82 + breath);
+      ctx.fillStyle = '#1e1e24';
+      ctx.fillRect(-12, -4, 20, 26); // Tablet body
+      ctx.strokeStyle = '#33333e';
+      ctx.strokeRect(-12, -4, 20, 26);
+      // Glowing Art Screen
+      ctx.fillStyle = `hsl(${hueShift}, 85%, 65%)`;
+      ctx.shadowColor = '#ff4081';
+      ctx.shadowBlur = 6;
+      ctx.fillRect(-10, -2, 16, 22);
+      ctx.shadowBlur = 0;
+      ctx.restore();
+
+      // Stylus Pen held in right hand
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(14, -86 + breath, 3, 18);
+      ctx.fillStyle = '#ff4081';
+      ctx.fillRect(14, -88 + breath, 3, 3); // Stylus tip
     }
 
-    // Head
+    // Head & Long Flowing Dark Wavy Hair
     ctx.fillStyle = isHurt ? '#9966aa' : '#c68642';
     ctx.beginPath();
     ctx.ellipse(0, -120 + breath, 13, 15, 0, 0, Math.PI * 2);
     ctx.fill();
 
-    // Hair bun (deep indigo)
-    ctx.fillStyle = '#4b0082';
+    // Long Flowing Dark Wavy Hair (Reference Artwork)
+    ctx.fillStyle = '#1a101f';
     ctx.beginPath();
-    ctx.arc(0, -130 + breath, 10, Math.PI, Math.PI * 2);
-    ctx.fill();
-    // Bun knot
-    ctx.beginPath();
-    ctx.arc(0, -132 + breath, 5, 0, Math.PI * 2);
-    ctx.fill();
-
-    // Artistic beret
-    ctx.fillStyle = '#6a0dad';
-    ctx.beginPath();
-    ctx.ellipse(3, -133 + breath, 14, 7, 0.3, 0, Math.PI * 2);
-    ctx.fill();
-    // Beret pompon
-    ctx.fillStyle = '#ff69b4';
-    ctx.beginPath();
-    ctx.arc(10, -138 + breath, 3.5, 0, Math.PI * 2);
+    ctx.arc(0, -126 + breath, 16, Math.PI * 0.8, Math.PI * 2.2);
+    // Flowing hair strands cascading down past shoulders
+    ctx.lineTo(18, -96 + breath);
+    ctx.lineTo(12, -92 + breath);
+    ctx.lineTo(10, -116 + breath);
+    ctx.lineTo(-10, -116 + breath);
+    ctx.lineTo(-12, -92 + breath);
+    ctx.lineTo(-18, -96 + breath);
+    ctx.closePath();
     ctx.fill();
 
-    // Eyes (artistic gaze)
+    // Expressive Eyes with Sparkle
     ctx.fillStyle = '#ffffff';
     ctx.fillRect(-7, -121 + breath, 5, 3);
     ctx.fillRect(2, -121 + breath, 5, 3);
-    ctx.fillStyle = '#4b0082';
+    ctx.fillStyle = '#3f1d5e';
     ctx.fillRect(-5, -121 + breath, 3, 3);
     ctx.fillRect(4, -121 + breath, 3, 3);
-    // Art-star highlight in eye
+    // Eye star glint
     ctx.fillStyle = '#ffffff';
     ctx.fillRect(-5, -122 + breath, 1, 1);
     ctx.fillRect(4, -122 + breath, 1, 1);

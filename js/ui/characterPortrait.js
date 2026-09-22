@@ -181,12 +181,12 @@ export class CharacterPortraitManager {
     }
     ctx.restore();
 
-    // 3. Render Fighter Waist-Up with Camera Zoom & Centering
+    // 3. Render Fighter Full-Body with Reference Scale & Centering
     ctx.save();
-    // Center at horizontal midpoint, positioned so head & torso fill the canvas
+    // Center at horizontal midpoint, positioned so full body (head to shoes) fits cleanly
     const focalX = width / 2;
-    const focalY = height * 0.94; // Feet anchor
-    const zoom = 1.62; // High-fidelity zoom focusing on waist, torso, head, and weapon
+    const focalY = height * 0.90; // Ground / feet anchor
+    const zoom = 1.15; // Full body showcase matching arcade reference artwork
 
     ctx.translate(focalX, focalY);
     ctx.scale(zoom, zoom);
@@ -202,17 +202,14 @@ export class CharacterPortraitManager {
 
     if (config.id === 'topper') {
       fighter.renderRealisticTopper(ctx, state, isHurt, isBlock, isAttack);
-      this.renderTopperSignatureProp(ctx, time);
     } else if (config.id === 'hosteler') {
       fighter.renderRealisticHosteler(ctx, state, isHurt, isBlock, isAttack);
-      this.renderHostelerSignatureProp(ctx, time);
     } else if (config.id === 'senior') {
       fighter.renderRealisticSenior(ctx, state, isHurt, isBlock, isAttack);
     } else if (config.id === 'placementWarrior') {
       fighter.renderRealisticPlacement(ctx, state, isHurt, isBlock, isAttack);
     } else if (config.id === 'sportsStar') {
       fighter.renderRealisticSportsStar(ctx, state, isHurt, isBlock, isAttack);
-      this.renderSportsStarSignatureProp(ctx, time);
     } else if (config.id === 'cypher') {
       fighter.renderRealisticCypher(ctx, state, isHurt, isBlock, isAttack);
     } else if (config.id === 'gavel') {
@@ -223,7 +220,6 @@ export class CharacterPortraitManager {
       fighter.renderRealisticPalette(ctx, state, isHurt, isBlock, isAttack);
     } else {
       fighter.renderRealisticBackbencher(ctx, state, isHurt, isBlock, isAttack);
-      this.renderBackbencherSignatureProp(ctx, time);
     }
 
     ctx.restore();
