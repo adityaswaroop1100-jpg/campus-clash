@@ -41,6 +41,10 @@
   <link rel="stylesheet" href="css/characterSelect.css?v=7">
   <link rel="stylesheet" href="css/stageSelect.css?v=2">
   <link rel="stylesheet" href="css/game.css?v=6">
+  <link rel="stylesheet" href="css/leaderboard.css?v=1">
+
+  <!-- Supabase JS Client CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
@@ -91,7 +95,12 @@
               <span class="btn-label">[ TRAINING ]</span>
               <span class="btn-cursor-right">◀</span>
             </button>
-            <button id="menu-btn-credits" class="arcade-menu-btn" role="menuitem" data-index="2" tabindex="0">
+            <button id="menu-btn-leaderboard" class="arcade-menu-btn" role="menuitem" data-index="2" tabindex="0">
+              <span class="btn-cursor-left">▶</span>
+              <span class="btn-label">[ LEADERBOARD ]</span>
+              <span class="btn-cursor-right">◀</span>
+            </button>
+            <button id="menu-btn-credits" class="arcade-menu-btn" role="menuitem" data-index="3" tabindex="0">
               <span class="btn-cursor-left">▶</span>
               <span class="btn-label">[ CREDITS ]</span>
               <span class="btn-cursor-right">◀</span>
@@ -728,6 +737,76 @@
         </footer>
       </div>
 
+
+      <!-- Supabase Global Leaderboard Modal -->
+      <div id="leaderboard-modal" class="leaderboard-modal hidden" role="dialog" aria-modal="true" aria-label="Campus Clash Leaderboard">
+        <div class="leaderboard-card">
+          <div class="leaderboard-header">
+            <div class="leaderboard-title">
+              <span>🏆</span>
+              <span>GLOBAL LEADERBOARD</span>
+            </div>
+            <div id="db-status-pill" class="db-status-pill">
+              <span id="db-status-text">CONNECTING...</span>
+            </div>
+          </div>
+
+          <div class="leaderboard-tabs">
+            <button id="tab-scores-btn" class="leaderboard-tab-btn active">TOP CHAMPIONS</button>
+            <button id="tab-config-btn" class="leaderboard-tab-btn">⚙️ SUPABASE CONFIG</button>
+          </div>
+
+          <div class="leaderboard-body">
+            <!-- Scores View -->
+            <div id="leaderboard-scores-view">
+              <table class="scores-table">
+                <thead>
+                  <tr>
+                    <th>RANK</th>
+                    <th>BRAWLER</th>
+                    <th>FIGHTER</th>
+                    <th>SCORE</th>
+                    <th>COMBO / DATE</th>
+                  </tr>
+                </thead>
+                <tbody id="leaderboard-table-body">
+                  <tr><td colspan="5" style="text-align:center; padding: 24px;">Loading leaderboard...</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Config View -->
+            <div id="leaderboard-config-view" class="supabase-config-panel" style="display: none;">
+              <div class="config-help-box">
+                Connect your Supabase database in 2 steps:<br>
+                1. Run <code>supabase_schema.sql</code> in your Supabase SQL Editor.<br>
+                2. Paste your <strong>Project URL</strong> and <strong>Anon Key</strong> below and click Save.
+              </div>
+
+              <div class="config-field">
+                <label for="supabase-url-input">SUPABASE PROJECT URL</label>
+                <input type="text" id="supabase-url-input" placeholder="https://your-project.supabase.co" autocomplete="off" />
+              </div>
+
+              <div class="config-field">
+                <label for="supabase-key-input">SUPABASE PUBLIC ANON KEY</label>
+                <input type="password" id="supabase-key-input" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." autocomplete="off" />
+              </div>
+
+              <div class="config-actions">
+                <button id="supabase-save-btn" class="btn-cyber">SAVE & CONNECT</button>
+                <button id="supabase-test-btn" class="btn-cyber-outline">TEST CONNECTION</button>
+              </div>
+
+              <div id="supabase-config-result" style="font-size: 13px; margin-top: 6px;"></div>
+            </div>
+          </div>
+
+          <div class="leaderboard-footer">
+            <button id="leaderboard-close-btn" class="btn-cyber-outline">[ CLOSE (ESC) ]</button>
+          </div>
+        </div>
+      </div>
 
       <!-- Dev Credits Modal (Layer 30) -->
       <div id="credits-modal" class="credits-modal" role="dialog" aria-modal="true" aria-label="Game Credits">

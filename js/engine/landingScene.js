@@ -159,6 +159,12 @@ export class LandingScene {
       // [ TRAINING ] Option
       this.triggerFightTransition(GAME_MODES.TRAINING);
     } else if (index === 2) {
+      // [ LEADERBOARD ] Option
+      if (this.game.leaderboardManager) {
+        this.game.leaderboardManager.open();
+        this.sound.playLightHit();
+      }
+    } else if (index === 3) {
       // [ CREDITS ] Option
       this.openCredits();
     }

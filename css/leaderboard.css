@@ -1,0 +1,252 @@
+/* ==========================================================================
+   Campus Clash 2D — Supabase Leaderboard Modal Styles
+   ========================================================================== */
+
+.leaderboard-modal {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(4, 9, 20, 0.88);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 35;
+  transition: opacity 0.25s ease;
+}
+
+.leaderboard-modal.hidden {
+  display: none !important;
+}
+
+.leaderboard-card {
+  width: 720px;
+  max-height: 560px;
+  background: linear-gradient(135deg, rgba(13, 24, 48, 0.96) 0%, rgba(8, 14, 28, 0.98) 100%);
+  border: 2px solid #00e5ff;
+  box-shadow: 0 0 35px rgba(0, 229, 255, 0.35), inset 0 0 25px rgba(0, 229, 255, 0.1);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  font-family: 'Rajdhani', sans-serif;
+  color: #ffffff;
+}
+
+.leaderboard-header {
+  padding: 16px 24px;
+  background: rgba(6, 12, 26, 0.95);
+  border-bottom: 2px solid rgba(0, 229, 255, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.leaderboard-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 13px;
+  color: #ffd700;
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
+}
+
+.db-status-pill {
+  font-family: monospace;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(0, 229, 255, 0.12);
+  border: 1px solid #00e5ff;
+  color: #00e5ff;
+}
+
+.db-status-pill.connected {
+  border-color: #00ff41;
+  color: #00ff41;
+  background: rgba(0, 255, 65, 0.12);
+  box-shadow: 0 0 10px rgba(0, 255, 65, 0.3);
+}
+
+.leaderboard-tabs {
+  display: flex;
+  gap: 8px;
+  padding: 10px 24px 0 24px;
+  background: rgba(8, 16, 34, 0.8);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.leaderboard-tab-btn {
+  background: transparent;
+  border: none;
+  border-bottom: 3px solid transparent;
+  color: #94a3b8;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.leaderboard-tab-btn.active {
+  color: #00e5ff;
+  border-bottom-color: #00e5ff;
+  text-shadow: 0 0 8px rgba(0, 229, 255, 0.5);
+}
+
+.leaderboard-body {
+  padding: 16px 24px;
+  overflow-y: auto;
+  max-height: 380px;
+  flex: 1;
+}
+
+/* Scores Table */
+.scores-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.scores-table th {
+  text-align: left;
+  padding: 8px 12px;
+  background: rgba(0, 229, 255, 0.08);
+  color: #00e5ff;
+  font-weight: 700;
+  letter-spacing: 1px;
+  border-bottom: 1px solid rgba(0, 229, 255, 0.2);
+}
+
+.scores-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.scores-table tr:hover td {
+  background: rgba(0, 229, 255, 0.06);
+}
+
+.rank-badge {
+  font-weight: 900;
+  font-size: 14px;
+  display: inline-block;
+  min-width: 28px;
+}
+
+.rank-1 { color: #ffd700; text-shadow: 0 0 8px #ffd700; }
+.rank-2 { color: #e2e8f0; text-shadow: 0 0 8px #cbd5e1; }
+.rank-3 { color: #cd7f32; text-shadow: 0 0 8px #b45309; }
+
+.fighter-tag {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.score-num {
+  font-family: monospace;
+  font-size: 15px;
+  font-weight: 900;
+  color: #ffd700;
+}
+
+/* Config Tab */
+.supabase-config-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.config-help-box {
+  background: rgba(0, 229, 255, 0.08);
+  border: 1px solid rgba(0, 229, 255, 0.3);
+  padding: 12px 16px;
+  border-radius: 6px;
+  font-size: 12px;
+  color: #cbd5e1;
+  line-height: 1.5;
+}
+
+.config-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.config-field label {
+  font-size: 12px;
+  font-weight: 700;
+  color: #00e5ff;
+  letter-spacing: 0.5px;
+}
+
+.config-field input {
+  background: rgba(4, 9, 20, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  padding: 10px 14px;
+  border-radius: 6px;
+  font-family: monospace;
+  font-size: 12px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.config-field input:focus {
+  border-color: #00e5ff;
+  box-shadow: 0 0 10px rgba(0, 229, 255, 0.3);
+}
+
+.config-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.btn-cyber {
+  background: linear-gradient(135deg, #00e5ff 0%, #0088cc 100%);
+  color: #040914;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 13px;
+  font-weight: 900;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  letter-spacing: 1px;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.btn-cyber:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 16px #00e5ff;
+}
+
+.btn-cyber-outline {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #ffffff;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.leaderboard-footer {
+  padding: 12px 24px;
+  background: rgba(6, 12, 26, 0.95);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  justify-content: flex-end;
+}

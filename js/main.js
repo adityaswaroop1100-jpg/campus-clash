@@ -39,6 +39,8 @@ import { PostProcessing } from './engine/postProcess.js';
 import { LandingScene } from './engine/landingScene.js';
 import { CharacterPortraitManager } from './ui/characterPortrait.js';
 import { StageSelectManager } from './ui/stageSelectManager.js';
+import { LeaderboardManager } from './multiplayer/leaderboard.js';
+import { supabaseService } from './database/supabaseClient.js';
 
 export const GAME_SCREENS = {
   LANDING: 'landing',
@@ -245,6 +247,7 @@ class CampusClashGame {
 
     // Screen State
     this.landingScene = new LandingScene(this);
+    this.leaderboardManager = new LeaderboardManager(this);
     this.currentScreen = GAME_SCREENS.LANDING;
     this.selectedMode = GAME_MODES.PVP;
     this.modeIndex = 0; // 0 = PvP, 1 = PvC
@@ -917,6 +920,13 @@ class CampusClashGame {
       this.charSelectStep = 0;
       return;
     }
+    if (e.code === 'KeyL') {
+      if (this.leaderboardManager) {
+        this.leaderboardManager.open();
+        this.sound.playLightHit();
+        return;
+      }
+    }
     if (e.code === 'Escape') {
       this.sound.playBlock();
       this.currentScreen = GAME_SCREENS.LANDING;
@@ -944,6 +954,46 @@ class CampusClashGame {
         this.currentScreen = GAME_SCREENS.LANDING;
         if (this.landingScene) this.landingScene.show();
       }
+    }
+  }
+
+  submitMatchToDatabase() {
+    if (!this.winner) return;
+    try {
+      const isP1Winner = this.winner === this.p1;
+      const winnerId = isP1Winner ? 'P1' : 'P2';
+      const loser = isP1Winner ? this.p2 : this.p1;
+      const stats = this.matchStats[winnerId] || { totalDamage: 300, maxCombo: 5 };
+      const score = Math.round(stats.totalDamage * 8 + stats.maxCombo * 120 + (isP1Winner ? this.p1RoundWins : this.p2RoundWins) * 500);
+      const playerName = isP1Winner ? (this.p1.config.displayName || 'P1 Champion') : (this.selectedMode === GAME_MODES.PVC ? 'SRM Campus AI' : 'P2 Challenger');
+
+      // 1. Submit high score to Leaderboard
+      supabaseService.submitScore({
+        playerName: playerName,
+        fighterId: this.winner.config.id,
+        fighterName: this.winner.config.displayName,
+        score: score,
+        damageDealt: stats.totalDamage,
+        maxCombo: stats.maxCombo,
+        roundsWon: isP1Winner ? this.p1RoundWins : this.p2RoundWins,
+        arenaId: this.stage ? this.stage.id : 'techpark'
+      });
+
+      // 2. Log full telemetry to Matches table
+      supabaseService.logMatch({
+        mode: this.selectedMode,
+        winner: playerName,
+        loser: loser ? loser.config.displayName : 'Opponent',
+        p1Fighter: this.p1 ? this.p1.config.id : 'topper',
+        p2Fighter: this.p2 ? this.p2.config.id : 'backbencher',
+        p1Damage: this.matchStats.P1.totalDamage,
+        p2Damage: this.matchStats.P2.totalDamage,
+        maxCombo: Math.max(this.matchStats.P1.maxCombo, this.matchStats.P2.maxCombo),
+        arenaId: this.stage ? this.stage.id : 'techpark',
+        duration: Math.max(10, 99 - this.matchTimer)
+      });
+    } catch (err) {
+      console.warn('[Database submitMatchToDatabase Error]', err);
     }
   }
 
@@ -1116,6 +1166,7 @@ class CampusClashGame {
           this.roundPhase = ROUND_STATES.MATCH_OVER;
           this.isMatchOver = true;
           this.winner = this.p1RoundWins >= 2 ? this.p1 : this.p2;
+          this.submitMatchToDatabase();
         } else {
           this.roundPhase = ROUND_STATES.ROUND_OVER;
           this.phaseTimer = 120; // 2 seconds round winner banner
