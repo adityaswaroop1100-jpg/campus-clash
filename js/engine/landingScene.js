@@ -26,7 +26,7 @@ export class LandingScene {
     this.creditsCloseBtn = document.getElementById('credits-close-btn');
 
     // Cyber Modals
-    this.clearanceModal = document.getElementById('pilot-clearance-modal');
+    this.clearanceModal = document.getElementById('entry-portal') || document.getElementById('pilot-clearance-modal');
     this.modeSelectModal = document.getElementById('mode-select-modal');
     this.briefingModal = document.getElementById('briefing-modal');
 
@@ -45,6 +45,7 @@ export class LandingScene {
     this.isClearanceOpen = false;
     this.isModeSelectOpen = false;
     this.pendingMode = GAME_MODES.PVC;
+    this.fromMenuAction = false;
 
     // Animation Timers & Parallax Offsets
     this.time = 0;
@@ -386,6 +387,7 @@ export class LandingScene {
       // [ VS COMPUTER ] Option (Expert AI)
       if (!hasRegistered) {
         this.pendingMode = GAME_MODES.PVC;
+        this.fromMenuAction = true;
         this.openClearanceModal();
       } else {
         this.triggerFightTransition(GAME_MODES.PVC);
@@ -394,6 +396,7 @@ export class LandingScene {
       // [ 2-PLAYER LOCAL ] Option
       if (!hasRegistered) {
         this.pendingMode = GAME_MODES.PVP;
+        this.fromMenuAction = true;
         this.openClearanceModal();
       } else {
         this.triggerFightTransition(GAME_MODES.PVP);

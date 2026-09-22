@@ -121,15 +121,120 @@
       <div class="rig-bracket bottom-right" aria-hidden="true"></div>
       <div class="chassis-crt-glare" aria-hidden="true"></div>
 
-      <!-- Holographic Cyber Participant Clearance Modal (Saved to Supabase) -->
-      <div id="pilot-clearance-modal" class="portal-modal hidden" role="dialog" aria-modal="true" aria-labelledby="clearance-modal-title">
-        <div class="portal-modal-card clearance-card">
-          <div class="portal-modal-header">
-            <span id="clearance-modal-title">⚡ SRM PILOT CLEARANCE TERMINAL ⚡</span>
-            <button type="button" class="portal-modal-close" id="btn-close-clearance" aria-label="Close modal">✕</button>
+      <!-- Layer 50: Peak Quality Aaruush Clash Cyber Entry Portal -->
+      <div id="entry-portal" class="entry-portal" role="region" aria-label="Aaruush Clash Entry Portal">
+        <!-- Top Status Bar -->
+        <header class="portal-header">
+          <div class="portal-status-pill">
+            <span class="portal-status-dot"></span>
+            <span class="portal-status-text">AARUUSH GRID // LEVEL 0</span>
           </div>
-          <div class="portal-modal-body">
-            <p class="clearance-desc">Enter your official credentials to sync match telemetry & compete on the live SRM Aaruush Leaderboard.</p>
+
+          <div class="portal-nav-actions">
+            <button type="button" id="portal-btn-briefing" class="portal-nav-btn">
+              <span class="icon-info">ⓘ</span> BRIEFING
+            </button>
+            <button type="button" id="portal-btn-schedule" class="portal-nav-btn schedule">
+              <span class="icon-cal">📅</span> SCHEDULE
+            </button>
+            <button type="button" id="portal-btn-sound" class="portal-nav-btn sound-toggle" aria-label="Toggle Sound">🔊</button>
+            <button type="button" id="portal-btn-fullscreen" class="portal-nav-btn fullscreen-toggle" aria-label="Toggle Fullscreen">⛶ FULLSCREEN</button>
+            <button type="button" id="portal-btn-to-cabinet" class="portal-nav-btn return-cabinet" title="Go to Arcade Rig">🕹️ ARCADE</button>
+          </div>
+        </header>
+
+        <!-- Center Stage Visuals -->
+        <main class="portal-main-content">
+          <!-- Solar Emblem / Logo Halo -->
+          <div class="portal-emblem-wrap">
+            <div class="portal-emblem-halo"></div>
+            <!-- Outer Golden Rotating Rays -->
+            <svg class="portal-solar-rays-gold" viewBox="0 0 200 200">
+              <defs>
+                <radialGradient id="sunBeamGradGold" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%" stop-color="#fff275" stop-opacity="0.9"/>
+                  <stop offset="40%" stop-color="#ffd602" stop-opacity="0.75"/>
+                  <stop offset="80%" stop-color="#fe6b00" stop-opacity="0.3"/>
+                  <stop offset="100%" stop-color="#ff7700" stop-opacity="0"/>
+                </radialGradient>
+              </defs>
+              <path d="M97.5 100 L100 35 L102.5 100 Z" fill="url(#sunBeamGradGold)" transform="rotate(0 100 100)" />
+              <path d="M98 100 L100 48 L102 100 Z" fill="url(#sunBeamGradGold)" transform="rotate(22.5 100 100)" />
+              <path d="M97.5 100 L100 35 L102.5 100 Z" fill="url(#sunBeamGradGold)" transform="rotate(45 100 100)" />
+              <path d="M98 100 L100 48 L102 100 Z" fill="url(#sunBeamGradGold)" transform="rotate(67.5 100 100)" />
+              <path d="M97.5 100 L100 35 L102.5 100 Z" fill="url(#sunBeamGradGold)" transform="rotate(90 100 100)" />
+              <path d="M98 100 L100 48 L102 100 Z" fill="url(#sunBeamGradGold)" transform="rotate(112.5 100 100)" />
+              <path d="M97.5 100 L100 35 L102.5 100 Z" fill="url(#sunBeamGradGold)" transform="rotate(135 100 100)" />
+              <path d="M98 100 L100 48 L102 100 Z" fill="url(#sunBeamGradGold)" transform="rotate(157.5 100 100)" />
+              <path d="M97.5 100 L100 35 L102.5 100 Z" fill="url(#sunBeamGradGold)" transform="rotate(180 100 100)" />
+              <path d="M98 100 L100 48 L102 100 Z" fill="url(#sunBeamGradGold)" transform="rotate(202.5 100 100)" />
+              <path d="M97.5 100 L100 35 L102.5 100 Z" fill="url(#sunBeamGradGold)" transform="rotate(225 100 100)" />
+              <path d="M98 100 L100 48 L102 100 Z" fill="url(#sunBeamGradGold)" transform="rotate(247.5 100 100)" />
+              <path d="M97.5 100 L100 35 L102.5 100 Z" fill="url(#sunBeamGradGold)" transform="rotate(270 100 100)" />
+              <path d="M98 100 L100 48 L102 100 Z" fill="url(#sunBeamGradGold)" transform="rotate(292.5 100 100)" />
+              <path d="M97.5 100 L100 35 L102.5 100 Z" fill="url(#sunBeamGradGold)" transform="rotate(315 100 100)" />
+              <path d="M98 100 L100 48 L102 100 Z" fill="url(#sunBeamGradGold)" transform="rotate(337.5 100 100)" />
+            </svg>
+            <!-- Inner Cyan Rotating Rays -->
+            <svg class="portal-solar-rays-cyan" viewBox="0 0 200 200">
+              <defs>
+                <radialGradient id="sunBeamGradCyan" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%" stop-color="#ffffff" stop-opacity="0.8"/>
+                  <stop offset="40%" stop-color="#00f0ff" stop-opacity="0.6"/>
+                  <stop offset="100%" stop-color="#00f0ff" stop-opacity="0"/>
+                </radialGradient>
+              </defs>
+              <polygon points="98.5,100 100,42 101.5,100" fill="url(#sunBeamGradCyan)" transform="rotate(11.25 100 100)" />
+              <polygon points="98.5,100 100,42 101.5,100" fill="url(#sunBeamGradCyan)" transform="rotate(41.25 100 100)" />
+              <polygon points="98.5,100 100,42 101.5,100" fill="url(#sunBeamGradCyan)" transform="rotate(71.25 100 100)" />
+              <polygon points="98.5,100 100,42 101.5,100" fill="url(#sunBeamGradCyan)" transform="rotate(101.25 100 100)" />
+              <polygon points="98.5,100 100,42 101.5,100" fill="url(#sunBeamGradCyan)" transform="rotate(131.25 100 100)" />
+              <polygon points="98.5,100 100,42 101.5,100" fill="url(#sunBeamGradCyan)" transform="rotate(161.25 100 100)" />
+              <polygon points="98.5,100 100,42 101.5,100" fill="url(#sunBeamGradCyan)" transform="rotate(191.25 100 100)" />
+              <polygon points="98.5,100 100,42 101.5,100" fill="url(#sunBeamGradCyan)" transform="rotate(221.25 100 100)" />
+              <polygon points="98.5,100 100,42 101.5,100" fill="url(#sunBeamGradCyan)" transform="rotate(251.25 100 100)" />
+              <polygon points="98.5,100 100,42 101.5,100" fill="url(#sunBeamGradCyan)" transform="rotate(281.25 100 100)" />
+              <polygon points="98.5,100 100,42 101.5,100" fill="url(#sunBeamGradCyan)" transform="rotate(311.25 100 100)" />
+              <polygon points="98.5,100 100,42 101.5,100" fill="url(#sunBeamGradCyan)" transform="rotate(341.25 100 100)" />
+            </svg>
+            <div class="portal-logo-ring"></div>
+            <img src="assets/aaruush_logo.svg" alt="Aaruush Logo" class="portal-logo-img">
+          </div>
+
+          <!-- Grand Cyber Title -->
+          <h1 class="portal-title-h1">
+            <span class="title-white">AARUUSH</span>
+            <span class="title-cyan">CLASH</span>
+          </h1>
+
+          <!-- Tagline -->
+          <div class="portal-tagline">
+            <span class="tag-orange">17 Portals.</span>
+            <span class="tag-gold">180 Seconds.</span>
+            <span class="tag-cyan">1 Champion.</span>
+          </div>
+
+          <!-- Quick Info Cards -->
+          <div class="portal-cards-row">
+            <div class="portal-info-card">
+              <span class="card-icon">⏱️</span>
+              <div class="card-text">
+                <div class="card-label">DURATION</div>
+                <div class="card-value">3:00 MIN</div>
+              </div>
+            </div>
+            <div class="portal-info-card">
+              <span class="card-icon">🚩</span>
+              <div class="card-text">
+                <div class="card-label">OBJECTIVE</div>
+                <div class="card-value">ALL PORTALS</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Clearance Registration Form Card -->
+          <div class="portal-form-card">
+            <div class="portal-form-title">⚡ PARTICIPANT CLEARANCE TERMINAL ⚡</div>
             <form id="portal-reg-form" autocomplete="on">
               <div class="portal-grid-inputs">
                 <div class="portal-input-group portal-field-full">
@@ -156,7 +261,7 @@
               <div id="entry-alert-box" class="portal-alert hidden"></div>
               <div class="clearance-actions">
                 <button type="submit" id="btn-start-quest" class="btn-start-quest">
-                  <span>CONFIRM CLEARANCE & FIGHT 🚀</span>
+                  <span>START CLASH 🚀</span>
                 </button>
                 <button type="button" id="btn-guest-play" class="btn-guest-play">
                   <span>GUEST QUICK PLAY ⚡</span>
@@ -164,7 +269,17 @@
               </div>
             </form>
           </div>
-        </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="portal-footer">
+          <span class="portal-footer-dot"></span>
+          <span>SYSTEM ONLINE</span>
+          <span>|</span>
+          <span>SRMIST KTR FESTIVAL GRID</span>
+          <span>|</span>
+          <span>v2.4.1</span>
+        </footer>
       </div>
 
       <!-- Combat Protocol Mode Selection Modal -->

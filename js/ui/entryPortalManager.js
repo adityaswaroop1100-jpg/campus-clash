@@ -10,7 +10,7 @@ import { GAME_MODES } from '../utils/constants.js';
 export class EntryPortalManager {
   constructor(game) {
     this.game = game;
-    this.portalEl = document.getElementById('pilot-clearance-modal') || document.getElementById('entry-portal');
+    this.portalEl = document.getElementById('entry-portal') || document.getElementById('pilot-clearance-modal');
     this.form = document.getElementById('portal-reg-form');
     this.nameInput = document.getElementById('entry-name');
     this.regNoInput = document.getElementById('entry-regno');
@@ -104,6 +104,28 @@ export class EntryPortalManager {
             document.exitFullscreen().catch(() => {});
           }
         }
+      });
+    }
+
+    const guestBtn = document.getElementById('btn-guest-play');
+    if (guestBtn) {
+      guestBtn.addEventListener('click', () => {
+        if (this.game && this.game.sound) {
+          this.game.sound.init();
+          this.game.sound.playLightHit();
+        }
+        this.enterGame();
+      });
+    }
+
+    const returnCabinetBtn = document.getElementById('portal-btn-to-cabinet');
+    if (returnCabinetBtn) {
+      returnCabinetBtn.addEventListener('click', () => {
+        if (this.game && this.game.sound) {
+          this.game.sound.init();
+          this.game.sound.playLightHit();
+        }
+        this.enterGame();
       });
     }
 
@@ -224,9 +246,10 @@ export class EntryPortalManager {
     if (this.game && this.game.landingScene && this.game.landingScene.updatePilotStatus) {
       this.game.landingScene.updatePilotStatus();
     }
-    // Smoothly enter chosen combat protocol
-    if (this.game && this.game.landingScene && this.game.landingScene.triggerFightTransition) {
-      const mode = this.game.landingScene.pendingMode || GAME_MODES.PVC;
+    // If entered via menu button click with a pending mode, launch it; otherwise user lands on Arcade Cabinet screen
+    if (this.game && this.game.landingScene && this.game.landingScene.fromMenuAction && this.game.landingScene.pendingMode) {
+      const mode = this.game.landingScene.pendingMode;
+      this.game.landingScene.fromMenuAction = false;
       setTimeout(() => {
         this.game.landingScene.triggerFightTransition(mode);
       }, 200);

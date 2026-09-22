@@ -408,6 +408,40 @@
   transform: translateY(1px);
 }
 
+.clearance-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  margin-top: 6px;
+}
+
+.btn-guest-play {
+  width: 100%;
+  background: rgba(14, 24, 44, 0.85);
+  border: 1px solid rgba(255, 214, 2, 0.45);
+  color: #ffd602;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+}
+
+.btn-guest-play:hover {
+  background: rgba(255, 214, 2, 0.15);
+  border-color: #ffd602;
+  box-shadow: 0 0 16px rgba(255, 214, 2, 0.5);
+  transform: translateY(-1px);
+}
+
 /* Footer Status */
 .portal-footer {
   width: 100%;
