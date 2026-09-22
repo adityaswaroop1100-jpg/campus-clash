@@ -9,7 +9,7 @@ import { supabaseService } from '../database/supabaseClient.js';
 export class EntryPortalManager {
   constructor(game) {
     this.game = game;
-    this.portalEl = document.getElementById('entry-portal');
+    this.portalEl = document.getElementById('pilot-clearance-modal') || document.getElementById('entry-portal');
     this.form = document.getElementById('portal-reg-form');
     this.nameInput = document.getElementById('entry-name');
     this.regNoInput = document.getElementById('entry-regno');
@@ -218,6 +218,16 @@ export class EntryPortalManager {
       if (this.game.p1 && this.game.p1.config) {
         this.game.p1.config.displayName = playerName;
       }
+    }
+    // Update pilot badge on top marquee
+    if (this.game && this.game.landingScene && this.game.landingScene.updatePilotStatus) {
+      this.game.landingScene.updatePilotStatus();
+    }
+    // Smoothly open Combat Protocol selection modal
+    if (this.game && this.game.landingScene && this.game.landingScene.openModeSelectModal) {
+      setTimeout(() => {
+        this.game.landingScene.openModeSelectModal();
+      }, 200);
     }
   }
 }

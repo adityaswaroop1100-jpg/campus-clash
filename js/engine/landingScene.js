@@ -21,9 +21,14 @@ export class LandingScene {
     // Layer 1 DOM Elements
     this.overlay = document.getElementById('landing-overlay');
     this.titleContainer = document.getElementById('landing-title-container');
-    this.menuBtns = Array.from(document.querySelectorAll('.arcade-menu-btn'));
+    this.menuBtns = Array.from(document.querySelectorAll('.cabinet-menu-btn'));
     this.creditsModal = document.getElementById('credits-modal');
     this.creditsCloseBtn = document.getElementById('credits-close-btn');
+
+    // Cyber Modals
+    this.clearanceModal = document.getElementById('pilot-clearance-modal');
+    this.modeSelectModal = document.getElementById('mode-select-modal');
+    this.briefingModal = document.getElementById('briefing-modal');
 
     // Layer 2 Particles Canvas
     this.fxCanvas = document.getElementById('particles-canvas');
@@ -37,12 +42,15 @@ export class LandingScene {
     this.selectedIndex = 0;
     this.isTransitioning = false;
     this.isCreditsOpen = false;
+    this.isClearanceOpen = false;
+    this.isModeSelectOpen = false;
 
     // Animation Timers & Parallax Offsets
     this.time = 0;
     this.bgSkylineX = 0;
     this.fgSkylineX = 0;
     this.lastThumpTime = 0;
+    this.coinCredits = 1;
 
     // Procedural Spotlight Angles
     this.spotlightCyanAngle = -Math.PI / 4;
@@ -54,6 +62,7 @@ export class LandingScene {
 
     // Bind DOM Listeners
     this.setupDOMEvents();
+    this.updatePilotStatus();
   }
 
   initDustParticles(count) {
@@ -82,7 +91,7 @@ export class LandingScene {
     // Hover sound & index sync for menu buttons
     this.menuBtns.forEach((btn, index) => {
       btn.addEventListener('mouseenter', () => {
-        if (this.isTransitioning || this.isCreditsOpen) return;
+        if (this.isTransitioning || this.isCreditsOpen || this.isClearanceOpen || this.isModeSelectOpen) return;
         this.sound.init();
         if (this.selectedIndex !== index) {
           this.setSelectedIndex(index);
@@ -93,7 +102,7 @@ export class LandingScene {
       btn.addEventListener('click', (e) => {
         e.stopPropagation();
         this.sound.init();
-        if (this.isTransitioning || this.isCreditsOpen) return;
+        if (this.isTransitioning || this.isCreditsOpen || this.isClearanceOpen || this.isModeSelectOpen) return;
         this.selectOption(index);
       });
     });
@@ -112,6 +121,179 @@ export class LandingScene {
         }
       });
     }
+
+    // Interactive Coin Slot
+    const coinSlot = document.getElementById('deck-coin-slot');
+    if (coinSlot) {
+      coinSlot.addEventListener('click', () => {
+        this.sound.init();
+        this.sound.playCoinInsert();
+        this.coinCredits++;
+        const counter = document.getElementById('deck-coin-counter');
+        if (counter) {
+          counter.textContent = `CREDIT ${this.coinCredits < 10 ? '0' + this.coinCredits : this.coinCredits}`;
+          counter.style.borderColor = '#00f0ff';
+          counter.style.color = '#00f0ff';
+          setTimeout(() => {
+            if (counter) {
+              counter.style.borderColor = 'rgba(255, 214, 2, 0.4)';
+              counter.style.color = '#ffffff';
+            }
+          }, 400);
+        }
+      });
+    }
+
+    // Bottom Nav Links
+    const navFs = document.getElementById('deck-nav-fullscreen');
+    if (navFs) {
+      navFs.addEventListener('click', () => {
+        this.toggleFullscreen();
+      });
+    }
+
+    const navCred = document.getElementById('deck-nav-credits');
+    if (navCred) {
+      navCred.addEventListener('click', () => {
+        this.openCredits();
+      });
+    }
+
+    // Top Header Buttons
+    const rigFs = document.getElementById('rig-btn-fullscreen');
+    if (rigFs) {
+      rigFs.addEventListener('click', () => {
+        this.toggleFullscreen();
+      });
+    }
+
+    const rigSound = document.getElementById('rig-btn-sound');
+    if (rigSound) {
+      rigSound.addEventListener('click', () => {
+        this.sound.init();
+        this.sound.isMuted = !this.sound.isMuted;
+        const soundText = document.getElementById('rig-sound-icon');
+        if (soundText) {
+          soundText.textContent = this.sound.isMuted ? '🔇 MUTED' : '🔊 SOUND';
+        }
+      });
+    }
+
+    const rigBriefing = document.getElementById('rig-btn-briefing');
+    if (rigBriefing && this.briefingModal) {
+      rigBriefing.addEventListener('click', () => {
+        this.briefingModal.classList.remove('hidden');
+        this.sound.playLightHit();
+      });
+    }
+
+    // Pilot Status Chip (Click to open / update Clearance)
+    const pilotChip = document.getElementById('pilot-status-chip');
+    if (pilotChip) {
+      pilotChip.addEventListener('click', () => {
+        this.openClearanceModal();
+      });
+    }
+
+    // Clearance Modal Close & Guest Play
+    const closeClearance = document.getElementById('btn-close-clearance');
+    if (closeClearance) {
+      closeClearance.addEventListener('click', () => {
+        this.closeClearanceModal();
+      });
+    }
+
+    const guestPlay = document.getElementById('btn-guest-play');
+    if (guestPlay) {
+      guestPlay.addEventListener('click', () => {
+        this.closeClearanceModal();
+        this.openModeSelectModal();
+      });
+    }
+
+    // Mode Select Modal Buttons
+    const modePvc = document.getElementById('mode-btn-pvc');
+    if (modePvc) {
+      modePvc.addEventListener('click', () => {
+        this.closeModeSelectModal();
+        this.triggerFightTransition(GAME_MODES.PVC);
+      });
+    }
+
+    const modePvp = document.getElementById('mode-btn-pvp');
+    if (modePvp) {
+      modePvp.addEventListener('click', () => {
+        this.closeModeSelectModal();
+        this.triggerFightTransition(GAME_MODES.PVP);
+      });
+    }
+
+    const closeModeSelect = document.getElementById('btn-close-mode-select');
+    if (closeModeSelect) {
+      closeModeSelect.addEventListener('click', () => {
+        this.closeModeSelectModal();
+      });
+    }
+  }
+
+  toggleFullscreen() {
+    if (!document.fullscreenElement) {
+      if (document.documentElement.requestFullscreen) {
+        document.documentElement.requestFullscreen().catch(() => {});
+      }
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen().catch(() => {});
+      }
+    }
+  }
+
+  updatePilotStatus() {
+    const chipText = document.getElementById('pilot-status-text');
+    if (!chipText) return;
+    try {
+      const stored = localStorage.getItem('campus_clash_current_participant');
+      if (stored) {
+        const participant = JSON.parse(stored);
+        if (participant && participant.name) {
+          chipText.textContent = `PILOT: ${participant.name.toUpperCase()} [${participant.registration_number || 'VERIFIED'}]`;
+          return;
+        }
+      }
+    } catch (e) {}
+    chipText.textContent = 'PILOT: CLEARANCE PENDING';
+  }
+
+  openClearanceModal() {
+    if (this.clearanceModal) {
+      this.isClearanceOpen = true;
+      this.clearanceModal.classList.remove('hidden');
+      this.sound.playLightHit();
+    }
+  }
+
+  closeClearanceModal() {
+    if (this.clearanceModal) {
+      this.isClearanceOpen = false;
+      this.clearanceModal.classList.add('hidden');
+      this.sound.playCancel ? this.sound.playCancel() : this.sound.playLightHit();
+    }
+  }
+
+  openModeSelectModal() {
+    if (this.modeSelectModal) {
+      this.isModeSelectOpen = true;
+      this.modeSelectModal.classList.remove('hidden');
+      this.sound.playLightHit();
+    }
+  }
+
+  closeModeSelectModal() {
+    if (this.modeSelectModal) {
+      this.isModeSelectOpen = false;
+      this.modeSelectModal.classList.add('hidden');
+      this.sound.playCancel ? this.sound.playCancel() : this.sound.playLightHit();
+    }
   }
 
   setSelectedIndex(index) {
@@ -125,10 +307,40 @@ export class LandingScene {
     });
   }
 
+  tiltJoystick(direction) {
+    const stick1 = document.getElementById('deck-stick-p1');
+    const stick2 = document.getElementById('deck-stick-p2');
+    [stick1, stick2].forEach(st => {
+      if (!st) return;
+      st.className = `deck-joystick tilt-${direction}`;
+      setTimeout(() => {
+        if (st) st.className = 'deck-joystick';
+      }, 180);
+    });
+  }
+
   handleKeyDown(e) {
     if (this.isTransitioning) return;
 
-    // Credits modal intercept
+    // Modal intercepts
+    if (this.isClearanceOpen) {
+      if (e.code === 'Escape') this.closeClearanceModal();
+      return;
+    }
+
+    if (this.isModeSelectOpen) {
+      if (e.code === 'Escape') {
+        this.closeModeSelectModal();
+      } else if (e.code === 'Digit1' || e.code === 'KeyC') {
+        this.closeModeSelectModal();
+        this.triggerFightTransition(GAME_MODES.PVC);
+      } else if (e.code === 'Digit2' || e.code === 'KeyP') {
+        this.closeModeSelectModal();
+        this.triggerFightTransition(GAME_MODES.PVP);
+      }
+      return;
+    }
+
     if (this.isCreditsOpen) {
       if (e.code === 'Escape' || e.code === 'Enter' || e.code === 'Space') {
         this.closeCredits();
@@ -137,13 +349,21 @@ export class LandingScene {
     }
 
     if (e.code === 'ArrowUp' || e.code === 'KeyW') {
+      this.tiltJoystick('up');
       this.setSelectedIndex((this.selectedIndex - 1 + this.menuBtns.length) % this.menuBtns.length);
       this.sound.playMenuBlip();
     } else if (e.code === 'ArrowDown' || e.code === 'KeyS') {
+      this.tiltJoystick('down');
       this.setSelectedIndex((this.selectedIndex + 1) % this.menuBtns.length);
       this.sound.playMenuBlip();
+    } else if (e.code === 'ArrowLeft' || e.code === 'KeyA') {
+      this.tiltJoystick('left');
+    } else if (e.code === 'ArrowRight' || e.code === 'KeyD') {
+      this.tiltJoystick('right');
     } else if (e.code === 'Enter' || e.code === 'Space') {
       this.selectOption(this.selectedIndex);
+    } else if (e.code === 'KeyF') {
+      this.toggleFullscreen();
     } else if (e.code === 'Escape') {
       this.openCredits();
     }
@@ -153,21 +373,31 @@ export class LandingScene {
     if (this.isTransitioning) return;
 
     if (index === 0) {
-      // [ VS COMPUTER ] Option (Expert AI)
-      this.triggerFightTransition(GAME_MODES.PVC);
+      // [ FIGHT ! ] Option
+      let hasRegistered = false;
+      try {
+        const stored = localStorage.getItem('campus_clash_current_participant');
+        if (stored) {
+          const p = JSON.parse(stored);
+          if (p && p.name && p.registration_number) hasRegistered = true;
+        }
+      } catch (e) {}
+
+      if (!hasRegistered) {
+        this.openClearanceModal();
+      } else {
+        this.openModeSelectModal();
+      }
     } else if (index === 1) {
-      // [ 2-PLAYER LOCAL ] Option
-      this.triggerFightTransition(GAME_MODES.PVP);
-    } else if (index === 2) {
-      // [ TRAINING DOJO ] Option
+      // [ TRAINING ] Option
       this.triggerFightTransition(GAME_MODES.TRAINING);
-    } else if (index === 3) {
+    } else if (index === 2) {
       // [ LEADERBOARD ] Option
       if (this.game.leaderboardManager) {
         this.game.leaderboardManager.open();
         this.sound.playLightHit();
       }
-    } else if (index === 4) {
+    } else if (index === 3) {
       // [ CREDITS ] Option
       this.openCredits();
     }

@@ -1,38 +1,37 @@
 /* ==========================================================================
-   Campus Clash 2D — Retro Arcade Landing Page Styles (css/landing.css)
-   Theme: Retro Arcade meets SRM University Campus
+   Campus Clash 2.0 — Retro Arcade Cabinet Landing & UI Styles (css/landing.css)
+   Faithfully matching the Cyber Rig v2.5 Arcade Reference Artwork
    ========================================================================== */
 
-/* Google Fonts fallback definition */
-@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Rajdhani:wght@600;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700;800;900&family=Press+Start+2P&family=Rajdhani:wght@600;700;900&family=Space+Grotesk:wght@500;700&display=swap');
 
 :root {
   --landing-bg: #060810;
-  --srm-blue-deep: #080f1e;
-  --srm-blue-primary: #0d162c;
-  --srm-blue-bright: #00f0ff;
-  --academic-gold: #ffd602;
-  --academic-gold-glow: rgba(255, 214, 2, 0.7);
-  --electric-cyan: #00f0ff;
-  --electric-cyan-glow: rgba(0, 240, 255, 0.7);
+  --arcade-gold: #ffd602;
+  --arcade-gold-glow: rgba(255, 214, 2, 0.75);
+  --arcade-amber: #ff8f00;
+  --arcade-amber-glow: rgba(255, 143, 0, 0.8);
+  --arcade-cyan: #00f0ff;
+  --arcade-cyan-glow: rgba(0, 240, 255, 0.75);
   --arcade-orange: #fe6b00;
-  --arcade-orange-glow: rgba(254, 107, 0, 0.7);
   --text-pure: #ffffff;
-  --text-gold-gradient: linear-gradient(180deg, #ffffff 0%, #ffd602 42%, #fe6b00 80%, #b24100 100%);
 }
 
-/* Layer 1: HTML Landing Overlay */
+/* ==========================================================================
+   LAYER 1: CABINET BACKGROUND & SCREEN WRAPPER
+   ========================================================================== */
 .landing-overlay {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
-  z-index: 10;
+  z-index: 20;
+  background: url('../assets/campus_clash_cabinet_bg.jpg') no-repeat center center;
+  background-size: 100% 100%;
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: space-between;
-  padding: 16px 24px 14px 24px;
+  align-items: center;
   box-sizing: border-box;
   opacity: 1;
   visibility: visible;
@@ -42,15 +41,14 @@
   -webkit-user-select: none;
 }
 
-/* Hidden state when transitioned out */
 .landing-overlay.hidden {
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
-  transform: scale(1.08);
+  transform: scale(1.05);
 }
 
-/* Screen Distortion / Crush Transition when FIGHT is pressed */
+/* Screen Distortion / Crush Transition when FIGHT is initiated */
 .landing-overlay.crush-transition {
   animation: screenDistort 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
@@ -62,395 +60,670 @@
   }
   20% {
     filter: brightness(2.2) contrast(1.8) hue-rotate(90deg);
-    transform: scale(1.04) skewX(2deg);
+    transform: scale(1.03) skewX(2deg);
   }
   40% {
     filter: brightness(1.8) contrast(2.2) hue-rotate(180deg);
-    transform: scale(0.97) skewX(-2deg);
+    transform: scale(0.98) skewX(-2deg);
   }
   70% {
     filter: brightness(3.0) contrast(3.0) saturate(2);
-    transform: scale(1.06);
+    transform: scale(1.05);
     opacity: 0.9;
   }
   100% {
     filter: brightness(4.0) contrast(4.0);
-    transform: scale(1.15);
+    transform: scale(1.12);
     opacity: 0;
     visibility: hidden;
   }
 }
 
 /* ==========================================================================
-   TOP SECTION (~15%): SRM Games Presents Banner
+   INTERACTIVE CABINET MENU HOTSPOTS
+   Placed with pixel-perfect percentage coordinates over the artwork buttons
    ========================================================================== */
-.landing-top-section {
-  width: 100%;
-  height: 15%;
+.cabinet-menu-overlay {
+  position: absolute;
+  top: 45.8%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 250px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 6px;
+  gap: 8.5px;
+  z-index: 25;
 }
 
-.srm-presents-badge {
+/* General Cabinet Menu Button */
+.cabinet-menu-btn {
+  position: relative;
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  padding: 6px 18px;
-  background: rgba(10, 22, 45, 0.85);
-  border: 1.5px solid var(--academic-gold);
-  border-radius: 4px;
-  box-shadow: 0 0 14px rgba(255, 215, 0, 0.35), inset 0 0 8px rgba(255, 215, 0, 0.2);
-  backdrop-filter: blur(4px);
-  position: relative;
-  overflow: hidden;
-}
-
-.srm-presents-badge::before {
-  content: '';
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: linear-gradient(
-    60deg,
-    transparent 30%,
-    rgba(255, 255, 255, 0.15) 50%,
-    transparent 70%
-  );
-  animation: badgeShimmer 3.5s infinite linear;
-  pointer-events: none;
-}
-
-@keyframes badgeShimmer {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
-}
-
-.srm-presents-text {
-  font-family: 'Press Start 2P', monospace;
-  font-size: 10px;
-  letter-spacing: 2.5px;
-  color: var(--academic-gold);
-  text-shadow: 0 0 8px var(--academic-gold-glow);
-  text-transform: uppercase;
-}
-
-.srm-presents-star {
-  color: var(--electric-cyan);
-  font-size: 8px;
-  animation: starBlink 1.4s infinite alternate;
-}
-
-@keyframes starBlink {
-  0% { opacity: 0.3; transform: scale(0.85); }
-  100% { opacity: 1; transform: scale(1.2); }
-}
-
-.srm-location-sub {
-  font-family: 'Rajdhani', sans-serif;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 3px;
-  color: #8fa7cf;
-  text-transform: uppercase;
-  text-shadow: 0 0 6px rgba(0, 229, 255, 0.4);
-}
-
-/* ==========================================================================
-   MIDDLE SECTION (~50%): Main Game Title (Breathing Pulse Effect)
-   ========================================================================== */
-.landing-middle-section {
-  width: 100%;
-  height: 48%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
-  position: relative;
-}
-
-.title-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  animation: titleBreathing 2.2s infinite ease-in-out;
-  transform-origin: center center;
-  cursor: default;
-}
-
-@keyframes titleBreathing {
-  0% {
-    transform: scale(1);
-    filter: drop-shadow(0 0 12px rgba(255, 215, 0, 0.5)) drop-shadow(0 0 24px rgba(0, 229, 255, 0.3));
-  }
-  50% {
-    transform: scale(1.04);
-    filter: drop-shadow(0 0 22px rgba(255, 215, 0, 0.85)) drop-shadow(0 0 45px rgba(0, 229, 255, 0.65)) drop-shadow(0 0 60px rgba(21, 101, 192, 0.6));
-  }
-  100% {
-    transform: scale(1);
-    filter: drop-shadow(0 0 12px rgba(255, 215, 0, 0.5)) drop-shadow(0 0 24px rgba(0, 229, 255, 0.3));
-  }
-}
-
-.title-main-row {
-  display: flex;
-  align-items: baseline;
-  justify-content: center;
-  gap: 14px;
-}
-
-.arcade-title-text {
-  font-family: 'Press Start 2P', 'Arial Black', monospace;
-  font-size: 44px;
-  line-height: 1.15;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  background: var(--text-gold-gradient);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  -webkit-text-stroke: 2.5px #1a0800;
-  text-shadow: 
-    0 3px 0 #8c4200,
-    0 5px 0 #572a00,
-    0 8px 16px rgba(0, 0, 0, 0.9);
-  position: relative;
-}
-
-.arcade-title-2d {
-  font-family: 'Press Start 2P', monospace;
-  font-size: 32px;
-  color: var(--electric-cyan);
-  -webkit-text-fill-color: var(--electric-cyan);
-  -webkit-text-stroke: 2px #003747;
-  text-shadow: 
-    0 0 12px var(--electric-cyan-glow),
-    0 3px 0 #005662,
-    0 5px 0 #00363a;
-  display: inline-block;
-  transform: rotate(-4deg) translateY(-8px);
-  animation: neonFlicker 3.2s infinite ease-in-out;
-}
-
-@keyframes neonFlicker {
-  0%, 100% { opacity: 1; filter: drop-shadow(0 0 10px #00e5ff); }
-  52% { opacity: 1; }
-  54% { opacity: 0.65; }
-  56% { opacity: 0.95; }
-  80% { opacity: 1; }
-}
-
-.title-tagline {
-  font-family: 'Rajdhani', sans-serif;
-  font-size: 15px;
-  font-weight: 700;
-  letter-spacing: 5px;
-  color: #e0e6ed;
-  text-transform: uppercase;
-  margin-top: 10px;
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  text-shadow: 0 0 10px rgba(0, 229, 255, 0.5);
-}
-
-.title-tagline::before,
-.title-tagline::after {
-  content: '';
-  display: inline-block;
-  width: 42px;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, var(--electric-cyan));
-}
-
-.title-tagline::after {
-  background: linear-gradient(90deg, var(--electric-cyan), transparent);
-}
-
-/* ==========================================================================
-   LOWER MIDDLE SECTION (~20%): Interactive Vertical Arcade Menu
-   ========================================================================== */
-.landing-menu-section {
-  width: 100%;
-  height: 22%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  z-index: 12;
-}
-
-.arcade-menu-list {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  width: 320px;
-}
-
-.arcade-menu-btn {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  padding: 10px 16px;
-  font-family: 'Press Start 2P', monospace;
-  font-size: 13px;
-  letter-spacing: 1.5px;
-  color: #e2e8f0;
-  background: linear-gradient(180deg, rgba(20, 36, 68, 0.9) 0%, rgba(10, 18, 36, 0.95) 100%);
-  border: 2px solid #2a4365;
-  border-radius: 4px;
   cursor: pointer;
   outline: none;
-  transition: all 0.15s cubic-bezier(0.2, 0.8, 0.2, 1);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  transition: all 0.18s cubic-bezier(0.2, 0.8, 0.2, 1);
+  user-select: none;
 }
 
-.arcade-menu-btn .btn-cursor-left,
-.arcade-menu-btn .btn-cursor-right {
-  position: absolute;
-  color: var(--academic-gold);
-  font-size: 11px;
-  opacity: 0;
-  transition: opacity 0.15s, transform 0.15s;
-}
-
-.arcade-menu-btn .btn-cursor-left {
-  left: 12px;
-  transform: translateX(-4px);
-}
-
-.arcade-menu-btn .btn-cursor-right {
-  right: 12px;
-  transform: translateX(4px);
-}
-
-/* Hover & Active / Selected Keyboard Focus State */
-.arcade-menu-btn:hover,
-.arcade-menu-btn.selected {
-  color: #ffffff;
-  border-color: var(--academic-gold);
-  background: linear-gradient(180deg, rgba(30, 58, 110, 0.95) 0%, rgba(18, 34, 68, 0.98) 100%);
+/* Primary FIGHT ! Button */
+.cabinet-menu-btn.btn-fight {
+  width: 236px;
+  height: 52px;
+  border-radius: 9px;
+  background: linear-gradient(180deg, #ffb300 0%, #ff8f00 48%, #e65100 100%);
+  border: 2.5px solid #fff8e1;
   box-shadow: 
-    0 0 16px var(--academic-gold-glow),
-    0 0 30px rgba(0, 229, 255, 0.3),
-    inset 0 0 12px rgba(255, 215, 0, 0.25);
-  transform: scale(1.04);
-}
-
-.arcade-menu-btn:hover .btn-cursor-left,
-.arcade-menu-btn.selected .btn-cursor-left {
-  opacity: 1;
-  transform: translateX(0);
-  animation: cursorNudgeLeft 0.7s infinite alternate;
-}
-
-.arcade-menu-btn:hover .btn-cursor-right,
-.arcade-menu-btn.selected .btn-cursor-right {
-  opacity: 1;
-  transform: translateX(0);
-  animation: cursorNudgeRight 0.7s infinite alternate;
-}
-
-@keyframes cursorNudgeLeft {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(3px); }
-}
-
-@keyframes cursorNudgeRight {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-3px); }
-}
-
-/* Primary FIGHT Button Accents */
-.arcade-menu-btn.btn-fight {
-  border-color: #3b5998;
-}
-
-.arcade-menu-btn.btn-fight:hover,
-.arcade-menu-btn.btn-fight.selected {
-  border-color: #ffd602;
-  background: linear-gradient(135deg, #fe6b00 0%, #ffd602 100%);
-  color: #040812;
+    0 0 24px rgba(255, 179, 0, 0.85),
+    0 0 45px rgba(254, 107, 0, 0.5),
+    inset 0 2px 4px rgba(255, 255, 255, 0.7),
+    inset 0 -3px 6px rgba(0, 0, 0, 0.4);
+  color: #1a0800;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 14px;
+  letter-spacing: 2.5px;
   font-weight: 900;
-  text-shadow: none;
-  box-shadow: 0 0 25px rgba(255, 214, 2, 0.85), 0 0 50px rgba(254, 107, 0, 0.5), inset 0 0 10px rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+  animation: fightBtnPulse 2s infinite ease-in-out alternate;
+}
+
+@keyframes fightBtnPulse {
+  0% {
+    box-shadow: 0 0 18px rgba(255, 179, 0, 0.7), 0 0 35px rgba(254, 107, 0, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.6);
+    transform: scale(1);
+  }
+  100% {
+    box-shadow: 0 0 32px rgba(255, 179, 0, 1), 0 0 55px rgba(254, 107, 0, 0.8), inset 0 2px 6px rgba(255, 255, 255, 0.9);
+    transform: scale(1.025);
+  }
+}
+
+.cabinet-menu-btn.btn-fight:hover,
+.cabinet-menu-btn.btn-fight.selected {
+  background: linear-gradient(180deg, #ffe082 0%, #ffb300 45%, #ff6f00 100%);
+  border-color: #ffffff;
+  color: #000000;
+  transform: scale(1.06);
+  box-shadow: 
+    0 0 38px rgba(255, 214, 2, 1),
+    0 0 70px rgba(255, 111, 0, 0.9),
+    inset 0 0 12px rgba(255, 255, 255, 0.9);
+}
+
+.cabinet-menu-btn.btn-fight .btn-cursor-arrow {
+  position: absolute;
+  color: #1a0800;
+  font-size: 11px;
+  transition: transform 0.15s ease;
+}
+
+.cabinet-menu-btn.btn-fight .btn-cursor-arrow.left {
+  left: 14px;
+  animation: arrowLeftNudge 0.65s infinite alternate ease-in-out;
+}
+
+.cabinet-menu-btn.btn-fight .btn-cursor-arrow.right {
+  right: 14px;
+  animation: arrowRightNudge 0.65s infinite alternate ease-in-out;
+}
+
+@keyframes arrowLeftNudge {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-4px); }
+}
+
+@keyframes arrowRightNudge {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(4px); }
+}
+
+/* Secondary Sleek Cyan Pill Buttons */
+.cabinet-menu-btn.btn-cyan {
+  width: 194px;
+  height: 38px;
+  border-radius: 7px;
+  background: rgba(5, 18, 34, 0.88);
+  border: 1.8px solid rgba(0, 240, 255, 0.65);
+  box-shadow: 
+    0 0 14px rgba(0, 240, 255, 0.35),
+    inset 0 0 10px rgba(0, 240, 255, 0.2);
+  color: #e0f2fe;
+  font-family: 'Orbitron', 'Rajdhani', sans-serif;
+  font-size: 11.5px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  backdrop-filter: blur(4px);
+}
+
+.cabinet-menu-btn.btn-cyan .btn-icon {
+  font-size: 13px;
+  filter: drop-shadow(0 0 4px #00f0ff);
+}
+
+.cabinet-menu-btn.btn-cyan:hover,
+.cabinet-menu-btn.btn-cyan.selected {
+  background: rgba(8, 34, 62, 0.95);
+  border-color: #00f0ff;
+  color: #00f0ff;
+  box-shadow: 
+    0 0 24px rgba(0, 240, 255, 0.85),
+    0 0 40px rgba(0, 240, 255, 0.4),
+    inset 0 0 14px rgba(0, 240, 255, 0.45);
   transform: scale(1.05);
 }
 
-.arcade-menu-btn.btn-fight:hover .btn-cursor-left,
-.arcade-menu-btn.btn-fight:hover .btn-cursor-right,
-.arcade-menu-btn.btn-fight.selected .btn-cursor-left,
-.arcade-menu-btn.btn-fight.selected .btn-cursor-right {
-  color: #040812;
-}
-
 /* ==========================================================================
-   BOTTOM SECTION (~10%): Versus Screen Preview & Control Hints
+   CABINET BOTTOM NAVIGATION STRIP
    ========================================================================== */
-.landing-bottom-section {
-  width: 100%;
-  height: 12%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 4px;
-}
-
-.versus-preview-card {
+.cabinet-nav-strip {
+  position: absolute;
+  bottom: 12.2%;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 16px;
-  background: rgba(10, 18, 32, 0.75);
-  border: 1px solid rgba(0, 229, 255, 0.25);
-  border-radius: 4px;
-  padding: 4px 18px;
+  gap: 12px;
+  background: rgba(4, 14, 28, 0.7);
+  border: 1px solid rgba(0, 240, 255, 0.35);
+  box-shadow: 0 0 14px rgba(0, 240, 255, 0.2);
+  border-radius: 9999px;
+  padding: 3px 18px;
   backdrop-filter: blur(4px);
+  z-index: 25;
 }
 
-.fighter-name-badge {
-  font-family: 'Rajdhani', sans-serif;
-  font-size: 13px;
+.cabinet-nav-strip .nav-hint {
+  font-family: 'Rajdhani', monospace;
+  font-size: 10.5px;
   font-weight: 700;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-}
-
-.fighter-name-badge.topper {
-  color: #64b5f6;
-  text-shadow: 0 0 8px rgba(100, 181, 246, 0.6);
-}
-
-.fighter-name-badge.backbencher {
-  color: #ffb74d;
-  text-shadow: 0 0 8px rgba(255, 183, 77, 0.6);
-}
-
-.versus-divider {
-  font-family: 'Press Start 2P', monospace;
-  font-size: 10px;
-  color: var(--academic-gold);
-  text-shadow: 0 0 6px var(--academic-gold-glow);
-}
-
-.landing-controls-hint {
-  font-family: 'Press Start 2P', monospace;
-  font-size: 7.5px;
   letter-spacing: 1px;
-  color: #6d84a3;
-  margin-top: 2px;
+  color: #7dd3fc;
 }
 
-.landing-controls-hint span {
-  color: var(--electric-cyan);
+.cabinet-nav-strip .nav-sep {
+  color: rgba(0, 240, 255, 0.4);
+  font-size: 10px;
+}
+
+.cabinet-nav-strip .nav-btn-link {
+  background: transparent;
+  border: none;
+  color: #ffd602;
+  font-family: 'Rajdhani', monospace;
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  padding: 2px 4px;
+}
+
+.cabinet-nav-strip .nav-btn-link:hover {
+  color: #ffffff;
+  text-shadow: 0 0 8px #ffd602;
+  transform: scale(1.05);
+}
+
+/* ==========================================================================
+   CABINET CONTROL DECK OVERLAY
+   Interactive Joysticks, Coin Slot & Audio Equalizer
+   ========================================================================== */
+.cabinet-deck-overlay {
+  position: absolute;
+  bottom: 0.8%;
+  left: 0;
+  width: 100%;
+  height: 9.8%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  box-sizing: border-box;
+  z-index: 25;
+}
+
+/* Clickable Arcade Coin Slot */
+.deck-coin-slot {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(10, 16, 26, 0.7);
+  border: 1px solid rgba(255, 214, 2, 0.35);
+  box-shadow: 0 0 10px rgba(255, 214, 2, 0.15);
+  border-radius: 4px;
+  padding: 3px 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.deck-coin-slot:hover {
+  background: rgba(20, 32, 50, 0.9);
+  border-color: #ffd602;
+  box-shadow: 0 0 20px rgba(255, 214, 2, 0.6);
+  transform: translateY(-1px);
+}
+
+.deck-coin-slot .coin-icon {
+  font-size: 13px;
+  animation: coinBob 1.6s infinite ease-in-out alternate;
+}
+
+@keyframes coinBob {
+  0% { transform: translateY(0); filter: drop-shadow(0 0 2px #ffd602); }
+  100% { transform: translateY(-2px); filter: drop-shadow(0 0 8px #ffd602); }
+}
+
+.deck-coin-slot .coin-text {
+  font-family: 'Rajdhani', monospace;
+  font-size: 9.5px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: #ffd602;
+}
+
+.deck-coin-slot .coin-counter {
+  font-family: 'Orbitron', monospace;
+  font-size: 8.5px;
+  font-weight: 800;
+  background: rgba(0, 0, 0, 0.6);
+  padding: 1px 5px;
+  border-radius: 2px;
+  border: 1px solid rgba(255, 214, 2, 0.4);
+  color: #ffffff;
+}
+
+/* Center Brand & Joysticks */
+.deck-center-rig {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.deck-joystick {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #ffea00, #ff8f00 60%, #e65100 100%);
+  box-shadow: 0 0 12px rgba(255, 143, 0, 0.8), inset 0 2px 3px rgba(255, 255, 255, 0.8);
+  cursor: pointer;
+  transition: transform 0.1s ease;
+}
+
+.deck-joystick:hover {
+  transform: scale(1.15);
+  box-shadow: 0 0 20px rgba(255, 214, 2, 1);
+}
+
+.deck-joystick.tilt-left { transform: rotate(-18deg) scale(1.05); }
+.deck-joystick.tilt-right { transform: rotate(18deg) scale(1.05); }
+.deck-joystick.tilt-up { transform: translateY(-3px) scale(1.05); }
+.deck-joystick.tilt-down { transform: translateY(3px) scale(1.05); }
+
+.deck-center-title {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  color: #94a3b8;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.deck-center-title .deck-brand {
+  color: #cbd5e1;
+}
+
+.deck-center-title .deck-dot {
+  color: #00f0ff;
+}
+
+.deck-center-title .deck-nexus {
+  color: #ffd602;
+  text-shadow: 0 0 6px rgba(255, 214, 2, 0.4);
+}
+
+/* Right Audio Equalizer Spec */
+.deck-audio-spec {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.deck-audio-spec .audio-spec-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: #64748b;
+  line-height: 1.15;
+}
+
+.deck-eq-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 2.5px;
+  height: 14px;
+}
+
+.deck-eq-bars .eq-bar {
+  width: 3px;
+  border-radius: 1px;
+  background: #00f0ff;
+  box-shadow: 0 0 4px #00f0ff;
+  animation: eqBounce 1s infinite ease-in-out alternate;
+}
+
+.deck-eq-bars .eq-bar.b1 { height: 40%; animation-delay: 0.1s; }
+.deck-eq-bars .eq-bar.b2 { height: 80%; animation-delay: 0.3s; background: #38bdf8; }
+.deck-eq-bars .eq-bar.b3 { height: 100%; animation-delay: 0.15s; background: #ffd602; box-shadow: 0 0 4px #ffd602; }
+.deck-eq-bars .eq-bar.b4 { height: 60%; animation-delay: 0.4s; background: #38bdf8; }
+.deck-eq-bars .eq-bar.b5 { height: 35%; animation-delay: 0.25s; }
+
+@keyframes eqBounce {
+  0% { transform: scaleY(0.3); opacity: 0.4; }
+  100% { transform: scaleY(1); opacity: 1; }
+}
+
+/* ==========================================================================
+   HOLOGRAPHIC CYBER MODALS: CLEARANCE & MODE SELECT
+   ========================================================================== */
+.portal-modal {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(4, 8, 16, 0.88);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  box-sizing: border-box;
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.25s ease, visibility 0.25s ease;
+}
+
+.portal-modal.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.portal-modal-card {
+  width: 520px;
+  max-width: 95%;
+  background: linear-gradient(180deg, #0d1a30 0%, #060d1a 100%);
+  border: 1.5px solid #00f0ff;
+  box-shadow: 
+    0 16px 50px rgba(0, 0, 0, 0.95),
+    0 0 35px rgba(0, 240, 255, 0.35);
+  border-radius: 10px;
+  padding: 20px 24px;
+  position: relative;
+  animation: modalEnter 0.22s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes modalEnter {
+  0% { transform: scale(0.92) translateY(14px); opacity: 0; }
+  100% { transform: scale(1) translateY(0); opacity: 1; }
+}
+
+.portal-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: 'Orbitron', monospace;
+  font-size: 13px;
+  font-weight: 800;
+  color: #ffd602;
+  text-shadow: 0 0 10px rgba(255, 214, 2, 0.6);
+  border-bottom: 1px dashed rgba(0, 240, 255, 0.35);
+  padding-bottom: 12px;
+  margin-bottom: 14px;
+}
+
+.portal-modal-close {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #94a3b8;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  transition: all 0.15s ease;
+}
+
+.portal-modal-close:hover {
+  border-color: #fe6b00;
+  color: #fe6b00;
+  transform: rotate(90deg);
+}
+
+/* Clearance Terminal Form */
+.clearance-card {
+  border-color: #ffd602;
+  box-shadow: 0 16px 50px rgba(0, 0, 0, 0.95), 0 0 35px rgba(255, 214, 2, 0.35);
+}
+
+.clearance-desc {
+  font-size: 12.5px;
+  color: #94a3b8;
+  margin-bottom: 14px;
+  line-height: 1.5;
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 600;
+}
+
+.portal-grid-inputs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.portal-input-group.portal-field-full {
+  grid-column: 1 / -1;
+}
+
+.portal-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  text-align: left;
+}
+
+.portal-input-group label {
+  font-family: 'Orbitron', monospace;
+  font-size: 9.5px;
+  font-weight: 700;
+  color: #67e8f9;
+  letter-spacing: 1px;
+}
+
+.portal-input-group input {
+  background: rgba(4, 10, 20, 0.9);
+  border: 1px solid rgba(0, 240, 255, 0.35);
+  border-radius: 5px;
+  padding: 8px 12px;
+  color: #ffffff;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  outline: none;
+  transition: all 0.15s ease;
+}
+
+.portal-input-group input:focus {
+  border-color: #ffd602;
+  box-shadow: 0 0 12px rgba(255, 214, 2, 0.45);
+  background: rgba(8, 18, 36, 0.95);
+}
+
+.portal-alert {
+  padding: 8px 12px;
+  border-radius: 5px;
+  font-size: 12px;
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 700;
+  margin-top: 10px;
+}
+
+.portal-alert.error {
+  background: rgba(220, 38, 38, 0.2);
+  border: 1px solid #ef4444;
+  color: #fca5a5;
+}
+
+.portal-alert.success {
+  background: rgba(16, 185, 129, 0.2);
+  border: 1px solid #10b981;
+  color: #6ee7b7;
+}
+
+.clearance-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.btn-start-quest {
+  flex: 1;
+  background: linear-gradient(135deg, #fe6b00 0%, #ffd602 100%);
+  border: none;
+  border-radius: 6px;
+  padding: 10px;
+  color: #040810;
+  font-family: 'Orbitron', monospace;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 1.5px;
+  cursor: pointer;
+  box-shadow: 0 0 18px rgba(255, 214, 2, 0.4);
+  transition: all 0.15s ease;
+}
+
+.btn-start-quest:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 0 25px rgba(255, 214, 2, 0.7);
+}
+
+.btn-guest-play {
+  background: rgba(12, 22, 40, 0.85);
+  border: 1px solid rgba(0, 240, 255, 0.4);
+  color: #38bdf8;
+  border-radius: 6px;
+  padding: 10px 14px;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-guest-play:hover {
+  border-color: #00f0ff;
+  color: #ffffff;
+  box-shadow: 0 0 12px rgba(0, 240, 255, 0.4);
+}
+
+/* Mode Select Options */
+.mode-select-body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mode-select-option {
+  background: linear-gradient(135deg, rgba(14, 28, 52, 0.9), rgba(8, 16, 32, 0.95));
+  border: 1.5px solid rgba(0, 240, 255, 0.35);
+  border-radius: 8px;
+  padding: 14px 18px;
+  cursor: pointer;
+  text-align: left;
+  outline: none;
+  transition: all 0.18s ease;
+}
+
+.mode-select-option:hover,
+.mode-select-option:focus {
+  border-color: #ffd602;
+  background: linear-gradient(135deg, rgba(22, 44, 82, 0.95), rgba(12, 24, 48, 0.98));
+  box-shadow: 
+    0 0 24px rgba(255, 214, 2, 0.5),
+    inset 0 0 14px rgba(255, 214, 2, 0.2);
+  transform: translateY(-2px) scale(1.015);
+}
+
+.mode-opt-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.mode-opt-header .mode-icon {
+  font-size: 20px;
+}
+
+.mode-opt-header .mode-name {
+  font-family: 'Orbitron', monospace;
+  font-size: 13px;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: 1px;
+}
+
+.mode-select-option:hover .mode-opt-header .mode-name {
+  color: #ffd602;
+}
+
+.mode-opt-header .mode-badge {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 10px;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 3px;
+  letter-spacing: 1px;
+  margin-left: auto;
+}
+
+.mode-opt-header .mode-badge.expert {
+  background: rgba(220, 38, 38, 0.25);
+  border: 1px solid #ef4444;
+  color: #f87171;
+}
+
+.mode-opt-header .mode-badge.pvp {
+  background: rgba(0, 240, 255, 0.2);
+  border: 1px solid #00f0ff;
+  color: #38bdf8;
+}
+
+.mode-select-option .mode-desc {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 12.5px;
+  color: #94a3b8;
+  line-height: 1.4;
+  margin: 0;
 }
 
 /* ==========================================================================
@@ -459,7 +732,7 @@
 .credits-modal {
   position: absolute;
   inset: 0;
-  z-index: 30;
+  z-index: 130;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -481,7 +754,7 @@
   width: 540px;
   max-width: 90%;
   background: linear-gradient(180deg, #0f1c33 0%, #091222 100%);
-  border: 2px solid var(--academic-gold);
+  border: 2px solid var(--arcade-gold);
   border-radius: 8px;
   box-shadow: 
     0 16px 40px rgba(0, 0, 0, 0.9),
@@ -491,12 +764,7 @@
   flex-direction: column;
   align-items: center;
   position: relative;
-  animation: modalPop 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-@keyframes modalPop {
-  0% { transform: scale(0.9) translateY(12px); opacity: 0; }
-  100% { transform: scale(1) translateY(0); opacity: 1; }
+  animation: modalEnter 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .credits-header {
@@ -505,8 +773,8 @@
   gap: 8px;
   font-family: 'Press Start 2P', monospace;
   font-size: 13px;
-  color: var(--academic-gold);
-  text-shadow: 0 0 8px var(--academic-gold-glow);
+  color: var(--arcade-gold);
+  text-shadow: 0 0 8px var(--arcade-gold-glow);
   margin-bottom: 16px;
   border-bottom: 1px dashed rgba(255, 215, 0, 0.3);
   width: 100%;
@@ -532,7 +800,7 @@
   padding: 6px 12px;
   background: rgba(16, 29, 54, 0.6);
   border-radius: 4px;
-  border-left: 3px solid var(--electric-cyan);
+  border-left: 3px solid var(--arcade-cyan);
 }
 
 .credits-label {
@@ -550,15 +818,15 @@
 }
 
 .credits-value.highlight {
-  color: var(--academic-gold);
-  text-shadow: 0 0 6px var(--academic-gold-glow);
+  color: var(--arcade-gold);
+  text-shadow: 0 0 6px var(--arcade-gold-glow);
 }
 
 .credits-close-btn {
   font-family: 'Press Start 2P', monospace;
   font-size: 10px;
-  color: var(--landing-bg);
-  background: var(--academic-gold);
+  color: #060810;
+  background: var(--arcade-gold);
   border: none;
   border-radius: 4px;
   padding: 10px 22px;
@@ -573,13 +841,6 @@
   transform: scale(1.05);
 }
 
-/* Layer 2: Top Particles Canvas (Academic Dust / Fireflies) */
-.fx-canvas {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 20;
-  pointer-events: none;
-  display: block;
+.cursor-pointer {
+  cursor: pointer;
 }

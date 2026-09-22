@@ -168,7 +168,7 @@ input, textarea, select {
 .rig-hud-header {
   position: relative;
   z-index: 10;
-  width: min(96vw, calc((94vh - 46px) * (960 / 640)));
+  width: min(96vw, calc((94vh - 46px) * (1024 / 642)));
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -259,8 +259,8 @@ input, textarea, select {
 /* Non-rectangular Cyber Screen Chassis */
 #canvas-wrapper {
   position: relative;
-  width: min(96vw, calc((94vh - 46px) * (960 / 640)));
-  aspect-ratio: 960 / 640;
+  width: min(96vw, calc((94vh - 46px) * (1024 / 642)));
+  aspect-ratio: 1024 / 642;
   background: #060810;
   overflow: hidden;
   clip-path: polygon(

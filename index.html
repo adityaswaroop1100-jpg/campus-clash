@@ -50,15 +50,15 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700;800;900&family=Press+Start+2P&family=Rajdhani:wght@600;700;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
 
-  <!-- External Stylesheets (v=11 cache bust) -->
-  <link rel="stylesheet" href="css/main.css?v=11">
-  <link rel="stylesheet" href="css/portal.css?v=11">
-  <link rel="stylesheet" href="css/landing.css?v=11">
-  <link rel="stylesheet" href="css/characterSelect.css?v=11">
-  <link rel="stylesheet" href="css/stageSelect.css?v=11">
-  <link rel="stylesheet" href="css/game.css?v=11">
-  <link rel="stylesheet" href="css/leaderboard.css?v=11">
-  <link rel="stylesheet" href="css/entryPortal.css?v=11">
+  <!-- External Stylesheets (v=12 cache bust) -->
+  <link rel="stylesheet" href="css/main.css?v=12">
+  <link rel="stylesheet" href="css/portal.css?v=12">
+  <link rel="stylesheet" href="css/landing.css?v=12">
+  <link rel="stylesheet" href="css/characterSelect.css?v=12">
+  <link rel="stylesheet" href="css/stageSelect.css?v=12">
+  <link rel="stylesheet" href="css/game.css?v=12">
+  <link rel="stylesheet" href="css/leaderboard.css?v=12">
+  <link rel="stylesheet" href="css/entryPortal.css?v=12">
 
   <!-- Supabase JS Client CDN -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -96,14 +96,24 @@
     <header class="rig-hud-header">
       <div class="rig-hud-badge">
         <span class="rig-hud-dot"></span>
-        <span class="rig-hud-title">SRM TECH PARK ARCADE // CYBER RIG v2.5</span>
+        <span class="rig-hud-title">★ SRM TECH PARK ARCADE // CYBER RIG v2.5</span>
       </div>
       <div class="rig-hud-controls">
+        <button type="button" id="rig-btn-briefing" class="rig-hud-btn briefing-btn" title="Mission Briefing & Rules">
+          <span>ⓘ BRIEFING</span>
+        </button>
+        <button type="button" id="rig-btn-sound" class="rig-hud-btn sound-btn" title="Toggle Audio (M)">
+          <span id="rig-sound-icon">🔊 SOUND</span>
+        </button>
         <button type="button" id="rig-btn-fullscreen" class="rig-hud-btn" title="Toggle Fullscreen (F)">
           <span>⛶ FULLSCREEN (F)</span>
         </button>
       </div>
       <div class="rig-hud-meta">
+        <div id="pilot-status-chip" class="rig-hud-chip gold cursor-pointer" title="Click to view / enter SRM Participant Credentials">
+          <span class="pilot-icon">🎫</span>
+          <span id="pilot-status-text">PILOT: CLEARANCE PENDING</span>
+        </div>
         <span class="rig-hud-chip">60 FPS</span>
         <span class="rig-hud-chip gold">AARUUSH GRID</span>
       </div>
@@ -113,8 +123,8 @@
     <div id="canvas-wrapper">
       <!-- High-Tech Chamfered Glowing Frame Border (Inside wrapper with inline absolute to guarantee zero displacement) -->
       <div class="chassis-chamfer-border" style="position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999;" aria-hidden="true">
-        <svg viewBox="0 0 960 640" preserveAspectRatio="none" style="width: 100%; height: 100%; display: block;">
-          <polygon points="28,2 932,2 958,28 958,612 932,638 28,638 2,612 2,28" 
+        <svg viewBox="0 0 1024 642" preserveAspectRatio="none" style="width: 100%; height: 100%; display: block;">
+          <polygon points="28,2 996,2 1022,28 1022,614 996,640 28,640 2,614 2,28" 
                    fill="none" 
                    stroke="url(#chassisBorderGrad)" 
                    stroke-width="3" />
@@ -136,119 +146,15 @@
       <div class="rig-bracket bottom-right" aria-hidden="true"></div>
       <div class="chassis-crt-glare" aria-hidden="true"></div>
 
-      <!-- Layer 50: Peak Quality Aaruush Clash Cyber Entry Portal -->
-      <div id="entry-portal" class="entry-portal" role="region" aria-label="Aaruush Clash Entry Portal">
-        <!-- Top Status Bar -->
-        <header class="portal-header">
-          <div class="portal-status-pill">
-            <span class="portal-status-dot"></span>
-            <span class="portal-status-text">AARUUSH GRID // LEVEL 0</span>
+      <!-- Holographic Cyber Participant Clearance Modal (Saved to Supabase) -->
+      <div id="pilot-clearance-modal" class="portal-modal hidden" role="dialog" aria-modal="true" aria-labelledby="clearance-modal-title">
+        <div class="portal-modal-card clearance-card">
+          <div class="portal-modal-header">
+            <span id="clearance-modal-title">⚡ SRM PILOT CLEARANCE TERMINAL ⚡</span>
+            <button type="button" class="portal-modal-close" id="btn-close-clearance" aria-label="Close modal">✕</button>
           </div>
-
-          <div class="portal-nav-actions">
-            <button type="button" id="portal-btn-briefing" class="portal-nav-btn">
-              <span class="icon-info">ⓘ</span> BRIEFING
-            </button>
-            <button type="button" id="portal-btn-schedule" class="portal-nav-btn schedule">
-              <span class="icon-cal">📅</span> SCHEDULE
-            </button>
-            <button type="button" id="portal-btn-sound" class="portal-nav-btn sound-toggle" aria-label="Toggle Sound">🔊</button>
-            <button type="button" id="portal-btn-fullscreen" class="portal-nav-btn fullscreen-toggle" aria-label="Toggle Fullscreen">⛶ FULLSCREEN</button>
-          </div>
-        </header>
-
-        <!-- Center Stage Visuals -->
-        <main class="portal-main-content">
-          <!-- Solar Emblem / Logo Halo -->
-          <div class="portal-emblem-wrap">
-            <div class="portal-emblem-halo"></div>
-            <!-- Outer Golden Rotating Rays -->
-            <svg class="portal-solar-rays-gold" viewBox="0 0 200 200">
-              <defs>
-                <radialGradient id="sunBeamGradGold" cx="50%" cy="50%" r="50%">
-                  <stop offset="0%" stop-color="#fff275" stop-opacity="0.9"/>
-                  <stop offset="40%" stop-color="#ffd602" stop-opacity="0.75"/>
-                  <stop offset="80%" stop-color="#fe6b00" stop-opacity="0.3"/>
-                  <stop offset="100%" stop-color="#ff7700" stop-opacity="0"/>
-                </radialGradient>
-              </defs>
-              <path d="M97.5 100 L100 35 L102.5 100 Z" fill="url(#sunBeamGradGold)" transform="rotate(0 100 100)" />
-              <path d="M98 100 L100 48 L102 100 Z" fill="url(#sunBeamGradGold)" transform="rotate(22.5 100 100)" />
-              <path d="M97.5 100 L100 35 L102.5 100 Z" fill="url(#sunBeamGradGold)" transform="rotate(45 100 100)" />
-              <path d="M98 100 L100 48 L102 100 Z" fill="url(#sunBeamGradGold)" transform="rotate(67.5 100 100)" />
-              <path d="M97.5 100 L100 35 L102.5 100 Z" fill="url(#sunBeamGradGold)" transform="rotate(90 100 100)" />
-              <path d="M98 100 L100 48 L102 100 Z" fill="url(#sunBeamGradGold)" transform="rotate(112.5 100 100)" />
-              <path d="M97.5 100 L100 35 L102.5 100 Z" fill="url(#sunBeamGradGold)" transform="rotate(135 100 100)" />
-              <path d="M98 100 L100 48 L102 100 Z" fill="url(#sunBeamGradGold)" transform="rotate(157.5 100 100)" />
-              <path d="M97.5 100 L100 35 L102.5 100 Z" fill="url(#sunBeamGradGold)" transform="rotate(180 100 100)" />
-              <path d="M98 100 L100 48 L102 100 Z" fill="url(#sunBeamGradGold)" transform="rotate(202.5 100 100)" />
-              <path d="M97.5 100 L100 35 L102.5 100 Z" fill="url(#sunBeamGradGold)" transform="rotate(225 100 100)" />
-              <path d="M98 100 L100 48 L102 100 Z" fill="url(#sunBeamGradGold)" transform="rotate(247.5 100 100)" />
-              <path d="M97.5 100 L100 35 L102.5 100 Z" fill="url(#sunBeamGradGold)" transform="rotate(270 100 100)" />
-              <path d="M98 100 L100 48 L102 100 Z" fill="url(#sunBeamGradGold)" transform="rotate(292.5 100 100)" />
-              <path d="M97.5 100 L100 35 L102.5 100 Z" fill="url(#sunBeamGradGold)" transform="rotate(315 100 100)" />
-              <path d="M98 100 L100 48 L102 100 Z" fill="url(#sunBeamGradGold)" transform="rotate(337.5 100 100)" />
-            </svg>
-            <!-- Inner Cyan Rotating Rays -->
-            <svg class="portal-solar-rays-cyan" viewBox="0 0 200 200">
-              <defs>
-                <radialGradient id="sunBeamGradCyan" cx="50%" cy="50%" r="50%">
-                  <stop offset="0%" stop-color="#ffffff" stop-opacity="0.8"/>
-                  <stop offset="40%" stop-color="#00f0ff" stop-opacity="0.6"/>
-                  <stop offset="100%" stop-color="#00f0ff" stop-opacity="0"/>
-                </radialGradient>
-              </defs>
-              <polygon points="98.5,100 100,42 101.5,100" fill="url(#sunBeamGradCyan)" transform="rotate(11.25 100 100)" />
-              <polygon points="98.5,100 100,42 101.5,100" fill="url(#sunBeamGradCyan)" transform="rotate(41.25 100 100)" />
-              <polygon points="98.5,100 100,42 101.5,100" fill="url(#sunBeamGradCyan)" transform="rotate(71.25 100 100)" />
-              <polygon points="98.5,100 100,42 101.5,100" fill="url(#sunBeamGradCyan)" transform="rotate(101.25 100 100)" />
-              <polygon points="98.5,100 100,42 101.5,100" fill="url(#sunBeamGradCyan)" transform="rotate(131.25 100 100)" />
-              <polygon points="98.5,100 100,42 101.5,100" fill="url(#sunBeamGradCyan)" transform="rotate(161.25 100 100)" />
-              <polygon points="98.5,100 100,42 101.5,100" fill="url(#sunBeamGradCyan)" transform="rotate(191.25 100 100)" />
-              <polygon points="98.5,100 100,42 101.5,100" fill="url(#sunBeamGradCyan)" transform="rotate(221.25 100 100)" />
-              <polygon points="98.5,100 100,42 101.5,100" fill="url(#sunBeamGradCyan)" transform="rotate(251.25 100 100)" />
-              <polygon points="98.5,100 100,42 101.5,100" fill="url(#sunBeamGradCyan)" transform="rotate(281.25 100 100)" />
-              <polygon points="98.5,100 100,42 101.5,100" fill="url(#sunBeamGradCyan)" transform="rotate(311.25 100 100)" />
-              <polygon points="98.5,100 100,42 101.5,100" fill="url(#sunBeamGradCyan)" transform="rotate(341.25 100 100)" />
-            </svg>
-            <div class="portal-logo-ring"></div>
-            <img src="assets/aaruush_logo.svg" alt="Aaruush Logo" class="portal-logo-img">
-          </div>
-
-          <!-- Grand Cyber Title -->
-          <h1 class="portal-title-h1">
-            <span class="title-white">AARUUSH</span>
-            <span class="title-cyan">CLASH</span>
-          </h1>
-
-          <!-- Tagline -->
-          <div class="portal-tagline">
-            <span class="tag-orange">17 Portals.</span>
-            <span class="tag-gold">180 Seconds.</span>
-            <span class="tag-cyan">1 Champion.</span>
-          </div>
-
-          <!-- Quick Info Cards -->
-          <div class="portal-cards-row">
-            <div class="portal-info-card">
-              <span class="card-icon">⏱️</span>
-              <div class="card-text">
-                <div class="card-label">DURATION</div>
-                <div class="card-value">3:00 MIN</div>
-              </div>
-            </div>
-            <div class="portal-info-card">
-              <span class="card-icon">🚩</span>
-              <div class="card-text">
-                <div class="card-label">OBJECTIVE</div>
-                <div class="card-value">ALL PORTALS</div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Clearance Registration Form Card -->
-          <div class="portal-form-card">
-            <div class="portal-form-title">⚡ PARTICIPANT CLEARANCE TERMINAL ⚡</div>
+          <div class="portal-modal-body">
+            <p class="clearance-desc">Enter your official credentials to sync match telemetry & compete on the live SRM Aaruush Leaderboard.</p>
             <form id="portal-reg-form" autocomplete="on">
               <div class="portal-grid-inputs">
                 <div class="portal-input-group portal-field-full">
@@ -273,22 +179,45 @@
                 </div>
               </div>
               <div id="entry-alert-box" class="portal-alert hidden"></div>
-              <button type="submit" id="btn-start-quest" class="btn-start-quest">
-                <span>START CLASH 🚀</span>
-              </button>
+              <div class="clearance-actions">
+                <button type="submit" id="btn-start-quest" class="btn-start-quest">
+                  <span>CONFIRM CLEARANCE & FIGHT 🚀</span>
+                </button>
+                <button type="button" id="btn-guest-play" class="btn-guest-play">
+                  <span>GUEST QUICK PLAY ⚡</span>
+                </button>
+              </div>
             </form>
           </div>
-        </main>
+        </div>
+      </div>
 
-        <!-- Footer -->
-        <footer class="portal-footer">
-          <span class="portal-footer-dot"></span>
-          <span>SYSTEM ONLINE</span>
-          <span>|</span>
-          <span>SRMIST KTR FESTIVAL GRID</span>
-          <span>|</span>
-          <span>v2.4.1</span>
-        </footer>
+      <!-- Combat Protocol Mode Selection Modal -->
+      <div id="mode-select-modal" class="portal-modal hidden" role="dialog" aria-modal="true" aria-labelledby="mode-select-title">
+        <div class="portal-modal-card mode-select-card">
+          <div class="portal-modal-header">
+            <span id="mode-select-title">⚔️ SELECT COMBAT PROTOCOL ⚔️</span>
+            <button type="button" class="portal-modal-close" id="btn-close-mode-select" aria-label="Close modal">✕</button>
+          </div>
+          <div class="portal-modal-body mode-select-body">
+            <button type="button" id="mode-btn-pvc" class="mode-select-option" tabindex="0">
+              <div class="mode-opt-header">
+                <span class="mode-icon">🤖</span>
+                <span class="mode-name">VS COMPUTER (EXPERT AI)</span>
+                <span class="mode-badge expert">TOURNAMENT TIER</span>
+              </div>
+              <p class="mode-desc">Battle the tournament-grade neural bot with 1-frame whiff punishes, hit-confirm combos, anti-air DP, and rage desperation mode.</p>
+            </button>
+            <button type="button" id="mode-btn-pvp" class="mode-select-option" tabindex="0">
+              <div class="mode-opt-header">
+                <span class="mode-icon">👥</span>
+                <span class="mode-name">2-PLAYER LOCAL</span>
+                <span class="mode-badge pvp">SAME KEYBOARD</span>
+              </div>
+              <p class="mode-desc">Classic 1v1 arcade combat. P1 uses WASD + F/G/H/R/T, P2 uses Arrows + Num4/5/6/1/2.</p>
+            </button>
+          </div>
+        </div>
       </div>
 
       <!-- Briefing Modal -->
@@ -366,71 +295,88 @@
         Your browser does not support the HTML5 canvas element.
       </canvas>
 
-      <!-- Layer 1: Retro Arcade Landing Overlay -->
+      <!-- Layer 1: Retro Arcade Landing Overlay (Matching the Cyber Rig Cabinet Design) -->
       <div id="landing-overlay" class="landing-overlay" role="region" aria-label="Main Menu">
-        <!-- Top Section (15%): SRM Games Presents Banner -->
-        <header class="landing-top-section">
-          <div class="srm-presents-badge">
-            <span class="srm-presents-star">★</span>
-            <span class="srm-presents-text">SRM GAMES PRESENTS</span>
-            <span class="srm-presents-star">★</span>
-          </div>
-          <div class="srm-location-sub">TECH PARK ARCADE • KATTANKULATHUR</div>
-        </header>
+        <!-- Interactive Menu Hotspots (Positioned directly over the central cabinet buttons) -->
+        <nav class="cabinet-menu-overlay" aria-label="Arcade Menu Navigation">
+          <!-- Primary Action Button: FIGHT ! -->
+          <button id="menu-btn-fight" class="cabinet-menu-btn btn-fight selected" role="menuitem" data-index="0" tabindex="0">
+            <span class="btn-cursor-arrow left">◀</span>
+            <span class="btn-label">FIGHT !</span>
+            <span class="btn-cursor-arrow right">▶</span>
+          </button>
 
-        <!-- Middle Section (50%): Main Game Title -->
-        <section class="landing-middle-section" aria-label="Game Title">
-          <div class="title-container" id="landing-title-container">
-            <div class="title-main-row">
-              <h1 class="arcade-title-text">CAMPUS CLASH</h1>
-              <span class="arcade-title-2d">2D</span>
-            </div>
-            <div class="title-tagline">BRAWL FOR THE 10 CGPA</div>
-          </div>
-        </section>
+          <!-- Secondary Action Button: TRAINING -->
+          <button id="menu-btn-training" class="cabinet-menu-btn btn-cyan" role="menuitem" data-index="1" tabindex="0">
+            <span class="btn-icon">🏋️</span>
+            <span class="btn-label">TRAINING</span>
+          </button>
 
-        <!-- Lower Middle Section (20%): Vertical Arcade Menu -->
-        <nav class="landing-menu-section" aria-label="Main Menu Navigation">
-          <div class="arcade-menu-list" role="menu">
-            <button id="menu-btn-pvc" class="arcade-menu-btn btn-fight selected" role="menuitem" data-index="0" tabindex="0">
-              <span class="btn-cursor-left">▶</span>
-              <span class="btn-label">[ VS COMPUTER ]</span>
-              <span class="btn-cursor-right">◀</span>
-            </button>
-            <button id="menu-btn-pvp" class="arcade-menu-btn" role="menuitem" data-index="1" tabindex="0">
-              <span class="btn-cursor-left">▶</span>
-              <span class="btn-label">[ 2-PLAYER LOCAL ]</span>
-              <span class="btn-cursor-right">◀</span>
-            </button>
-            <button id="menu-btn-training" class="arcade-menu-btn" role="menuitem" data-index="2" tabindex="0">
-              <span class="btn-cursor-left">▶</span>
-              <span class="btn-label">[ TRAINING DOJO ]</span>
-              <span class="btn-cursor-right">◀</span>
-            </button>
-            <button id="menu-btn-leaderboard" class="arcade-menu-btn" role="menuitem" data-index="3" tabindex="0">
-              <span class="btn-cursor-left">▶</span>
-              <span class="btn-label">[ LEADERBOARD ]</span>
-              <span class="btn-cursor-right">◀</span>
-            </button>
-            <button id="menu-btn-credits" class="arcade-menu-btn" role="menuitem" data-index="4" tabindex="0">
-              <span class="btn-cursor-left">▶</span>
-              <span class="btn-label">[ CREDITS ]</span>
-              <span class="btn-cursor-right">◀</span>
-            </button>
-          </div>
+          <!-- Secondary Action Button: LEADERBOARD -->
+          <button id="menu-btn-leaderboard" class="cabinet-menu-btn btn-cyan" role="menuitem" data-index="2" tabindex="0">
+            <span class="btn-icon">🏆</span>
+            <span class="btn-label">LEADERBOARD</span>
+          </button>
+
+          <!-- Secondary Action Button: CREDITS -->
+          <button id="menu-btn-credits" class="cabinet-menu-btn btn-cyan" role="menuitem" data-index="3" tabindex="0">
+            <span class="btn-icon">⚙️</span>
+            <span class="btn-label">CREDITS</span>
+          </button>
         </nav>
 
-        <!-- Bottom Section (10%): Dynamic Versus Screen Preview -->
-        <footer class="landing-bottom-section">
-          <div class="versus-preview-card">
-            <span class="fighter-name-badge topper">🎓 THE TOPPER</span>
-            <span class="versus-divider">VS</span>
-            <span class="fighter-name-badge backbencher">🔥 THE BACKBENCHER</span>
+        <!-- Bottom Navigation Bar (Interactive and clickable) -->
+        <div class="cabinet-nav-strip">
+          <span class="nav-hint">[ ← / → ] NAVIGATE</span>
+          <span class="nav-sep">|</span>
+          <span class="nav-hint">[ ENTER / SPACE ] SELECT</span>
+          <span class="nav-sep">|</span>
+          <button type="button" id="deck-nav-fullscreen" class="nav-btn-link" title="Toggle Fullscreen (F)">[ F ] FULLSCREEN</button>
+          <span class="nav-sep">|</span>
+          <button type="button" id="deck-nav-credits" class="nav-btn-link" title="Open Credits & Controls">[ ESC ] CREDITS</button>
+        </div>
+
+        <!-- Bottom Arcade Machine Control Deck Hotspots -->
+        <div class="cabinet-deck-overlay">
+          <!-- Left: Clickable Coin Slot -->
+          <div id="deck-coin-slot" class="deck-coin-slot" title="Click to Insert Coin!">
+            <span class="coin-icon">🪙</span>
+            <span class="coin-text">INSERT COIN // FREE PLAY //</span>
+            <span id="deck-coin-counter" class="coin-counter">CREDIT 01</span>
           </div>
-          <div class="landing-controls-hint">
-            <span>[↑/↓]</span> NAVIGATE &nbsp;|&nbsp; <span>[ENTER / SPACE]</span> SELECT &nbsp;|&nbsp; <span>[F]</span> FULLSCREEN &nbsp;|&nbsp; <span>[ESC]</span> CREDITS
+
+          <!-- Center: Interactive Joysticks & Logo -->
+          <div class="deck-center-rig">
+            <div class="deck-joystick left" id="deck-stick-p1" title="Player 1 Stick">
+              <div class="stick-ball"></div>
+              <div class="stick-shaft"></div>
+            </div>
+            <div class="deck-center-title">
+              <span class="deck-brand">SRM KTR CAMPUS CLASH</span>
+              <span class="deck-dot">•</span>
+              <span class="deck-nexus">WEBNEXUS</span>
+            </div>
+            <div class="deck-joystick right" id="deck-stick-p2" title="Player 2 Stick">
+              <div class="stick-ball"></div>
+              <div class="stick-shaft"></div>
+            </div>
           </div>
-        </footer>
+
+          <!-- Right: Audio Equalizer / 60 FPS Spec -->
+          <div class="deck-audio-spec">
+            <div class="audio-spec-text">
+              <span>DETERMINISTIC 60 FPS</span>
+              <span>PROCEDURAL WEB AUDIO</span>
+            </div>
+            <div class="deck-eq-bars" aria-label="Audio Visualizer">
+              <span class="eq-bar b1"></span>
+              <span class="eq-bar b2"></span>
+              <span class="eq-bar b3"></span>
+              <span class="eq-bar b4"></span>
+              <span class="eq-bar b5"></span>
+            </div>
+          </div>
+        </div>
       </div>
 
       <!-- Layer 1.5: High-End Retro Arcade Character Select Screen Overlay -->
