@@ -1,5 +1,5 @@
 -- ============================================================================
--- CAMPUS CLASH 2D: WEBNEXUS EDITION — SUPABASE DATABASE SCHEMA
+-- CAMPUS CLASH 2D: WEBNEXUS / AARUUSH EDITION — SUPABASE DATABASE SCHEMA
 -- Execute this entire script in Supabase Dashboard -> SQL Editor -> Run
 -- ============================================================================
 
@@ -17,11 +17,28 @@ CREATE TABLE IF NOT EXISTS public.campus_clash_leaderboard (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
--- Index for instant leaderboard score sorting
 CREATE INDEX IF NOT EXISTS idx_campus_clash_leaderboard_score 
 ON public.campus_clash_leaderboard (score DESC, created_at DESC);
 
--- 2. MATCH TELEMETRY TABLE (Analytics & Combat Stats)
+-- 2. PARTICIPANTS REGISTRATION TABLE (Name, RegNo, SRM Mail, Participation ID, Phone)
+CREATE TABLE IF NOT EXISTS public.campus_clash_participants (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    name TEXT NOT NULL,
+    registration_number TEXT NOT NULL,
+    srm_mail_id TEXT NOT NULL,
+    participation_id TEXT NOT NULL,
+    phone_number TEXT NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
+    last_active_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_campus_clash_participants_regno
+ON public.campus_clash_participants (registration_number);
+
+CREATE INDEX IF NOT EXISTS idx_campus_clash_participants_partid
+ON public.campus_clash_participants (participation_id);
+
+-- 3. MATCH TELEMETRY TABLE (Analytics & Combat Stats)
 CREATE TABLE IF NOT EXISTS public.campus_clash_matches (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     mode TEXT NOT NULL DEFAULT 'pvp',
@@ -37,7 +54,7 @@ CREATE TABLE IF NOT EXISTS public.campus_clash_matches (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
--- 3. PLAYER PROFILES TABLE (Stats & ELO tracking)
+-- 4. PLAYER PROFILES TABLE (Stats & ELO tracking)
 CREATE TABLE IF NOT EXISTS public.campus_clash_profiles (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     username TEXT UNIQUE NOT NULL,
@@ -51,56 +68,46 @@ CREATE TABLE IF NOT EXISTS public.campus_clash_profiles (
 
 -- ============================================================================
 -- ROW LEVEL SECURITY (RLS) POLICIES
--- Enables anonymous players to read and submit scores from browser client
 -- ============================================================================
 
 ALTER TABLE public.campus_clash_leaderboard ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.campus_clash_participants ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.campus_clash_matches ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.campus_clash_profiles ENABLE ROW LEVEL SECURITY;
 
--- Allow anyone (public anon) to read leaderboard
+-- Leaderboard policies
 CREATE POLICY "Public can view leaderboard" 
-ON public.campus_clash_leaderboard 
-FOR SELECT 
-TO anon, authenticated 
-USING (true);
+ON public.campus_clash_leaderboard FOR SELECT TO anon, authenticated USING (true);
 
--- Allow anyone (public anon) to insert their match scores
 CREATE POLICY "Public can insert scores" 
-ON public.campus_clash_leaderboard 
-FOR INSERT 
-TO anon, authenticated 
-WITH CHECK (true);
+ON public.campus_clash_leaderboard FOR INSERT TO anon, authenticated WITH CHECK (true);
 
--- Allow anyone (public anon) to log match telemetry
+-- Participants registration policies
+CREATE POLICY "Public can register participants" 
+ON public.campus_clash_participants FOR INSERT TO anon, authenticated WITH CHECK (true);
+
+CREATE POLICY "Public can view participants" 
+ON public.campus_clash_participants FOR SELECT TO anon, authenticated USING (true);
+
+CREATE POLICY "Public can update participants" 
+ON public.campus_clash_participants FOR UPDATE TO anon, authenticated USING (true) WITH CHECK (true);
+
+-- Matches telemetry policies
 CREATE POLICY "Public can log matches" 
-ON public.campus_clash_matches 
-FOR INSERT 
-TO anon, authenticated 
-WITH CHECK (true);
+ON public.campus_clash_matches FOR INSERT TO anon, authenticated WITH CHECK (true);
 
 CREATE POLICY "Public can view match history" 
-ON public.campus_clash_matches 
-FOR SELECT 
-TO anon, authenticated 
-USING (true);
+ON public.campus_clash_matches FOR SELECT TO anon, authenticated USING (true);
 
--- Allow public to view and upsert profiles
+-- Profiles policies
 CREATE POLICY "Public can view profiles" 
-ON public.campus_clash_profiles 
-FOR SELECT 
-TO anon, authenticated 
-USING (true);
+ON public.campus_clash_profiles FOR SELECT TO anon, authenticated USING (true);
 
 CREATE POLICY "Public can update profiles" 
-ON public.campus_clash_profiles 
-FOR ALL 
-TO anon, authenticated 
-USING (true)
-WITH CHECK (true);
+ON public.campus_clash_profiles FOR ALL TO anon, authenticated USING (true) WITH CHECK (true);
 
 -- ============================================================================
--- INITIAL SEED DATA (SRM Legends Roster Scores)
+-- INITIAL SEED DATA
 -- ============================================================================
 INSERT INTO public.campus_clash_leaderboard (player_name, fighter_id, fighter_name, score, damage_dealt, max_combo, rounds_won, arena_id)
 VALUES 

@@ -41,6 +41,7 @@ import { CharacterPortraitManager } from './ui/characterPortrait.js';
 import { StageSelectManager } from './ui/stageSelectManager.js';
 import { LeaderboardManager } from './multiplayer/leaderboard.js';
 import { supabaseService } from './database/supabaseClient.js';
+import { EntryPortalManager } from './ui/entryPortalManager.js';
 
 export const GAME_SCREENS = {
   LANDING: 'landing',
@@ -248,6 +249,7 @@ class CampusClashGame {
     // Screen State
     this.landingScene = new LandingScene(this);
     this.leaderboardManager = new LeaderboardManager(this);
+    this.entryPortalManager = new EntryPortalManager(this);
     this.currentScreen = GAME_SCREENS.LANDING;
     this.selectedMode = GAME_MODES.PVP;
     this.modeIndex = 0; // 0 = PvP, 1 = PvC

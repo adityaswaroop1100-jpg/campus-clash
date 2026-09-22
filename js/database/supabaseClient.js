@@ -189,11 +189,66 @@ class SupabaseService {
         p2_damage: matchStats.p2Damage || 0,
         max_combo: matchStats.maxCombo || 0,
         arena_id: matchStats.arenaId || 'techpark',
-        duration_seconds: matchStats.duration || 60
       }]);
-    } catch (e) {
-      // Non-blocking telemetry
+    } catch (err) {
+      console.warn('[Supabase logMatch Error]', err.message);
     }
+  }
+
+  /**
+   * Register or update participant in Supabase
+   */
+  async registerParticipant(participant) {
+    const payload = {
+      name: participant.name ? participant.name.trim() : 'Participant',
+      registration_number: participant.regNo ? participant.regNo.trim().toUpperCase() : '',
+      srm_mail_id: participant.srmMail ? participant.srmMail.trim().toLowerCase() : '',
+      participation_id: participant.partId ? participant.partId.trim().toUpperCase() : '',
+      phone_number: participant.phone ? participant.phone.trim() : '',
+      last_active_at: new Date().toISOString()
+    };
+
+    // Save to localStorage immediately so user info persists on device
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem('campus_clash_current_participant', JSON.stringify(payload));
+    }
+
+    const client = this.ensureClient();
+    if (client) {
+      try {
+        const { data, error } = await client
+          .from('campus_clash_participants')
+          .insert([payload]);
+
+        if (!error) {
+          console.log('[Supabase] Participant registered successfully:', payload.registration_number);
+          return { success: true, data };
+        } else {
+          console.warn('[Supabase Participant Error]', error.message);
+          return { success: true, localOnly: true, error: error.message };
+        }
+      } catch (err) {
+        console.warn('[Supabase Participant Exception]', err.message);
+        return { success: true, localOnly: true, error: err.message };
+      }
+    }
+
+    return { success: true, localOnly: true };
+  }
+
+  /**
+   * Get cached participant
+   */
+  getCurrentParticipant() {
+    if (typeof localStorage !== 'undefined') {
+      const stored = localStorage.getItem('campus_clash_current_participant');
+      if (stored) {
+        try {
+          return JSON.parse(stored);
+        } catch (e) {}
+      }
+    }
+    return null;
   }
 }
 

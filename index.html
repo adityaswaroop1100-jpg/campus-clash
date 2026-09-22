@@ -32,7 +32,7 @@
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Rajdhani:wght@600;700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700;800;900&family=Press+Start+2P&family=Rajdhani:wght@600;700;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
 
   <!-- External Stylesheets -->
   <link rel="stylesheet" href="css/main.css?v=6">
@@ -42,6 +42,7 @@
   <link rel="stylesheet" href="css/stageSelect.css?v=2">
   <link rel="stylesheet" href="css/game.css?v=6">
   <link rel="stylesheet" href="css/leaderboard.css?v=1">
+  <link rel="stylesheet" href="css/entryPortal.css?v=1">
 
   <!-- Supabase JS Client CDN -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -54,6 +55,238 @@
 
     <!-- 960x640 Fixed Aspect Ratio Canvas Wrapper -->
     <div id="canvas-wrapper">
+
+      <!-- Layer 50: Peak Quality Aaruush Quest Cyber Entry Portal -->
+      <div id="entry-portal" class="entry-portal" role="region" aria-label="Aaruush Quest Entry Portal">
+        <!-- Top Status Bar -->
+        <header class="portal-header">
+          <div class="portal-status-pill">
+            <span class="portal-status-dot"></span>
+            <span class="portal-status-text">AARUUSH GRID // LEVEL 0</span>
+          </div>
+
+          <div class="portal-nav-actions">
+            <button type="button" id="portal-btn-briefing" class="portal-nav-btn">
+              <span class="icon-info">ⓘ</span> BRIEFING
+            </button>
+            <button type="button" id="portal-btn-schedule" class="portal-nav-btn schedule">
+              <span class="icon-cal">📅</span> SCHEDULE
+            </button>
+            <button type="button" id="portal-btn-sound" class="portal-nav-btn sound-toggle" aria-label="Toggle Sound">🔊</button>
+          </div>
+        </header>
+
+        <!-- Center Stage Visuals -->
+        <main class="portal-main-content">
+          <!-- Solar Emblem / Logo Halo -->
+          <div class="portal-emblem-wrap">
+            <div class="portal-emblem-halo"></div>
+            <!-- Outer Golden Rotating Rays -->
+            <svg class="portal-solar-rays-gold" viewBox="0 0 200 200">
+              <defs>
+                <radialGradient id="goldRayGrad" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%" stop-color="#ffd602" stop-opacity="0.9"/>
+                  <stop offset="70%" stop-color="#ff7700" stop-opacity="0.4"/>
+                  <stop offset="100%" stop-color="#ff7700" stop-opacity="0"/>
+                </radialGradient>
+              </defs>
+              <g fill="url(#goldRayGrad)" transform="translate(100, 100)">
+                <polygon points="0,-15 -4,-90 0,-98 4,-90" />
+                <polygon points="0,-15 -4,-90 0,-98 4,-90" transform="rotate(22.5)" />
+                <polygon points="0,-15 -4,-90 0,-98 4,-90" transform="rotate(45)" />
+                <polygon points="0,-15 -4,-90 0,-98 4,-90" transform="rotate(67.5)" />
+                <polygon points="0,-15 -4,-90 0,-98 4,-90" transform="rotate(90)" />
+                <polygon points="0,-15 -4,-90 0,-98 4,-90" transform="rotate(112.5)" />
+                <polygon points="0,-15 -4,-90 0,-98 4,-90" transform="rotate(135)" />
+                <polygon points="0,-15 -4,-90 0,-98 4,-90" transform="rotate(157.5)" />
+                <polygon points="0,-15 -4,-90 0,-98 4,-90" transform="rotate(180)" />
+                <polygon points="0,-15 -4,-90 0,-98 4,-90" transform="rotate(202.5)" />
+                <polygon points="0,-15 -4,-90 0,-98 4,-90" transform="rotate(225)" />
+                <polygon points="0,-15 -4,-90 0,-98 4,-90" transform="rotate(247.5)" />
+                <polygon points="0,-15 -4,-90 0,-98 4,-90" transform="rotate(270)" />
+                <polygon points="0,-15 -4,-90 0,-98 4,-90" transform="rotate(292.5)" />
+                <polygon points="0,-15 -4,-90 0,-98 4,-90" transform="rotate(315)" />
+                <polygon points="0,-15 -4,-90 0,-98 4,-90" transform="rotate(337.5)" />
+              </g>
+            </svg>
+            <!-- Inner Cyan Rotating Rays -->
+            <svg class="portal-solar-rays-cyan" viewBox="0 0 200 200">
+              <defs>
+                <radialGradient id="cyanRayGrad" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%" stop-color="#00f0ff" stop-opacity="0.8"/>
+                  <stop offset="60%" stop-color="#00a8ff" stop-opacity="0.3"/>
+                  <stop offset="100%" stop-color="#0055ff" stop-opacity="0"/>
+                </radialGradient>
+              </defs>
+              <g fill="url(#cyanRayGrad)" transform="translate(100, 100)">
+                <polygon points="0,-12 -2,-75 0,-85 2,-75" transform="rotate(11.25)" />
+                <polygon points="0,-12 -2,-75 0,-85 2,-75" transform="rotate(33.75)" />
+                <polygon points="0,-12 -2,-75 0,-85 2,-75" transform="rotate(56.25)" />
+                <polygon points="0,-12 -2,-75 0,-85 2,-75" transform="rotate(78.75)" />
+                <polygon points="0,-12 -2,-75 0,-85 2,-75" transform="rotate(101.25)" />
+                <polygon points="0,-12 -2,-75 0,-85 2,-75" transform="rotate(123.75)" />
+                <polygon points="0,-12 -2,-75 0,-85 2,-75" transform="rotate(146.25)" />
+                <polygon points="0,-12 -2,-75 0,-85 2,-75" transform="rotate(168.75)" />
+                <polygon points="0,-12 -2,-75 0,-85 2,-75" transform="rotate(191.25)" />
+                <polygon points="0,-12 -2,-75 0,-85 2,-75" transform="rotate(213.75)" />
+                <polygon points="0,-12 -2,-75 0,-85 2,-75" transform="rotate(236.25)" />
+                <polygon points="0,-12 -2,-75 0,-85 2,-75" transform="rotate(258.75)" />
+                <polygon points="0,-12 -2,-75 0,-85 2,-75" transform="rotate(281.25)" />
+                <polygon points="0,-12 -2,-75 0,-85 2,-75" transform="rotate(303.75)" />
+                <polygon points="0,-12 -2,-75 0,-85 2,-75" transform="rotate(326.25)" />
+                <polygon points="0,-12 -2,-75 0,-85 2,-75" transform="rotate(348.75)" />
+              </g>
+            </svg>
+            <div class="portal-logo-ring"></div>
+            <img src="assets/aaruush_logo.png" alt="Aaruush Logo" class="portal-logo-img">
+          </div>
+
+          <!-- Grand Cyber Title -->
+          <h1 class="portal-title-h1">
+            <span class="title-white">AARUUSH</span>
+            <span class="title-cyan">QUEST</span>
+          </h1>
+
+          <!-- Tagline -->
+          <div class="portal-tagline">
+            <span class="tag-orange">17 Portals.</span>
+            <span class="tag-gold">180 Seconds.</span>
+            <span class="tag-cyan">1 Champion.</span>
+          </div>
+
+          <!-- Quick Info Cards -->
+          <div class="portal-cards-row">
+            <div class="portal-info-card">
+              <span class="card-icon">⏱️</span>
+              <div class="card-text">
+                <div class="card-label">DURATION</div>
+                <div class="card-value">3:00 MIN</div>
+              </div>
+            </div>
+            <div class="portal-info-card">
+              <span class="card-icon">🚩</span>
+              <div class="card-text">
+                <div class="card-label">OBJECTIVE</div>
+                <div class="card-value">ALL PORTALS</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Clearance Registration Form Card -->
+          <div class="portal-form-card">
+            <div class="portal-form-title">⚡ PARTICIPANT CLEARANCE TERMINAL ⚡</div>
+            <form id="portal-reg-form" autocomplete="on">
+              <div class="portal-grid-inputs">
+                <div class="portal-input-group portal-field-full">
+                  <label for="entry-name">NAME *</label>
+                  <input type="text" id="entry-name" name="name" placeholder="Aditya Swaroop" required>
+                </div>
+                <div class="portal-input-group">
+                  <label for="entry-regno">REGISTRATION NUMBER *</label>
+                  <input type="text" id="entry-regno" name="regno" placeholder="RA2511026010269" required>
+                </div>
+                <div class="portal-input-group">
+                  <label for="entry-partid">PARTICIPATION ID *</label>
+                  <input type="text" id="entry-partid" name="partid" placeholder="AR-9842" required>
+                </div>
+                <div class="portal-input-group">
+                  <label for="entry-srmmail">SRM MAIL ID *</label>
+                  <input type="email" id="entry-srmmail" name="srmmail" placeholder="as1234@srmist.edu.in" required>
+                </div>
+                <div class="portal-input-group">
+                  <label for="entry-phone">PHONE NUMBER *</label>
+                  <input type="tel" id="entry-phone" name="phone" placeholder="9876543210" maxlength="15" required>
+                </div>
+              </div>
+              <div id="entry-alert-box" class="portal-alert hidden"></div>
+              <button type="submit" id="btn-start-quest" class="btn-start-quest">
+                <span>START QUEST 🚀</span>
+              </button>
+            </form>
+          </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="portal-footer">
+          <span class="portal-footer-dot"></span>
+          <span>SYSTEM ONLINE</span>
+          <span>|</span>
+          <span>SRMIST KTR FESTIVAL GRID</span>
+          <span>|</span>
+          <span>v2.4.1</span>
+        </footer>
+      </div>
+
+      <!-- Briefing Modal -->
+      <div id="briefing-modal" class="portal-modal hidden" role="dialog" aria-modal="true" aria-labelledby="briefing-title">
+        <div class="portal-modal-card">
+          <div class="portal-modal-header">
+            <span id="briefing-title">⚡ AARUUSH QUEST // PROTOCOL BRIEFING ⚡</span>
+            <button type="button" class="portal-modal-close" aria-label="Close modal">✕</button>
+          </div>
+          <div class="portal-modal-body">
+            <h3 style="color:#00f0ff;margin:0 0 10px 0;font-family:'Orbitron',sans-serif;">MISSION DIRECTIVE</h3>
+            <p>Welcome to <strong>AARUUSH QUEST: CAMPUS CLASH</strong> — the premier SRMIST nationwide techno-management combat simulation.</p>
+            
+            <div style="background:rgba(0,240,255,0.08);border-left:3px solid #00f0ff;padding:10px 14px;margin:12px 0;border-radius:4px;">
+              <strong style="color:#ffd602;">CORE OBJECTIVE:</strong>
+              <p style="margin:4px 0 0 0;">Navigate all 17 Portals across SRM Kattankulathur Campus within the 180-second clock window. Neutralize rival department champions and claim the ultimate 10 CGPA victory.</p>
+            </div>
+
+            <h4 style="color:#ffd602;margin:14px 0 6px 0;font-family:'Orbitron',sans-serif;">KEY PROTOCOLS</h4>
+            <ul style="padding-left:20px;margin:0;line-height:1.7;">
+              <li><strong>Fighter Archetypes:</strong> Choose from 10 distinct campus legends including Topper, Backbencher, Hosteler, Senior, Placement Warrior, and Cypher.</li>
+              <li><strong>Campus Arenas:</strong> Battle across authentic SRM landmarks — Tech Park Steps, UB Clock Tower, Dr. T.P. Ganesan Auditorium, and the Grand Arch Gate.</li>
+              <li><strong>Deterministic Combat:</strong> Frame-accurate hitboxes, cancelable light/heavy attacks, directional blocking, and devastating cinematic Ultimates.</li>
+              <li><strong>Live Leaderboard:</strong> All clearance records and battle telemetry sync directly with the festival Supabase cloud database.</li>
+            </ul>
+          </div>
+          <div class="portal-modal-footer">
+            <button type="button" class="portal-modal-close btn-cyber-outline" style="padding:6px 16px;font-family:'Orbitron',monospace;font-size:11px;cursor:pointer;">[ ACKNOWLEDGED ]</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Schedule Modal -->
+      <div id="schedule-modal" class="portal-modal hidden" role="dialog" aria-modal="true" aria-labelledby="schedule-title">
+        <div class="portal-modal-card">
+          <div class="portal-modal-header">
+            <span id="schedule-title">📅 AARUUSH FESTIVAL TIMELINE & ARENA SCHEDULE</span>
+            <button type="button" class="portal-modal-close" aria-label="Close modal">✕</button>
+          </div>
+          <div class="portal-modal-body">
+            <div style="display:flex;flex-direction:column;gap:12px;">
+              <div style="background:rgba(255,214,2,0.08);border:1px solid rgba(255,214,2,0.3);border-radius:8px;padding:12px;">
+                <div style="display:flex;justify-content:space-between;color:#ffd602;font-family:'Orbitron',sans-serif;font-size:12px;font-weight:700;">
+                  <span>PHASE 1: REGISTRATION & INITIAL CLEARANCE</span>
+                  <span>ROUND 0</span>
+                </div>
+                <p style="margin:6px 0 0 0;font-size:12px;color:#94a3b8;">Identity verification on SRMIST Festival Grid. All participant details locked in Supabase.</p>
+              </div>
+
+              <div style="background:rgba(0,240,255,0.08);border:1px solid rgba(0,240,255,0.3);border-radius:8px;padding:12px;">
+                <div style="display:flex;justify-content:space-between;color:#00f0ff;font-family:'Orbitron',sans-serif;font-size:12px;font-weight:700;">
+                  <span>PHASE 2: CAMPUS QUALIFIERS</span>
+                  <span>TECH PARK / UB</span>
+                </div>
+                <p style="margin:6px 0 0 0;font-size:12px;color:#94a3b8;">1v1 arcade combat brackets. High-score speedruns and department rivalries.</p>
+              </div>
+
+              <div style="background:rgba(254,107,0,0.08);border:1px solid rgba(254,107,0,0.3);border-radius:8px;padding:12px;">
+                <div style="display:flex;justify-content:space-between;color:#fe6b00;font-family:'Orbitron',sans-serif;font-size:12px;font-weight:700;">
+                  <span>PHASE 3: GRAND FINALE CLASH</span>
+                  <span>TP GANESAN AUDITORIUM</span>
+                </div>
+                <p style="margin:6px 0 0 0;font-size:12px;color:#94a3b8;">Top 8 tournament finals on Asia's premier 4000-seat auditorium stage. Live trophy coronation.</p>
+              </div>
+            </div>
+          </div>
+          <div class="portal-modal-footer">
+            <button type="button" class="portal-modal-close btn-cyber-outline" style="padding:6px 16px;font-family:'Orbitron',monospace;font-size:11px;cursor:pointer;">[ CLOSE ]</button>
+          </div>
+        </div>
+      </div>
+
       <!-- Layer 0: Main Background Canvas (Parallax SRM Skyline, Spotlights, Silhouettes) -->
       <canvas id="game-canvas" width="960" height="640" aria-label="Campus Clash 2D Game Screen">
         Your browser does not support the HTML5 canvas element.
