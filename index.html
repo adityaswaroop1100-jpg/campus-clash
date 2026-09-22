@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <meta name="description" content="Campus Clash — 2D Arcade Fighting Game set in SRM Campus">
+  <meta name="author" content="Aditya Swaroop (RA2511026010269)">
+  <title>Campus Clash | SRM Arcade Fighter</title>
+
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+
+  <!-- Instant Error Catcher -->
+  <script>
+    window.onerror = function(msg, url, line, col, error) {
+      console.error('[CampusClash Fatal]', msg, url, line, col, error);
+      var errDiv = document.getElementById('debug-fatal-error');
+      if (!errDiv) {
+        errDiv = document.createElement('div');
+        errDiv.id = 'debug-fatal-error';
+        errDiv.style.cssText = 'position:fixed;top:10px;left:10px;right:10px;background:#c62828;color:#fff;padding:16px;z-index:999999;font-family:monospace;font-size:14px;border:2px solid #ffd700;border-radius:8px;box-shadow:0 8px 30px rgba(0,0,0,0.9);white-space:pre-wrap;';
+        document.body.appendChild(errDiv);
+      }
+      errDiv.innerHTML = '<h3 style="margin:0 0 8px 0;color:#ffd700;">⚠️ Game Engine Error</h3>' +
+        '<strong>Message:</strong> ' + msg + '<br>' +
+        '<strong>Source:</strong> ' + (url ? url.split('/').pop() : 'inline') + ' (Line ' + line + ', Col ' + col + ')<br>' +
+        (error && error.stack ? '<pre style="margin-top:8px;font-size:11px;color:#ffcdd2;overflow-x:auto;">' + error.stack + '</pre>' : '');
+    };
+  </script>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Rajdhani:wght@600;700;900&display=swap" rel="stylesheet">
+
+  <!-- External Stylesheets -->
+  <link rel="stylesheet" href="css/main.css?v=6">
+  <link rel="stylesheet" href="css/portal.css?v=6">
+  <link rel="stylesheet" href="css/landing.css?v=6">
+  <link rel="stylesheet" href="css/characterSelect.css?v=7">
+  <link rel="stylesheet" href="css/stageSelect.css?v=2">
+  <link rel="stylesheet" href="css/game.css?v=6">
+</head>
+<body>
+
+  <!-- Main Viewport Container -->
+  <main id="app-container" role="main">
+    <h1 class="sr-only">Campus Clash — SRM Campus 2D Fighting Game</h1>
+
+    <!-- 960x640 Fixed Aspect Ratio Canvas Wrapper -->
+    <div id="canvas-wrapper">
+      <!-- Layer 0: Main Background Canvas (Parallax SRM Skyline, Spotlights, Silhouettes) -->
+      <canvas id="game-canvas" width="960" height="640" aria-label="Campus Clash 2D Game Screen">
+        Your browser does not support the HTML5 canvas element.
+      </canvas>
+
+      <!-- Layer 1: Retro Arcade Landing Overlay -->
+      <div id="landing-overlay" class="landing-overlay" role="region" aria-label="Main Menu">
+        <!-- Top Section (15%): SRM Games Presents Banner -->
+        <header class="landing-top-section">
+          <div class="srm-presents-badge">
+            <span class="srm-presents-star">★</span>
+            <span class="srm-presents-text">SRM GAMES PRESENTS</span>
+            <span class="srm-presents-star">★</span>
+          </div>
+          <div class="srm-location-sub">TECH PARK ARCADE • KATTANKULATHUR</div>
+        </header>
+
+        <!-- Middle Section (50%): Main Game Title -->
+        <section class="landing-middle-section" aria-label="Game Title">
+          <div class="title-container" id="landing-title-container">
+            <div class="title-main-row">
+              <h1 class="arcade-title-text">CAMPUS CLASH</h1>
+              <span class="arcade-title-2d">2D</span>
+            </div>
+            <div class="title-tagline">BRAWL FOR THE 10 CGPA</div>
+          </div>
+        </section>
+
+        <!-- Lower Middle Section (20%): Vertical Arcade Menu -->
+        <nav class="landing-menu-section" aria-label="Main Menu Navigation">
+          <div class="arcade-menu-list" role="menu">
+            <button id="menu-btn-fight" class="arcade-menu-btn btn-fight selected" role="menuitem" data-index="0" tabindex="0">
+              <span class="btn-cursor-left">▶</span>
+              <span class="btn-label">[ FIGHT! ]</span>
+              <span class="btn-cursor-right">◀</span>
+            </button>
+            <button id="menu-btn-training" class="arcade-menu-btn" role="menuitem" data-index="1" tabindex="0">
+              <span class="btn-cursor-left">▶</span>
+              <span class="btn-label">[ TRAINING ]</span>
+              <span class="btn-cursor-right">◀</span>
+            </button>
+            <button id="menu-btn-credits" class="arcade-menu-btn" role="menuitem" data-index="2" tabindex="0">
+              <span class="btn-cursor-left">▶</span>
+              <span class="btn-label">[ CREDITS ]</span>
+              <span class="btn-cursor-right">◀</span>
+            </button>
+          </div>
+        </nav>
+
+        <!-- Bottom Section (10%): Dynamic Versus Screen Preview -->
+        <footer class="landing-bottom-section">
+          <div class="versus-preview-card">
+            <span class="fighter-name-badge topper">🎓 THE TOPPER</span>
+            <span class="versus-divider">VS</span>
+            <span class="fighter-name-badge backbencher">🔥 THE BACKBENCHER</span>
+          </div>
+          <div class="landing-controls-hint">
+            <span>[↑/↓]</span> NAVIGATE &nbsp;|&nbsp; <span>[ENTER / SPACE]</span> SELECT &nbsp;|&nbsp; <span>[ESC]</span> CREDITS
+          </div>
+        </footer>
+      </div>
+
+      <!-- Layer 1.5: High-End Retro Arcade Character Select Screen Overlay -->
+      <div id="characterSelectScreen" class="char-select-screen hidden" role="region" aria-label="Character Selection">
+        <!-- Top Banner (10% height) -->
+        <header class="char-top-banner">
+          <button id="char-select-back-btn" class="char-nav-btn" tabindex="0">
+            <span class="btn-icon">←</span> ESC: TITLE
+          </button>
+
+          <div class="char-select-title-wrap">
+            <span class="arcade-chevron chevron-left">&gt;&gt;&gt;</span>
+            <h1 class="char-select-main-title">SELECT YOUR FIGHTER</h1>
+            <span class="arcade-chevron chevron-right">&lt;&lt;&lt;</span>
+          </div>
+
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <button class="char-mode-pill venue-pill-btn" id="char-venue-pill" title="Choose Battle Venue" tabindex="0">
+              <span class="pill-dot" style="color: #ffd700;">🏛️</span>
+              <span class="pill-text" id="char-venue-text">VENUE: TECH PARK</span>
+            </button>
+            <div class="char-mode-pill" id="char-mode-indicator">
+              <span class="pill-dot">●</span>
+              <span class="pill-text" id="char-mode-text">1 VS 1 LOCAL</span>
+            </div>
+          </div>
+        </header>
+
+        <!-- Main 3x2 Grid (70% height) -->
+        <section class="char-grid-section" aria-label="Fighter Roster">
+          <div id="char-grid" class="char-grid" role="grid">
+            <!-- Card 0: The Topper -->
+            <article class="char-card selected-p1" data-index="0" data-id="topper" style="--card-primary: #1565c0; --card-accent: #ffd700;" tabindex="0">
+              <div class="card-inner">
+                <div class="card-badge p1-badge">P1 PICK</div>
+                <div class="card-badge p2-badge">P2 PICK</div>
+                <div class="card-portrait-wrap">
+                  <canvas class="char-portrait-canvas" width="200" height="230"></canvas>
+                  <div class="portrait-glow"></div>
+                </div>
+                <div class="card-stats">
+                  <div class="stat-bar-row">
+                    <span class="stat-label">ATK</span>
+                    <div class="stat-bar-track"><div class="stat-bar-fill atk" style="--val: 65%;"></div></div>
+                  </div>
+                  <div class="stat-bar-row">
+                    <span class="stat-label">DEF</span>
+                    <div class="stat-bar-track"><div class="stat-bar-fill def" style="--val: 80%;"></div></div>
+                  </div>
+                  <div class="stat-bar-row">
+                    <span class="stat-label">SPD</span>
+                    <div class="stat-bar-track"><div class="stat-bar-fill spd" style="--val: 90%;"></div></div>
+                  </div>
+                  <div class="stat-bar-row">
+                    <span class="stat-label">RCH</span>
+                    <div class="stat-bar-track"><div class="stat-bar-fill rch" style="--val: 60%;"></div></div>
+                  </div>
+                </div>
+                <div class="card-nameplate">
+                  <div class="char-name">THE TOPPER</div>
+                  <div class="char-subtitle">ACADEMIC ZONER</div>
+                </div>
+              </div>
+            </article>
+
+            <!-- Card 1: The Backbencher -->
+            <article class="char-card selected-p2" data-index="1" data-id="backbencher" style="--card-primary: #ff6b35; --card-accent: #00e5ff;" tabindex="0">
+              <div class="card-inner">
+                <div class="card-badge p1-badge">P1 PICK</div>
+                <div class="card-badge p2-badge">P2 PICK</div>
+                <div class="card-portrait-wrap">
+                  <canvas class="char-portrait-canvas" width="200" height="230"></canvas>
+                  <div class="portrait-glow"></div>
+                </div>
+                <div class="card-stats">
+                  <div class="stat-bar-row">
+                    <span class="stat-label">ATK</span>
+                    <div class="stat-bar-track"><div class="stat-bar-fill atk" style="--val: 95%;"></div></div>
+                  </div>
+                  <div class="stat-bar-row">
+                    <span class="stat-label">DEF</span>
+                    <div class="stat-bar-track"><div class="stat-bar-fill def" style="--val: 60%;"></div></div>
+                  </div>
+                  <div class="stat-bar-row">
+                    <span class="stat-label">SPD</span>
+                    <div class="stat-bar-track"><div class="stat-bar-fill spd" style="--val: 75%;"></div></div>
+                  </div>
+                  <div class="stat-bar-row">
+                    <span class="stat-label">RCH</span>
+                    <div class="stat-bar-track"><div class="stat-bar-fill rch" style="--val: 70%;"></div></div>
+                  </div>
+                </div>
+                <div class="card-nameplate">
+                  <div class="char-name">BACKBENCHER</div>
+                  <div class="char-subtitle">CHAOS BRAWLER</div>
+                </div>
+              </div>
+            </article>
+
+            <!-- Card 2: The Hosteler -->
+            <article class="char-card" data-index="2" data-id="hosteler" style="--card-primary: #d84315; --card-accent: #ffab40;" tabindex="0">
+              <div class="card-inner">
+                <div class="card-badge p1-badge">P1 PICK</div>
+                <div class="card-badge p2-badge">P2 PICK</div>
+                <div class="card-portrait-wrap">
+                  <canvas class="char-portrait-canvas" width="200" height="230"></canvas>
+                  <div class="portrait-glow"></div>
+                </div>
+                <div class="card-stats">
+                  <div class="stat-bar-row">
+                    <span class="stat-label">ATK</span>
+                    <div class="stat-bar-track"><div class="stat-bar-fill atk" style="--val: 90%;"></div></div>
+                  </div>
+                  <div class="stat-bar-row">
+                    <span class="stat-label">DEF</span>
+                    <div class="stat-bar-track"><div class="stat-bar-fill def" style="--val: 95%;"></div></div>
+                  </div>
+                  <div class="stat-bar-row">
+                    <span class="stat-label">SPD</span>
+                    <div class="stat-bar-track"><div class="stat-bar-fill spd" style="--val: 50%;"></div></div>
+                  </div>
+                  <div class="stat-bar-row">
+                    <span class="stat-label">RCH</span>
+                    <div class="stat-bar-track"><div class="stat-bar-fill rch" style="--val: 55%;"></div></div>
+                  </div>
+                </div>
+                <div class="card-nameplate">
+                  <div class="char-name">THE HOSTELER</div>
+                  <div class="char-subtitle">TANK GRAPPLER</div>
+                </div>
+              </div>
+            </article>
+
+            <!-- Card 3: The Senior -->
+            <article class="char-card" data-index="3" data-id="senior" style="--card-primary: #1b4d3e; --card-accent: #ffd700;" tabindex="0">
+              <div class="card-inner">
+                <div class="card-badge p1-badge">P1 PICK</div>
+                <div class="card-badge p2-badge">P2 PICK</div>
+                <div class="card-portrait-wrap">
+                  <canvas class="char-portrait-canvas" width="200" height="230"></canvas>
+                  <div class="portrait-glow"></div>
+                </div>
+                <div class="card-stats">
+                  <div class="stat-bar-row">
+                    <span class="stat-label">ATK</span>
+                    <div class="stat-bar-track"><div class="stat-bar-fill atk" style="--val: 75%;"></div></div>
+                  </div>
+                  <div class="stat-bar-row">
+                    <span class="stat-label">DEF</span>
+                    <div class="stat-bar-track"><div class="stat-bar-fill def" style="--val: 75%;"></div></div>
+                  </div>
+                  <div class="stat-bar-row">
+                    <span class="stat-label">SPD</span>
+                    <div class="stat-bar-track"><div class="stat-bar-fill spd" style="--val: 70%;"></div></div>
+                  </div>
+                  <div class="stat-bar-row">
+                    <span class="stat-label">RCH</span>
+                    <div class="stat-bar-track"><div class="stat-bar-fill rch" style="--val: 90%;"></div></div>
+                  </div>
+                </div>
+                <div class="card-nameplate">
+                  <div class="char-name">THE SENIOR</div>
+                  <div class="char-subtitle">CONTROL ZONER</div>
+                </div>
+              </div>
+            </article>
+
+            <!-- Card 4: Placement Warrior -->
+            <article class="char-card" data-index="4" data-id="placementWarrior" style="--card-primary: #0d47a1; --card-accent: #00e5ff;" tabindex="0">
+              <div class="card-inner">
+                <div class="card-badge p1-badge">P1 PICK</div>
+                <div class="card-badge p2-badge">P2 PICK</div>
+                <div class="card-portrait-wrap">
+                  <canvas class="char-portrait-canvas" width="200" height="230"></canvas>
+                  <div class="portrait-glow"></div>
+                </div>
+                <div class="card-stats">
+                  <div class="stat-bar-row">
+                    <span class="stat-label">ATK</span>
+                    <div class="stat-bar-track"><div class="stat-bar-fill atk" style="--val: 80%;"></div></div>
+                  </div>
+                  <div class="stat-bar-row">
+                    <span class="stat-label">DEF</span>
+                    <div class="stat-bar-track"><div class="stat-bar-fill def" style="--val: 65%;"></div></div>
+                  </div>
+                  <div class="stat-bar-row">
+                    <span class="stat-label">SPD</span>
+                    <div class="stat-bar-track"><div class="stat-bar-fill spd" style="--val: 95%;"></div></div>
+                  </div>
+                  <div class="stat-bar-row">
+                    <span class="stat-label">RCH</span>
+                    <div class="stat-bar-track"><div class="stat-bar-fill rch" style="--val: 75%;"></div></div>
+                  </div>
+                </div>
+                <div class="card-nameplate">
+                  <div class="char-name">PLACEMENT WARRIOR</div>
+                  <div class="char-subtitle">RUSHDOWN COMBO</div>
+                </div>
+              </div>
+            </article>
+
+            <!-- Card 5: Sports Star -->
+            <article class="char-card" data-index="5" data-id="sportsStar" style="--card-primary: #00c853; --card-accent: #ffd700;" tabindex="0">
+              <div class="card-inner">
+                <div class="card-badge p1-badge">P1 PICK</div>
+                <div class="card-badge p2-badge">P2 PICK</div>
+                <div class="card-portrait-wrap">
+                  <canvas class="char-portrait-canvas" width="200" height="230"></canvas>
+                  <div class="portrait-glow"></div>
+                </div>
+                <div class="card-stats">
+                  <div class="stat-bar-row">
+                    <span class="stat-label">ATK</span>
+                    <div class="stat-bar-track"><div class="stat-bar-fill atk" style="--val: 85%;"></div></div>
+                  </div>
+                  <div class="stat-bar-row">
+                    <span class="stat-label">DEF</span>
+                    <div class="stat-bar-track"><div class="stat-bar-fill def" style="--val: 75%;"></div></div>
+                  </div>
+                  <div class="stat-bar-row">
+                    <span class="stat-label">SPD</span>
+                    <div class="stat-bar-track"><div class="stat-bar-fill spd" style="--val: 90%;"></div></div>
+                  </div>
+                  <div class="stat-bar-row">
+                    <span class="stat-label">RCH</span>
+                    <div class="stat-bar-track"><div class="stat-bar-fill rch" style="--val: 80%;"></div></div>
+                  </div>
+                </div>
+                <div class="card-nameplate">
+                  <div class="char-name">SPORTS STAR</div>
+                  <div class="char-subtitle">AGILE BRAWLER</div>
+                </div>
+              </div>
+            </article>
+
+            <!-- Card 6: Cypher -->
+            <article class="char-card" data-index="6" data-id="cypher" style="--card-primary: #00ff41; --card-accent: #00e5ff;" tabindex="0">
+              <div class="card-inner">
+                <div class="card-badge p1-badge">P1 PICK</div>
+                <div class="card-badge p2-badge">P2 PICK</div>
+                <div class="card-portrait-wrap">
+                  <canvas class="char-portrait-canvas" width="200" height="230"></canvas>
+                  <div class="portrait-glow"></div>
+                </div>
+                <div class="card-stats">
+                  <div class="stat-bar-row">
+                    <span class="stat-label">ATK</span>
+                    <div class="stat-bar-track"><div class="stat-bar-fill atk" style="--val: 70%;"></div></div>
+                  </div>
+                  <div class="stat-bar-row">
+                    <span class="stat-label">DEF</span>
+                    <div class="stat-bar-track"><div class="stat-bar-fill def" style="--val: 60%;"></div></div>
+                  </div>
+                  <div class="stat-bar-row">
+                    <span class="stat-label">SPD</span>
+                    <div class="stat-bar-track"><div class="stat-bar-fill spd" style="--val: 95%;"></div></div>
+                  </div>
+                  <div class="stat-bar-row">
+                    <span class="stat-label">RCH</span>
+                    <div class="stat-bar-track"><div class="stat-bar-fill rch" style="--val: 85%;"></div></div>
+                  </div>
+                </div>
+                <div class="card-nameplate">
+                  <div class="char-name">CYPHER</div>
+                  <div class="char-subtitle">CAMPUS HACKER</div>
+                </div>
+              </div>
+            </article>
+
+            <!-- Card 7: Gavel -->
+            <article class="char-card" data-index="7" data-id="gavel" style="--card-primary: #c8a84b; --card-accent: #ffd700;" tabindex="0">
+              <div class="card-inner">
+                <div class="card-badge p1-badge">P1 PICK</div>
+                <div class="card-badge p2-badge">P2 PICK</div>
+                <div class="card-portrait-wrap">
+                  <canvas class="char-portrait-canvas" width="200" height="230"></canvas>
+                  <div class="portrait-glow"></div>
+                </div>
+                <div class="card-stats">
+                  <div class="stat-bar-row">
+                    <span class="stat-label">ATK</span>
+                    <div class="stat-bar-track"><div class="stat-bar-fill atk" style="--val: 95%;"></div></div>
+                  </div>
+                  <div class="stat-bar-row">
+                    <span class="stat-label">DEF</span>
+                    <div class="stat-bar-track"><div class="stat-bar-fill def" style="--val: 90%;"></div></div>
+                  </div>
+                  <div class="stat-bar-row">
+                    <span class="stat-label">SPD</span>
+                    <div class="stat-bar-track"><div class="stat-bar-fill spd" style="--val: 50%;"></div></div>
+                  </div>
+                  <div class="stat-bar-row">
+                    <span class="stat-label">RCH</span>
+                    <div class="stat-bar-track"><div class="stat-bar-fill rch" style="--val: 70%;"></div></div>
+                  </div>
+                </div>
+                <div class="card-nameplate">
+                  <div class="char-name">GAVEL</div>
+                  <div class="char-subtitle">MOOT COURT LEGEND</div>
+                </div>
+              </div>
+            </article>
+
+            <!-- Card 8: Bolt -->
+            <article class="char-card" data-index="8" data-id="bolt" style="--card-primary: #00b4d8; --card-accent: #ffd700;" tabindex="0">
+              <div class="card-inner">
+                <div class="card-badge p1-badge">P1 PICK</div>
+                <div class="card-badge p2-badge">P2 PICK</div>
+                <div class="card-portrait-wrap">
+                  <canvas class="char-portrait-canvas" width="200" height="230"></canvas>
+                  <div class="portrait-glow"></div>
+                </div>
+                <div class="card-stats">
+                  <div class="stat-bar-row">
+                    <span class="stat-label">ATK</span>
+                    <div class="stat-bar-track"><div class="stat-bar-fill atk" style="--val: 80%;"></div></div>
+                  </div>
+                  <div class="stat-bar-row">
+                    <span class="stat-label">DEF</span>
+                    <div class="stat-bar-track"><div class="stat-bar-fill def" style="--val: 55%;"></div></div>
+                  </div>
+                  <div class="stat-bar-row">
+                    <span class="stat-label">SPD</span>
+                    <div class="stat-bar-track"><div class="stat-bar-fill spd" style="--val: 100%;"></div></div>
+                  </div>
+                  <div class="stat-bar-row">
+                    <span class="stat-label">RCH</span>
+                    <div class="stat-bar-track"><div class="stat-bar-fill rch" style="--val: 65%;"></div></div>
+                  </div>
+                </div>
+                <div class="card-nameplate">
+                  <div class="char-name">BOLT</div>
+                  <div class="char-subtitle">THE TRACK STAR</div>
+                </div>
+              </div>
+            </article>
+
+            <!-- Card 9: Palette -->
+            <article class="char-card" data-index="9" data-id="palette" style="--card-primary: #da70d6; --card-accent: #ff1493;" tabindex="0">
+              <div class="card-inner">
+                <div class="card-badge p1-badge">P1 PICK</div>
+                <div class="card-badge p2-badge">P2 PICK</div>
+                <div class="card-portrait-wrap">
+                  <canvas class="char-portrait-canvas" width="200" height="230"></canvas>
+                  <div class="portrait-glow"></div>
+                </div>
+                <div class="card-stats">
+                  <div class="stat-bar-row">
+                    <span class="stat-label">ATK</span>
+                    <div class="stat-bar-track"><div class="stat-bar-fill atk" style="--val: 75%;"></div></div>
+                  </div>
+                  <div class="stat-bar-row">
+                    <span class="stat-label">DEF</span>
+                    <div class="stat-bar-track"><div class="stat-bar-fill def" style="--val: 65%;"></div></div>
+                  </div>
+                  <div class="stat-bar-row">
+                    <span class="stat-label">SPD</span>
+                    <div class="stat-bar-track"><div class="stat-bar-fill spd" style="--val: 80%;"></div></div>
+                  </div>
+                  <div class="stat-bar-row">
+                    <span class="stat-label">RCH</span>
+                    <div class="stat-bar-track"><div class="stat-bar-fill rch" style="--val: 85%;"></div></div>
+                  </div>
+                </div>
+                <div class="card-nameplate">
+                  <div class="char-name">PALETTE</div>
+                  <div class="char-subtitle">FINE ARTS MAJOR</div>
+                </div>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <!-- Bottom Versus Bar (20% height) -->
+        <footer class="char-bottom-bar">
+          <!-- Player 1 Profile Card (Left) -->
+          <div id="p1-profile-card" class="player-profile-card p1-profile">
+            <div class="player-avatar-box">
+              <span class="player-avatar-emoji" id="p1-profile-emoji">🎓</span>
+            </div>
+            <div class="player-info-box">
+              <div class="player-slot-label">PLAYER 1</div>
+              <div class="player-char-name" id="p1-profile-name">THE TOPPER</div>
+              <div class="player-char-tagline" id="p1-profile-tagline">"The Academic Assassin"</div>
+            </div>
+            <div class="player-lock-state" id="p1-profile-status">
+              <span class="status-stamp selecting">P1 SELECTING...</span>
+            </div>
+          </div>
+
+          <!-- Dynamic Center "VS" Emblem with Diagonal Slash -->
+          <div class="versus-center-divider">
+            <div class="diagonal-slash slash-left"></div>
+            <div class="vs-emblem-wrap">
+              <div class="vs-emblem">VS</div>
+              <div class="vs-spark-particles">
+                <span class="spark s1">✦</span>
+                <span class="spark s2">★</span>
+                <span class="spark s3">✦</span>
+              </div>
+            </div>
+            <div class="diagonal-slash slash-right"></div>
+          </div>
+
+          <!-- Player 2 Profile Card (Right) -->
+          <div id="p2-profile-card" class="player-profile-card p2-profile">
+            <div class="player-lock-state" id="p2-profile-status">
+              <span class="status-stamp pending">P2 WAITING...</span>
+            </div>
+            <div class="player-info-box text-right">
+              <div class="player-slot-label" id="p2-profile-slot">PLAYER 2</div>
+              <div class="player-char-name" id="p2-profile-name">THE BACKBENCHER</div>
+              <div class="player-char-tagline" id="p2-profile-tagline">"The Chaos Agent"</div>
+            </div>
+            <div class="player-avatar-box">
+              <span class="player-avatar-emoji" id="p2-profile-emoji">🔥</span>
+            </div>
+          </div>
+        </footer>
+
+        <!-- Dramatic 3-2-1-FIGHT Countdown Modal Overlay -->
+        <div id="char-countdown-overlay" class="char-countdown-overlay hidden" aria-live="assertive">
+          <div class="countdown-card">
+            <div class="countdown-badge">MATCH READY</div>
+            <div class="countdown-number" id="countdown-display">3</div>
+            <div class="countdown-sub" id="countdown-sub">GET READY FOR BRAWL!</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Layer 26: SRM KTR Battle Venue Select Screen Overlay -->
+      <div id="stageSelectScreen" class="stage-select-screen hidden" role="region" aria-label="Battle Venue Selection Screen">
+        <!-- Top Header Bar -->
+        <header class="stage-header-bar">
+          <button id="stage-back-btn" class="arcade-back-btn" title="Return to Fighter Select" tabindex="0">
+            <span class="btn-bracket">[</span>
+            <span class="btn-arrow">←</span>
+            <span class="btn-text">ESC: FIGHTERS</span>
+            <span class="btn-bracket">]</span>
+          </button>
+
+          <div class="stage-title-wrap">
+            <span class="arcade-chevron chevron-left">&gt;&gt;&gt;</span>
+            <h1 class="stage-select-title">SELECT BATTLE VENUE</h1>
+            <span class="arcade-chevron chevron-right">&lt;&lt;&lt;</span>
+          </div>
+
+          <div class="stage-mode-pill" id="stage-matchup-pill">
+            <span class="pill-dot">●</span>
+            <span class="pill-text" id="stage-matchup-text">SRM KTR CAMPUS</span>
+          </div>
+        </header>
+
+        <!-- Main 3x2 Grid of 6 SRM KTR Venues -->
+        <section class="stage-grid-section" aria-label="SRM KTR Campus Battlegrounds">
+          <div id="stage-grid" class="stage-grid" role="grid">
+
+            <!-- Card 0: Tech Park Steps & Plaza -->
+            <article class="stage-card selected" data-index="0" data-id="techpark" style="--venue-accent: #00e5ff;" tabindex="0">
+              <div class="stage-card-inner">
+                <div class="stage-thumb-wrap">
+                  <canvas class="stage-thumb-canvas" width="280" height="110"></canvas>
+                </div>
+                <div class="stage-card-info">
+                  <div class="stage-card-name">🏛️ TECH PARK PLAZA</div>
+                  <div class="stage-card-tagline">15-Floor IT Powerhouse & Skywalk</div>
+                  <div class="stage-card-hazard">⚠ ID Check Whistle & Sea Breeze Papers</div>
+                </div>
+              </div>
+            </article>
+
+            <!-- Card 1: University Building (UB) Quadrangle -->
+            <article class="stage-card" data-index="1" data-id="universitybuilding" style="--venue-accent: #ffd700;" tabindex="0">
+              <div class="stage-card-inner">
+                <div class="stage-thumb-wrap">
+                  <canvas class="stage-thumb-canvas" width="280" height="110"></canvas>
+                </div>
+                <div class="stage-card-info">
+                  <div class="stage-card-name">🔔 UB CLOCK TOWER</div>
+                  <div class="stage-card-tagline">Administrative Heart & Colonnade</div>
+                  <div class="stage-card-hazard">⚠ Clock Bell Toll & Ambassador Car</div>
+                </div>
+              </div>
+            </article>
+
+            <!-- Card 2: Dr. T.P. Ganesan Auditorium -->
+            <article class="stage-card" data-index="2" data-id="tpganesan" style="--venue-accent: #e040fb;" tabindex="0">
+              <div class="stage-card-inner">
+                <div class="stage-thumb-wrap">
+                  <canvas class="stage-thumb-canvas" width="280" height="110"></canvas>
+                </div>
+                <div class="stage-card-info">
+                  <div class="stage-card-name">🎭 TP GANESAN AUDITORIUM</div>
+                  <div class="stage-card-tagline">Asia's Premier 4000-Seat Hall</div>
+                  <div class="stage-card-hazard">⚠ Moving Spotlights & Bass Subwoofer</div>
+                </div>
+              </div>
+            </article>
+
+            <!-- Card 3: SRM Silver Jubilee Arch Gate -->
+            <article class="stage-card" data-index="3" data-id="archgate" style="--venue-accent: #ff4081;" tabindex="0">
+              <div class="stage-card-inner">
+                <div class="stage-thumb-wrap">
+                  <canvas class="stage-thumb-canvas" width="280" height="110"></canvas>
+                </div>
+                <div class="stage-card-info">
+                  <div class="stage-card-name">🏛️ SILVER JUBILEE ARCH</div>
+                  <div class="stage-card-tagline">GST Road (NH45) Main Entrance</div>
+                  <div class="stage-card-hazard">⚠ Bouncing Barricades & Bus Horn</div>
+                </div>
+              </div>
+            </article>
+
+            <!-- Card 4: Vendhar Square -->
+            <article class="stage-card" data-index="4" data-id="vendharsquare" style="--venue-accent: #ffd700;" tabindex="0">
+              <div class="stage-card-inner">
+                <div class="stage-thumb-wrap">
+                  <canvas class="stage-thumb-canvas" width="280" height="110"></canvas>
+                </div>
+                <div class="stage-card-info">
+                  <div class="stage-card-name">👑 VENDHAR SQUARE</div>
+                  <div class="stage-card-tagline">Founder Monument & Grand Plaza</div>
+                  <div class="stage-card-hazard">⚠ Geodesic Fountain Sprays & Sunset Flare</div>
+                </div>
+              </div>
+            </article>
+
+            <!-- Card 5: SRM School of Architecture -->
+            <article class="stage-card" data-index="5" data-id="architectureblock" style="--venue-accent: #00bcd4;" tabindex="0">
+              <div class="stage-card-inner">
+                <div class="stage-thumb-wrap">
+                  <canvas class="stage-thumb-canvas" width="280" height="110"></canvas>
+                </div>
+                <div class="stage-card-info">
+                  <div class="stage-card-name">📐 ARCHITECTURE BLOCK</div>
+                  <div class="stage-card-tagline">SRM School of Architecture</div>
+                  <div class="stage-card-hazard">⚠ Blueprints & Jury Laser Scan</div>
+                </div>
+              </div>
+            </article>
+
+            <!-- Card 6: The Cloud Citadel (WebNexus Cloud Computing) -->
+            <article class="stage-card" data-index="6" data-id="cloudcitadel" style="--venue-accent: #00e5ff;" tabindex="0">
+              <div class="stage-card-inner">
+                <div class="stage-thumb-wrap">
+                  <canvas class="stage-thumb-canvas" width="280" height="110"></canvas>
+                </div>
+                <div class="stage-card-info">
+                  <div class="stage-card-name">☁️ CLOUD CITADEL</div>
+                  <div class="stage-card-tagline">WebNexus Cloud Computing &amp; Pods</div>
+                  <div class="stage-card-hazard">🌐 Server Blade Clusters &amp; K8S Nodes</div>
+                </div>
+              </div>
+            </article>
+
+            <!-- Card 7: Cyber Fortress Zero-Day (WebNexus Cyber Security) -->
+            <article class="stage-card" data-index="7" data-id="cyberfortress" style="--venue-accent: #ff1744;" tabindex="0">
+              <div class="stage-card-inner">
+                <div class="stage-thumb-wrap">
+                  <canvas class="stage-thumb-canvas" width="280" height="110"></canvas>
+                </div>
+                <div class="stage-card-info">
+                  <div class="stage-card-name">🛡️ CYBER FORTRESS</div>
+                  <div class="stage-card-tagline">WebNexus Cyber Security &amp; Firewall</div>
+                  <div class="stage-card-hazard">⚠ Zero-Day Alerts &amp; Laser Perimeter</div>
+                </div>
+              </div>
+            </article>
+
+            <!-- Card 8: IoT Sensor Matrix (WebNexus Internet of Things) -->
+            <article class="stage-card" data-index="8" data-id="iotsensormatrix" style="--venue-accent: #00e676;" tabindex="0">
+              <div class="stage-card-inner">
+                <div class="stage-thumb-wrap">
+                  <canvas class="stage-thumb-canvas" width="280" height="110"></canvas>
+                </div>
+                <div class="stage-card-info">
+                  <div class="stage-card-name">📡 IOT SENSOR MATRIX</div>
+                  <div class="stage-card-tagline">WebNexus IoT &amp; Mesh Network</div>
+                  <div class="stage-card-hazard">📶 2.4GHz WiFi Ripples &amp; ESP32 Nodes</div>
+                </div>
+              </div>
+            </article>
+
+            <!-- Card 9: Edge Gateway Station (WebNexus Edge Computing) -->
+            <article class="stage-card" data-index="9" data-id="edgegateway" style="--venue-accent: #e040fb;" tabindex="0">
+              <div class="stage-card-inner">
+                <div class="stage-thumb-wrap">
+                  <canvas class="stage-thumb-canvas" width="280" height="110"></canvas>
+                </div>
+                <div class="stage-card-info">
+                  <div class="stage-card-name">⚡ EDGE GATEWAY</div>
+                  <div class="stage-card-tagline">WebNexus Edge &amp; Micro-Nodes</div>
+                  <div class="stage-card-hazard">⚡ Ultra-Low Latency &amp; Optical Pulses</div>
+                </div>
+              </div>
+            </article>
+
+          </div>
+        </section>
+
+        <!-- Bottom Selection Confirmation Bar -->
+        <footer class="stage-bottom-bar">
+          <div class="stage-selected-preview">
+            <span class="stage-selected-label">CURRENTLY SELECTED VENUE</span>
+            <span class="stage-selected-name" id="stage-selected-name">🏛️ TECH PARK PLAZA</span>
+            <span class="stage-selected-sub" id="stage-selected-sub">"15-Floor IT Powerhouse &amp; Skywalk"</span>
+          </div>
+
+          <div style="display: flex; align-items: center; gap: 16px;">
+            <button id="stage-random-btn" class="stage-random-btn" title="Pick Random Venue">[ 🎲 RANDOM VENUE ]</button>
+            <button id="stage-start-btn" class="stage-start-btn">
+              <span>ENTER BRAWL</span>
+              <span>⚔️</span>
+            </button>
+          </div>
+        </footer>
+      </div>
+
+
+      <!-- Dev Credits Modal (Layer 30) -->
+      <div id="credits-modal" class="credits-modal" role="dialog" aria-modal="true" aria-label="Game Credits">
+        <div class="credits-card">
+          <div class="credits-header">
+            <span>👾</span>
+            <span>DEVELOPER CREDITS</span>
+            <span>👾</span>
+          </div>
+          <div class="credits-body">
+            <div class="credits-row">
+              <span class="credits-label">Game Title</span>
+              <span class="credits-value highlight">Campus Clash 2D (SRM Edition)</span>
+            </div>
+            <div class="credits-row">
+              <span class="credits-label">Lead Developer</span>
+              <span class="credits-value">Aditya Swaroop</span>
+            </div>
+            <div class="credits-row">
+              <span class="credits-label">Registration No</span>
+              <span class="credits-value">RA2511026010269</span>
+            </div>
+            <div class="credits-row">
+              <span class="credits-label">Organization</span>
+              <span class="credits-value highlight">ACM SIGGRAPH SRM Chapter</span>
+            </div>
+            <div class="credits-row">
+              <span class="credits-label">Engine Architecture</span>
+              <span class="credits-value">Deterministic 60 FPS HTML5 Canvas</span>
+            </div>
+            <div class="credits-row">
+              <span class="credits-label">Audio System</span>
+              <span class="credits-value">100% Procedural Web Audio API</span>
+            </div>
+          </div>
+          <button id="credits-close-btn" class="credits-close-btn">[ CLOSE (ESC) ]</button>
+        </div>
+      </div>
+
+      <!-- Layer 2: Top Particles Canvas (Academic Dust / Fireflies drifting over UI) -->
+      <canvas id="particles-canvas" width="960" height="640" class="fx-canvas" aria-hidden="true"></canvas>
+    </div>
+  </main>
+
+  <!-- Dynamic ES6 Module Entry Point (Zero Stale Cache Guarantee) -->
+  <script type="module">
+    import(`./js/main.js?t=${Date.now()}`).catch(err => {
+      console.error('[CampusClash Module Load Error]', err);
+    });
+  </script>
+</body>
+</html>

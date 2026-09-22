@@ -1,0 +1,582 @@
+/* ==========================================================================
+   Campus Clash 2D — Retro Arcade Landing Page Styles (css/landing.css)
+   Theme: Retro Arcade meets SRM University Campus
+   ========================================================================== */
+
+/* Google Fonts fallback definition */
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Rajdhani:wght@600;700;900&display=swap');
+
+:root {
+  --landing-bg: #0a0e17;
+  --srm-blue-deep: #0d1b33;
+  --srm-blue-primary: #1565c0;
+  --srm-blue-bright: #1976d2;
+  --academic-gold: #ffd700;
+  --academic-gold-glow: rgba(255, 215, 0, 0.65);
+  --electric-cyan: #00e5ff;
+  --electric-cyan-glow: rgba(0, 229, 255, 0.65);
+  --arcade-orange: #ff6b35;
+  --text-pure: #ffffff;
+  --text-gold-gradient: linear-gradient(180deg, #fff7c2 0%, #ffd700 45%, #ff9100 80%, #b26a00 100%);
+}
+
+/* Layer 1: HTML Landing Overlay */
+.landing-overlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 24px 14px 24px;
+  box-sizing: border-box;
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1), transform 0.5s ease-in-out;
+  pointer-events: auto;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Hidden state when transitioned out */
+.landing-overlay.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: scale(1.08);
+}
+
+/* Screen Distortion / Crush Transition when FIGHT is pressed */
+.landing-overlay.crush-transition {
+  animation: screenDistort 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes screenDistort {
+  0% {
+    filter: brightness(1) contrast(1) saturate(1);
+    transform: scale(1);
+  }
+  20% {
+    filter: brightness(2.2) contrast(1.8) hue-rotate(90deg);
+    transform: scale(1.04) skewX(2deg);
+  }
+  40% {
+    filter: brightness(1.8) contrast(2.2) hue-rotate(180deg);
+    transform: scale(0.97) skewX(-2deg);
+  }
+  70% {
+    filter: brightness(3.0) contrast(3.0) saturate(2);
+    transform: scale(1.06);
+    opacity: 0.9;
+  }
+  100% {
+    filter: brightness(4.0) contrast(4.0);
+    transform: scale(1.15);
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+/* ==========================================================================
+   TOP SECTION (~15%): SRM Games Presents Banner
+   ========================================================================== */
+.landing-top-section {
+  width: 100%;
+  height: 15%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.srm-presents-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 18px;
+  background: rgba(10, 22, 45, 0.85);
+  border: 1.5px solid var(--academic-gold);
+  border-radius: 4px;
+  box-shadow: 0 0 14px rgba(255, 215, 0, 0.35), inset 0 0 8px rgba(255, 215, 0, 0.2);
+  backdrop-filter: blur(4px);
+  position: relative;
+  overflow: hidden;
+}
+
+.srm-presents-badge::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    60deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.15) 50%,
+    transparent 70%
+  );
+  animation: badgeShimmer 3.5s infinite linear;
+  pointer-events: none;
+}
+
+@keyframes badgeShimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.srm-presents-text {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+  letter-spacing: 2.5px;
+  color: var(--academic-gold);
+  text-shadow: 0 0 8px var(--academic-gold-glow);
+  text-transform: uppercase;
+}
+
+.srm-presents-star {
+  color: var(--electric-cyan);
+  font-size: 8px;
+  animation: starBlink 1.4s infinite alternate;
+}
+
+@keyframes starBlink {
+  0% { opacity: 0.3; transform: scale(0.85); }
+  100% { opacity: 1; transform: scale(1.2); }
+}
+
+.srm-location-sub {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  color: #8fa7cf;
+  text-transform: uppercase;
+  text-shadow: 0 0 6px rgba(0, 229, 255, 0.4);
+}
+
+/* ==========================================================================
+   MIDDLE SECTION (~50%): Main Game Title (Breathing Pulse Effect)
+   ========================================================================== */
+.landing-middle-section {
+  width: 100%;
+  height: 48%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.title-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: titleBreathing 2.2s infinite ease-in-out;
+  transform-origin: center center;
+  cursor: default;
+}
+
+@keyframes titleBreathing {
+  0% {
+    transform: scale(1);
+    filter: drop-shadow(0 0 12px rgba(255, 215, 0, 0.5)) drop-shadow(0 0 24px rgba(0, 229, 255, 0.3));
+  }
+  50% {
+    transform: scale(1.04);
+    filter: drop-shadow(0 0 22px rgba(255, 215, 0, 0.85)) drop-shadow(0 0 45px rgba(0, 229, 255, 0.65)) drop-shadow(0 0 60px rgba(21, 101, 192, 0.6));
+  }
+  100% {
+    transform: scale(1);
+    filter: drop-shadow(0 0 12px rgba(255, 215, 0, 0.5)) drop-shadow(0 0 24px rgba(0, 229, 255, 0.3));
+  }
+}
+
+.title-main-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 14px;
+}
+
+.arcade-title-text {
+  font-family: 'Press Start 2P', 'Arial Black', monospace;
+  font-size: 44px;
+  line-height: 1.15;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  background: var(--text-gold-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -webkit-text-stroke: 2.5px #1a0800;
+  text-shadow: 
+    0 3px 0 #8c4200,
+    0 5px 0 #572a00,
+    0 8px 16px rgba(0, 0, 0, 0.9);
+  position: relative;
+}
+
+.arcade-title-2d {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 32px;
+  color: var(--electric-cyan);
+  -webkit-text-fill-color: var(--electric-cyan);
+  -webkit-text-stroke: 2px #003747;
+  text-shadow: 
+    0 0 12px var(--electric-cyan-glow),
+    0 3px 0 #005662,
+    0 5px 0 #00363a;
+  display: inline-block;
+  transform: rotate(-4deg) translateY(-8px);
+  animation: neonFlicker 3.2s infinite ease-in-out;
+}
+
+@keyframes neonFlicker {
+  0%, 100% { opacity: 1; filter: drop-shadow(0 0 10px #00e5ff); }
+  52% { opacity: 1; }
+  54% { opacity: 0.65; }
+  56% { opacity: 0.95; }
+  80% { opacity: 1; }
+}
+
+.title-tagline {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 5px;
+  color: #e0e6ed;
+  text-transform: uppercase;
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  text-shadow: 0 0 10px rgba(0, 229, 255, 0.5);
+}
+
+.title-tagline::before,
+.title-tagline::after {
+  content: '';
+  display: inline-block;
+  width: 42px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--electric-cyan));
+}
+
+.title-tagline::after {
+  background: linear-gradient(90deg, var(--electric-cyan), transparent);
+}
+
+/* ==========================================================================
+   LOWER MIDDLE SECTION (~20%): Interactive Vertical Arcade Menu
+   ========================================================================== */
+.landing-menu-section {
+  width: 100%;
+  height: 22%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  z-index: 12;
+}
+
+.arcade-menu-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 320px;
+}
+
+.arcade-menu-btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 10px 16px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 13px;
+  letter-spacing: 1.5px;
+  color: #e2e8f0;
+  background: linear-gradient(180deg, rgba(20, 36, 68, 0.9) 0%, rgba(10, 18, 36, 0.95) 100%);
+  border: 2px solid #2a4365;
+  border-radius: 4px;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.15s cubic-bezier(0.2, 0.8, 0.2, 1);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.arcade-menu-btn .btn-cursor-left,
+.arcade-menu-btn .btn-cursor-right {
+  position: absolute;
+  color: var(--academic-gold);
+  font-size: 11px;
+  opacity: 0;
+  transition: opacity 0.15s, transform 0.15s;
+}
+
+.arcade-menu-btn .btn-cursor-left {
+  left: 12px;
+  transform: translateX(-4px);
+}
+
+.arcade-menu-btn .btn-cursor-right {
+  right: 12px;
+  transform: translateX(4px);
+}
+
+/* Hover & Active / Selected Keyboard Focus State */
+.arcade-menu-btn:hover,
+.arcade-menu-btn.selected {
+  color: #ffffff;
+  border-color: var(--academic-gold);
+  background: linear-gradient(180deg, rgba(30, 58, 110, 0.95) 0%, rgba(18, 34, 68, 0.98) 100%);
+  box-shadow: 
+    0 0 16px var(--academic-gold-glow),
+    0 0 30px rgba(0, 229, 255, 0.3),
+    inset 0 0 12px rgba(255, 215, 0, 0.25);
+  transform: scale(1.04);
+}
+
+.arcade-menu-btn:hover .btn-cursor-left,
+.arcade-menu-btn.selected .btn-cursor-left {
+  opacity: 1;
+  transform: translateX(0);
+  animation: cursorNudgeLeft 0.7s infinite alternate;
+}
+
+.arcade-menu-btn:hover .btn-cursor-right,
+.arcade-menu-btn.selected .btn-cursor-right {
+  opacity: 1;
+  transform: translateX(0);
+  animation: cursorNudgeRight 0.7s infinite alternate;
+}
+
+@keyframes cursorNudgeLeft {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(3px); }
+}
+
+@keyframes cursorNudgeRight {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-3px); }
+}
+
+/* Primary FIGHT Button Accents */
+.arcade-menu-btn.btn-fight {
+  border-color: #3b5998;
+}
+
+.arcade-menu-btn.btn-fight:hover,
+.arcade-menu-btn.btn-fight.selected {
+  border-color: var(--academic-gold);
+  background: linear-gradient(180deg, #b8860b 0%, #7d5900 100%);
+  color: #ffffff;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.9);
+  box-shadow: 0 0 25px rgba(255, 215, 0, 0.8), inset 0 0 14px rgba(255, 255, 255, 0.4);
+}
+
+.arcade-menu-btn.btn-fight:hover .btn-cursor-left,
+.arcade-menu-btn.btn-fight:hover .btn-cursor-right,
+.arcade-menu-btn.btn-fight.selected .btn-cursor-left,
+.arcade-menu-btn.btn-fight.selected .btn-cursor-right {
+  color: #ffffff;
+}
+
+/* ==========================================================================
+   BOTTOM SECTION (~10%): Versus Screen Preview & Control Hints
+   ========================================================================== */
+.landing-bottom-section {
+  width: 100%;
+  height: 12%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+}
+
+.versus-preview-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  background: rgba(10, 18, 32, 0.75);
+  border: 1px solid rgba(0, 229, 255, 0.25);
+  border-radius: 4px;
+  padding: 4px 18px;
+  backdrop-filter: blur(4px);
+}
+
+.fighter-name-badge {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+.fighter-name-badge.topper {
+  color: #64b5f6;
+  text-shadow: 0 0 8px rgba(100, 181, 246, 0.6);
+}
+
+.fighter-name-badge.backbencher {
+  color: #ffb74d;
+  text-shadow: 0 0 8px rgba(255, 183, 77, 0.6);
+}
+
+.versus-divider {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+  color: var(--academic-gold);
+  text-shadow: 0 0 6px var(--academic-gold-glow);
+}
+
+.landing-controls-hint {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 7.5px;
+  letter-spacing: 1px;
+  color: #6d84a3;
+  margin-top: 2px;
+}
+
+.landing-controls-hint span {
+  color: var(--electric-cyan);
+}
+
+/* ==========================================================================
+   CREDITS MODAL (Layer 30)
+   ========================================================================== */
+.credits-modal {
+  position: absolute;
+  inset: 0;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(5, 10, 20, 0.88);
+  backdrop-filter: blur(8px);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.25s ease, visibility 0.25s ease;
+  pointer-events: none;
+}
+
+.credits-modal.active {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.credits-card {
+  width: 540px;
+  max-width: 90%;
+  background: linear-gradient(180deg, #0f1c33 0%, #091222 100%);
+  border: 2px solid var(--academic-gold);
+  border-radius: 8px;
+  box-shadow: 
+    0 16px 40px rgba(0, 0, 0, 0.9),
+    0 0 30px rgba(255, 215, 0, 0.35);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  animation: modalPop 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes modalPop {
+  0% { transform: scale(0.9) translateY(12px); opacity: 0; }
+  100% { transform: scale(1) translateY(0); opacity: 1; }
+}
+
+.credits-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 13px;
+  color: var(--academic-gold);
+  text-shadow: 0 0 8px var(--academic-gold-glow);
+  margin-bottom: 16px;
+  border-bottom: 1px dashed rgba(255, 215, 0, 0.3);
+  width: 100%;
+  padding-bottom: 10px;
+  justify-content: center;
+}
+
+.credits-body {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 14px;
+  color: #cfd8dc;
+  margin-bottom: 20px;
+}
+
+.credits-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 12px;
+  background: rgba(16, 29, 54, 0.6);
+  border-radius: 4px;
+  border-left: 3px solid var(--electric-cyan);
+}
+
+.credits-label {
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: #90a4ae;
+  text-transform: uppercase;
+  font-size: 12px;
+}
+
+.credits-value {
+  font-weight: 900;
+  color: #ffffff;
+  font-size: 15px;
+}
+
+.credits-value.highlight {
+  color: var(--academic-gold);
+  text-shadow: 0 0 6px var(--academic-gold-glow);
+}
+
+.credits-close-btn {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+  color: var(--landing-bg);
+  background: var(--academic-gold);
+  border: none;
+  border-radius: 4px;
+  padding: 10px 22px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  box-shadow: 0 0 12px rgba(255, 215, 0, 0.4);
+}
+
+.credits-close-btn:hover {
+  background: #ffffff;
+  box-shadow: 0 0 18px rgba(255, 255, 255, 0.7);
+  transform: scale(1.05);
+}
+
+/* Layer 2: Top Particles Canvas (Academic Dust / Fireflies) */
+.fx-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 20;
+  pointer-events: none;
+  display: block;
+}

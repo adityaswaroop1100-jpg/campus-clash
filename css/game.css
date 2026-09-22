@@ -1,0 +1,70 @@
+/* ==========================================================================
+   Campus Clash — In-Game HUD Styles (css/game.css)
+   ========================================================================== */
+
+.game-hud-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  pointer-events: none;
+}
+
+/* ============================================================
+   Combo Counter — Canvas-drawn but these classes add DOM juice
+   ============================================================ */
+@keyframes combo-shake {
+  0%, 100% { transform: translateX(0) translateY(0); }
+  20%       { transform: translateX(-3px) translateY(1px); }
+  40%       { transform: translateX(3px) translateY(-1px); }
+  60%       { transform: translateX(-2px) translateY(2px); }
+  80%       { transform: translateX(2px) translateY(-1px); }
+}
+
+@keyframes combo-pop {
+  0%   { transform: scale(0.85); opacity: 0.7; }
+  40%  { transform: scale(1.15); opacity: 1; }
+  100% { transform: scale(1.0);  opacity: 1; }
+}
+
+.combo-active {
+  animation: combo-shake 0.14s infinite;
+}
+
+.combo-new-hit {
+  animation: combo-pop 0.12s ease-out forwards;
+}
+
+/* ============================================================
+   Chromatic Flash — triggered on Ultimate activation
+   ============================================================ */
+@keyframes chromatic-flash-anim {
+  0%   { opacity: 0.85; filter: saturate(3) hue-rotate(20deg); }
+  50%  { opacity: 0.55; filter: saturate(2) hue-rotate(-10deg); }
+  100% { opacity: 0;    filter: saturate(1) hue-rotate(0deg);   }
+}
+
+.chromatic-flash {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  animation: chromatic-flash-anim 0.22s ease-out forwards;
+}
+
+/* ============================================================
+   KO Screen — vignette class for DOM overlay fallback
+   ============================================================ */
+.ko-vignette {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse at center, transparent 20%, rgba(0,0,0,0.75) 100%);
+  z-index: 100;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.ko-vignette.active {
+  opacity: 1;
+}

@@ -1,0 +1,7 @@
+.DS_Store
+*.DS_Store
+*.zip
+scratch_chrome/
+scratch/
+test.pdf
+node_modules/
