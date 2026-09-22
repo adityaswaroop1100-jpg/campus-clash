@@ -598,9 +598,9 @@ class CampusClashGame {
       if (this.selectedMode === GAME_MODES.TRAINING) {
         this.charModeText.textContent = '🥋 TRAINING DOJO';
       } else if (this.selectedMode === GAME_MODES.PVC) {
-        this.charModeText.textContent = 'PLAYER VS SRM BOT';
+        this.charModeText.textContent = '⚡ PLAYER VS SRM BOT [EXPERT]';
       } else {
-        this.charModeText.textContent = '1 VS 1 LOCAL BRAWL';
+        this.charModeText.textContent = '⚔️ 2-PLAYER LOCAL BRAWL';
       }
     }
 
@@ -636,7 +636,7 @@ class CampusClashGame {
     // Update Player 2 Profile Card
     const p2Item = this.roster[this.p2CharIndex];
     if (this.p2ProfileSlot) {
-      if (this.selectedMode === GAME_MODES.PVC) this.p2ProfileSlot.textContent = 'SRM AI BOT';
+      if (this.selectedMode === GAME_MODES.PVC) this.p2ProfileSlot.innerHTML = '🤖 SRM BOT <span style="color:#00f0ff;font-weight:900;">[EXPERT]</span>';
       else if (this.selectedMode === GAME_MODES.TRAINING) this.p2ProfileSlot.textContent = 'DOJO DUMMY';
       else this.p2ProfileSlot.textContent = 'PLAYER 2';
     }
@@ -671,6 +671,24 @@ class CampusClashGame {
       this.p1CharIndex = charIndex;
       this.charSelectStep = 1;
       this.updateCharSelectUI();
+
+      // If playing in VS Computer (PVC) mode, CPU automatically picks rival
+      if (this.selectedMode === GAME_MODES.PVC) {
+        setTimeout(() => {
+          if (!this.p1Locked || this.p2Locked) return;
+          let cpuPick = (charIndex + 1) % this.roster.length;
+          if (charIndex === 0) cpuPick = 1; // Topper vs Backbencher
+          else if (charIndex === 1) cpuPick = 0; // Backbencher vs Topper
+          else if (charIndex === 2) cpuPick = 3; // Hosteler vs Senior
+          else if (charIndex === 3) cpuPick = 4; // Senior vs Placement Warrior
+          else if (charIndex === 4) cpuPick = 5; // Placement Warrior vs Sports Star
+          else if (charIndex === 6) cpuPick = 2; // Cypher vs Hosteler
+
+          this.p2CharIndex = cpuPick;
+          this.updateCharSelectUI();
+          this.lockInCharacter(2, cpuPick);
+        }, 450);
+      }
     } else if (playerIndex === 2) {
       this.p2Locked = true;
       this.p2CharIndex = charIndex;
@@ -1640,8 +1658,8 @@ class CampusClashGame {
       },
       {
         id: GAME_MODES.PVC,
-        title: '🤖  PLAYER VS COMPUTER (SRM AI BOT)',
-        desc: 'Test your reflexes against the adaptive SRM Campus AI'
+        title: '🤖  VS COMPUTER (EXPERT SRM AI)',
+        desc: 'Test your reflexes against tournament-tier frame data and whiff punishes'
       },
       {
         id: GAME_MODES.TRAINING,
@@ -1788,7 +1806,7 @@ class CampusClashGame {
     const topY = 26;
 
     const p1Name = `P1: ${this.p1.config.displayName.toUpperCase()}`;
-    const p2Label = this.selectedMode === GAME_MODES.PVC ? 'CPU: ' : (this.selectedMode === GAME_MODES.TRAINING ? 'DUMMY: ' : 'P2: ');
+    const p2Label = this.selectedMode === GAME_MODES.PVC ? 'CPU [EXPERT]: ' : (this.selectedMode === GAME_MODES.TRAINING ? 'DUMMY: ' : 'P2: ');
     const p2Name = `${p2Label}${this.p2.config.displayName.toUpperCase()}`;
 
     // --- P1 HUD (Left) ---

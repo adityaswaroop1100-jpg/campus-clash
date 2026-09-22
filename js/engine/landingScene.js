@@ -153,18 +153,21 @@ export class LandingScene {
     if (this.isTransitioning) return;
 
     if (index === 0) {
-      // [ FIGHT! ] Option
-      this.triggerFightTransition(GAME_MODES.PVP);
+      // [ VS COMPUTER ] Option (Expert AI)
+      this.triggerFightTransition(GAME_MODES.PVC);
     } else if (index === 1) {
-      // [ TRAINING ] Option
-      this.triggerFightTransition(GAME_MODES.TRAINING);
+      // [ 2-PLAYER LOCAL ] Option
+      this.triggerFightTransition(GAME_MODES.PVP);
     } else if (index === 2) {
+      // [ TRAINING DOJO ] Option
+      this.triggerFightTransition(GAME_MODES.TRAINING);
+    } else if (index === 3) {
       // [ LEADERBOARD ] Option
       if (this.game.leaderboardManager) {
         this.game.leaderboardManager.open();
         this.sound.playLightHit();
       }
-    } else if (index === 3) {
+    } else if (index === 4) {
       // [ CREDITS ] Option
       this.openCredits();
     }

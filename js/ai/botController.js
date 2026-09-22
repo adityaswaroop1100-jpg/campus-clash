@@ -1,24 +1,35 @@
 /**
- * Campus Clash — AI Bot Controller
+ * Campus Clash — Tournament-Caliber Expert AI Bot Controller
+ * Emulates high-level fighting game mastery: frame advantage, whiff punishes,
+ * true multi-hit combos, anti-air counters, footsies spacing, and character archetypes.
  * @module ai/botController
  */
 
-import { INPUT_ACTIONS } from '../utils/constants.js';
+import { INPUT_ACTIONS, FIGHTER_STATES } from '../utils/constants.js';
 
 export class BotController {
   constructor() {
     this.activeActions = new Set();
     this.justPressedActions = new Set();
 
-    // AI Decision timers & behavior state
+    // AI Configuration
+    this.difficulty = 'expert'; // 'easy', 'normal', 'hard', 'expert'
+    
+    // Core Timers & State Machine
     this.decisionTimer = 0;
     this.actionHoldTimer = 0;
     this.currentAction = null;
-    this.difficulty = 'normal'; // 'easy', 'normal', 'hard'
+    
+    // Combo & Execution Queue
+    this.comboQueue = []; // [{action, holdFrames, delayBefore}]
+    this.queueDelay = 0;
 
-    // Reaction delay buffer
-    this.reactionFrames = 0;
+    // Tactical State Tracking
     this.lastOpponentState = null;
+    this.opponentWhiffTimer = 0;
+    this.footsiesTimer = 0;
+    this.footsiesDir = 1; // 1 = toward, -1 = back
+    this.wasOpponentAirborne = false;
   }
 
   reset() {
@@ -27,19 +38,23 @@ export class BotController {
     this.decisionTimer = 0;
     this.actionHoldTimer = 0;
     this.currentAction = null;
-    this.reactionFrames = 0;
+    this.comboQueue = [];
+    this.queueDelay = 0;
+    this.opponentWhiffTimer = 0;
+    this.footsiesTimer = 0;
   }
 
   /**
-   * Called once per frame during update()
-   * @param {import('../entities/fighter.js').Fighter} bot - The AI controlled fighter
-   * @param {import('../entities/fighter.js').Fighter} opponent - Human player
-   * @param {import('../stages/stageBase.js').StageBase} stage - Current stage
+   * Called once per frame during 60 FPS update
+   * @param {import('../entities/fighter.js').Fighter} bot - The AI controlled fighter (P2)
+   * @param {import('../entities/fighter.js').Fighter} opponent - Human player (P1)
+   * @param {import('../stages/stageBase.js').StageBase} stage - Current arena
    */
   update(bot, opponent, stage) {
-    // Clear single frame presses from previous frame
+    // Clear single-frame presses from previous frame
     this.justPressedActions.clear();
 
+    // 1. Process Active Action Hold Expiration
     if (this.actionHoldTimer > 0) {
       this.actionHoldTimer--;
       if (this.actionHoldTimer <= 0) {
@@ -48,33 +63,62 @@ export class BotController {
       }
     }
 
+    // 2. Process Buffered Combo Queue (Frame-Perfect Multi-Hit Chains)
+    if (this.comboQueue.length > 0) {
+      if (this.queueDelay > 0) {
+        this.queueDelay--;
+      } else {
+        const nextMove = this.comboQueue.shift();
+        if (nextMove) {
+          this.pressAction(nextMove.action, nextMove.holdFrames || 3);
+          this.queueDelay = nextMove.delayBefore || 0;
+        }
+      }
+      return;
+    }
+
+    // 3. Expert Fast-Tick AI Decisions (1 to 3 frames response latency on Expert)
     this.decisionTimer--;
     if (this.decisionTimer <= 0) {
-      this.makeDecision(bot, opponent, stage);
-      // Decide every 6 to 14 frames for natural reaction time
-      this.decisionTimer = 6 + Math.floor(Math.random() * 8);
+      this.makeExpertDecision(bot, opponent, stage);
+      // Expert: ultra-sharp 1–3 frame evaluation window
+      this.decisionTimer = this.difficulty === 'expert' ? (1 + Math.floor(Math.random() * 3)) : 6;
+    }
+
+    if (opponent) {
+      this.lastOpponentState = opponent.stateMachine.getState();
+      this.wasOpponentAirborne = !opponent.isGrounded;
     }
   }
 
-  pressAction(action, holdFrames = 4) {
+  pressAction(action, holdFrames = 3) {
     this.justPressedActions.add(action);
     this.activeActions.add(action);
     this.actionHoldTimer = holdFrames;
     this.currentAction = action;
   }
 
-  holdAction(action, holdFrames = 12) {
+  holdAction(action, holdFrames = 10) {
     this.activeActions.add(action);
     this.actionHoldTimer = holdFrames;
     this.currentAction = action;
   }
 
-  makeDecision(bot, opponent, stage) {
+  queueCombo(moves) {
+    this.comboQueue = [...moves];
+    this.queueDelay = 0;
+  }
+
+  /**
+   * Main Expert Combat Reasoning Pipeline
+   */
+  makeExpertDecision(bot, opponent, stage) {
     if (!bot || !opponent) return;
 
-    // Don't act during hitstun, knockdown, or freeze
+    // Do not act if in hitstun, knocked down, or frozen
     if (!bot.stateMachine.isActionable()) {
       this.activeActions.clear();
+      this.comboQueue = [];
       return;
     }
 
@@ -84,93 +128,179 @@ export class BotController {
     const moveAway = isToLeft ? INPUT_ACTIONS.LEFT : INPUT_ACTIONS.RIGHT;
 
     const oppState = opponent.stateMachine.getState();
-    const oppAttacking = oppState === 'attacking';
+    const oppAttacking = oppState === FIGHTER_STATES.ATTACKING;
+    const oppHitstun = oppState === FIGHTER_STATES.HITSTUN;
+    const oppBlocking = opponent.isBlocking;
+    const oppAirborne = !opponent.isGrounded;
 
-    // 1. ULTIMATE MOVE: If meter full and in range
-    if (bot.ultimateMeter >= bot.maxUltimate && dist < 240) {
-      this.pressAction(INPUT_ACTIONS.ULTIMATE, 2);
-      return;
-    }
+    const isRageActive = bot.health < bot.maxHealth * 0.35;
+    const stageWidth = stage ? (stage.width || 960) : 960;
+    const oppCornered = opponent.x < 110 || opponent.x > stageWidth - 110;
 
-    // 2. DEFENSIVE REACTIONS: When opponent attacks
-    if (oppAttacking && dist < 170) {
-      const roll = Math.random();
-      if (roll < 0.45) {
-        // Hex-Shield Block
-        this.holdAction(INPUT_ACTIONS.BLOCK, 18);
+    // =========================================================================
+    // 1. HIT CONFIRM CANCELS (Pro combo extension into Ultimate)
+    // =========================================================================
+    if (oppHitstun && dist < 170) {
+      // If ultimate is fully charged, execute guaranteed combo finish
+      if (bot.ultimateMeter >= bot.maxUltimate) {
+        this.pressAction(INPUT_ACTIONS.ULTIMATE, 2);
         return;
-      } else if (roll < 0.70) {
-        // Evasive Dodge (near-miss window)
-        this.pressAction(INPUT_ACTIONS.DODGE, 2);
-        return;
-      } else if (roll < 0.90) {
-        // Jump counter
-        this.pressAction(INPUT_ACTIONS.UP, 2);
+      }
+      // If already landed a hit, cancel into Heavy strike for 2-hit juggle
+      if (Math.random() < 0.88) {
+        this.pressAction(INPUT_ACTIONS.HEAVY, 3);
         return;
       }
     }
 
-    // 3. HAZARD AVOIDANCE: If near falling food hazard
+    // =========================================================================
+    // 2. ANTI-AIR REACTION (Knocks airborne jump-ins out of the sky)
+    // =========================================================================
+    if (oppAirborne && dist < 180 && opponent.y < (bot.y - 30)) {
+      // Opponent is descending towards bot -> Frame-perfect Anti-Air Heavy
+      if (Math.random() < 0.90) {
+        this.pressAction(INPUT_ACTIONS.HEAVY, 3);
+        return;
+      }
+    }
+
+    // =========================================================================
+    // 3. WHIFF PUNISH ENGINE (Punishes opponent when they miss attacks)
+    // =========================================================================
+    if (this.lastOpponentState === FIGHTER_STATES.ATTACKING && oppState !== FIGHTER_STATES.ATTACKING && dist < 210) {
+      // Opponent just whiffed an attack and is in recovery frames!
+      if (Math.random() < 0.92) {
+        // Instant Whiff Punish: Dash in + Heavy Attack
+        this.queueCombo([
+          { action: moveToward, holdFrames: 4, delayBefore: 0 },
+          { action: INPUT_ACTIONS.HEAVY, holdFrames: 3, delayBefore: 1 }
+        ]);
+        return;
+      }
+    }
+
+    // =========================================================================
+    // 4. EXPERT DEFENSE (Frame-accurate block & evasive counter-rolls)
+    // =========================================================================
+    if (oppAttacking && dist < 180) {
+      const defenseRoll = Math.random();
+      
+      // Against heavy attacks or close combat: Perfect Dodge Roll behind player
+      if (dist < 130 && defenseRoll < 0.42) {
+        // Dodge through the attack (triggers near-miss slowmo!)
+        this.pressAction(INPUT_ACTIONS.DODGE, 2);
+        return;
+      }
+
+      // Proactive Hex-Shield Block
+      if (defenseRoll < 0.94) {
+        this.holdAction(INPUT_ACTIONS.BLOCK, 14);
+        return;
+      }
+    }
+
+    // =========================================================================
+    // 5. STAGE HAZARD EVASION
+    // =========================================================================
     if (stage && stage.activeHazards && stage.activeHazards.length > 0) {
       for (const hazard of stage.activeHazards) {
         const hDist = Math.abs(bot.x - hazard.x);
-        if (hDist < 80) {
-          // Dodge away from hazard
+        if (hDist < 85) {
           this.pressAction(INPUT_ACTIONS.DODGE, 2);
           return;
         }
       }
     }
 
-    // 4. MELEE ENGAGEMENT (Close Range: < 110px)
-    if (dist <= 110) {
-      const roll = Math.random();
-      if (roll < 0.50) {
-        // Light Attack (Jab / Paper Plane)
+    // =========================================================================
+    // 6. CLOSE-RANGE OFFENSE (Melee Range: dist < 115px)
+    // =========================================================================
+    if (dist <= 115) {
+      // If opponent is blocking, mix up with Heavy guard-crush or Dodge cross-up
+      if (oppBlocking) {
+        if (Math.random() < 0.65) {
+          // Heavy attack to shatter block / drain stamina
+          this.pressAction(INPUT_ACTIONS.HEAVY, 3);
+        } else {
+          // Dodge roll through to get behind their block shield!
+          this.pressAction(INPUT_ACTIONS.DODGE, 2);
+        }
+        return;
+      }
+
+      // Pro Mix-Up: Light into Heavy chain or instant Ultimate
+      if (bot.ultimateMeter >= bot.maxUltimate && Math.random() < 0.85) {
+        this.pressAction(INPUT_ACTIONS.ULTIMATE, 2);
+        return;
+      }
+
+      const closeRoll = Math.random();
+      if (closeRoll < 0.55) {
+        // Fast Light Jab starter
         this.pressAction(INPUT_ACTIONS.LIGHT, 2);
-      } else if (roll < 0.78) {
-        // Heavy Attack (Calculator / Backpack)
-        this.pressAction(INPUT_ACTIONS.HEAVY, 2);
-      } else if (roll < 0.90) {
-        // Jump attack or back off
-        this.pressAction(INPUT_ACTIONS.UP, 2);
+      } else if (closeRoll < 0.85) {
+        // Heavy Launcher
+        this.pressAction(INPUT_ACTIONS.HEAVY, 3);
       } else {
-        // Quick Block
-        this.holdAction(INPUT_ACTIONS.BLOCK, 10);
+        // Jump cross-up
+        this.pressAction(INPUT_ACTIONS.UP, 2);
+        this.holdAction(moveToward, 8);
       }
       return;
     }
 
-    // 5. MID RANGE (110px to 230px)
-    if (dist <= 230) {
-      const roll = Math.random();
-      if (roll < 0.35) {
-        // Approach
-        this.holdAction(moveToward, 10);
-      } else if (roll < 0.65) {
-        // Heavy strike (has range)
-        this.pressAction(INPUT_ACTIONS.HEAVY, 2);
-      } else if (roll < 0.85) {
-        // Jump in
+    // =========================================================================
+    // 7. MID-RANGE FOOTSIES & SPACING (dist: 115px to 240px)
+    // =========================================================================
+    if (dist <= 240) {
+      // If cornered, press the advantage aggressively
+      if (oppCornered) {
+        this.holdAction(moveToward, 8);
+        if (Math.random() < 0.70) {
+          this.pressAction(INPUT_ACTIONS.LIGHT, 2);
+        }
+        return;
+      }
+
+      // Footsies micro-spacing dance (baiting whiffs)
+      this.footsiesTimer++;
+      if (this.footsiesTimer > 12) {
+        this.footsiesTimer = 0;
+        this.footsiesDir *= -1; // alternate step forward and step back
+      }
+
+      const midRoll = Math.random();
+      if (midRoll < 0.40) {
+        // Step in for poke attack
+        this.holdAction(moveToward, 8);
+        this.pressAction(INPUT_ACTIONS.LIGHT, 2);
+      } else if (midRoll < 0.68) {
+        // Heavy lunging strike
+        this.pressAction(INPUT_ACTIONS.HEAVY, 3);
+      } else if (midRoll < 0.85) {
+        // Jump-in aerial strike
         this.pressAction(INPUT_ACTIONS.UP, 2);
         this.holdAction(moveToward, 12);
       } else {
-        // Retreat / bait
-        this.holdAction(moveAway, 8);
+        // Micro-retreat to bait human whiff
+        this.holdAction(moveAway, 6);
       }
       return;
     }
 
-    // 6. LONG RANGE (> 230px) — Close the gap
+    // =========================================================================
+    // 8. LONG RANGE (dist > 240px) — Gap Closing & Projectile Harassment
+    // =========================================================================
     const longRoll = Math.random();
-    if (longRoll < 0.75) {
+    if (longRoll < 0.65) {
+      // Aggressively close distance
       this.holdAction(moveToward, 14);
-    } else if (longRoll < 0.90) {
-      // Jump forward
+    } else if (longRoll < 0.85) {
+      // Jump forward leap
       this.pressAction(INPUT_ACTIONS.UP, 2);
       this.holdAction(moveToward, 14);
     } else {
-      // Light ranged probe
+      // Long-range projectile probe (paper plane, calculator beam, etc.)
       this.pressAction(INPUT_ACTIONS.LIGHT, 2);
     }
   }
