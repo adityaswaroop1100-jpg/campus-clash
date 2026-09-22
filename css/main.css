@@ -48,18 +48,346 @@ input, textarea, select {
   width: 100vw;
   height: 100vh;
   position: relative;
-  background: radial-gradient(circle at center, #18233c 0%, #080c14 100%);
+  background: #04070e;
+  overflow: hidden;
+}
+
+/* Ambient Stadium Cyber Rig Backdrop (Fills entire screen dynamically) */
+.rig-ambient-backdrop {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.rig-ambient-glow-left {
+  position: absolute;
+  top: 15%;
+  left: -10%;
+  width: 50vw;
+  height: 70vh;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(0, 240, 255, 0.18) 0%, rgba(0, 240, 255, 0.04) 50%, transparent 75%);
+  filter: blur(60px);
+  animation: rigGlowPulseLeft 5s ease-in-out infinite alternate;
+}
+
+.rig-ambient-glow-right {
+  position: absolute;
+  top: 15%;
+  right: -10%;
+  width: 50vw;
+  height: 70vh;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(254, 107, 0, 0.22) 0%, rgba(255, 214, 2, 0.08) 50%, transparent 75%);
+  filter: blur(60px);
+  animation: rigGlowPulseRight 4.5s ease-in-out infinite alternate;
+}
+
+@keyframes rigGlowPulseLeft {
+  0% { transform: scale(0.95); opacity: 0.65; }
+  100% { transform: scale(1.1); opacity: 1; }
+}
+
+@keyframes rigGlowPulseRight {
+  0% { transform: scale(1.08); opacity: 0.7; }
+  100% { transform: scale(0.92); opacity: 1; }
+}
+
+/* 3D Cyber Perspective Grid Floor */
+.rig-grid-perspective {
+  position: absolute;
+  bottom: -40px;
+  left: -20%;
+  width: 140%;
+  height: 40vh;
+  background-image: 
+    linear-gradient(to right, rgba(0, 240, 255, 0.12) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 214, 2, 0.1) 1px, transparent 1px);
+  background-size: 45px 30px;
+  transform: perspective(400px) rotateX(68deg);
+  transform-origin: bottom center;
+  mask-image: linear-gradient(to top, rgba(0,0,0,0.9) 30%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,0.9) 30%, transparent 100%);
+  animation: rigGridScroll 8s linear infinite;
+}
+
+@keyframes rigGridScroll {
+  0% { background-position: 0 0; }
+  100% { background-position: 0 60px; }
+}
+
+/* Stadium Side Towers (Pillars with Pulsing LEDs) */
+.rig-stadium-pillars {
+  position: absolute;
+  top: 10%;
+  bottom: 10%;
+  width: 48px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  opacity: 0.7;
+}
+
+.rig-stadium-pillars.left { left: 16px; }
+.rig-stadium-pillars.right { right: 16px; }
+
+.pillar-led {
+  width: 22px;
+  height: 5px;
+  border-radius: 2px;
+  background: rgba(0, 240, 255, 0.4);
+  box-shadow: 0 0 8px rgba(0, 240, 255, 0.3);
+  animation: pillarLedFlicker 2s ease-in-out infinite alternate;
+}
+
+.rig-stadium-pillars.right .pillar-led {
+  background: rgba(254, 107, 0, 0.45);
+  box-shadow: 0 0 8px rgba(254, 107, 0, 0.3);
+  animation-duration: 2.3s;
+}
+
+.pillar-led:nth-child(1) { animation-delay: 0.1s; }
+.pillar-led:nth-child(2) { animation-delay: 0.4s; }
+.pillar-led:nth-child(3) { animation-delay: 0.7s; }
+.pillar-led:nth-child(4) { animation-delay: 1.0s; }
+.pillar-led:nth-child(5) { animation-delay: 1.3s; }
+.pillar-led:nth-child(6) { animation-delay: 1.6s; }
+
+@keyframes pillarLedFlicker {
+  0% { opacity: 0.3; transform: scaleX(0.7); }
+  50% { opacity: 0.95; transform: scaleX(1.1); }
+  100% { opacity: 0.4; transform: scaleX(0.85); }
+}
+
+/* Rig Top Header Bar */
+.rig-hud-header {
+  position: relative;
+  z-index: 10;
+  width: min(96vw, calc((94vh - 46px) * (960 / 640)));
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 3px 6px 5px 6px;
+  font-family: 'Rajdhani', sans-serif;
+  letter-spacing: 1px;
+}
+
+.rig-hud-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(8, 14, 28, 0.9);
+  border: 1px solid rgba(0, 240, 255, 0.35);
+  padding: 3px 12px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #67e8f9;
+}
+
+.rig-hud-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #00f0ff;
+  box-shadow: 0 0 8px #00f0ff;
+  animation: rigPulse 1.4s infinite;
+}
+
+@keyframes rigPulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.8); }
+}
+
+.rig-hud-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.rig-hud-btn {
+  background: linear-gradient(135deg, rgba(14, 22, 42, 0.95), rgba(8, 12, 24, 0.95));
+  border: 1px solid rgba(255, 214, 2, 0.5);
+  color: #ffd602;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  padding: 4px 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 0 12px rgba(255, 214, 2, 0.25);
+  transition: all 0.2s ease;
+}
+
+.rig-hud-btn:hover {
+  background: #ffd602;
+  color: #060810;
+  box-shadow: 0 0 20px rgba(255, 214, 2, 0.6);
+  transform: translateY(-1px);
+}
+
+.rig-hud-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.rig-hud-chip {
+  background: rgba(12, 18, 34, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #94a3b8;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 3px;
+}
+
+.rig-hud-chip.gold {
+  border-color: rgba(255, 214, 2, 0.4);
+  color: #ffd602;
+}
+
+/* Non-rectangular Cyber Screen Chassis */
+.cyber-screen-chassis-container {
+  position: relative;
+  width: min(96vw, calc((94vh - 46px) * (960 / 640)));
+  aspect-ratio: 960 / 640;
+  filter: drop-shadow(0 0 35px rgba(254, 107, 0, 0.35)) drop-shadow(0 0 55px rgba(0, 240, 255, 0.25));
+  z-index: 5;
 }
 
 #canvas-wrapper {
   position: relative;
-  width: min(95vw, calc(95vh * (960 / 640)));
-  aspect-ratio: 960 / 640;
-  box-shadow: 0 12px 50px rgba(0, 0, 0, 0.85), 0 0 35px rgba(254, 107, 0, 0.25), 0 0 50px rgba(0, 240, 255, 0.15);
-  border-radius: 10px;
-  overflow: hidden;
-  border: 2px solid rgba(255, 214, 2, 0.35);
+  width: 100%;
+  height: 100%;
   background: #060810;
+  overflow: hidden;
+  clip-path: polygon(
+    28px 0%,
+    calc(100% - 28px) 0%,
+    100% 28px,
+    100% calc(100% - 28px),
+    calc(100% - 28px) 100%,
+    28px 100%,
+    0% calc(100% - 28px),
+    0% 28px
+  );
+  border: none;
+}
+
+/* Outer Chamfer Glow Border */
+.chassis-chamfer-border {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+.chassis-chamfer-border svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* High-Tech Corner Brackets */
+.rig-bracket {
+  position: absolute;
+  width: 34px;
+  height: 34px;
+  border: 2px solid #00f0ff;
+  pointer-events: none;
+  z-index: 10000;
+  box-shadow: 0 0 12px #00f0ff;
+}
+
+.rig-bracket.top-left {
+  top: 3px;
+  left: 3px;
+  border-right: none;
+  border-bottom: none;
+  border-top-left-radius: 4px;
+}
+
+.rig-bracket.top-right {
+  top: 3px;
+  right: 3px;
+  border-left: none;
+  border-bottom: none;
+  border-top-right-radius: 4px;
+  border-color: #ffd602;
+  box-shadow: 0 0 12px #ffd602;
+}
+
+.rig-bracket.bottom-left {
+  bottom: 3px;
+  left: 3px;
+  border-right: none;
+  border-top: none;
+  border-bottom-left-radius: 4px;
+  border-color: #ffd602;
+  box-shadow: 0 0 12px #ffd602;
+}
+
+.rig-bracket.bottom-right {
+  bottom: 3px;
+  right: 3px;
+  border-left: none;
+  border-top: none;
+  border-bottom-right-radius: 4px;
+  border-color: #fe6b00;
+  box-shadow: 0 0 12px #fe6b00;
+}
+
+/* CRT Monitor Glass Sheen Reflection */
+.chassis-crt-glare {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 40%;
+  background: linear-gradient(175deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 35%, transparent 100%);
+  pointer-events: none;
+  z-index: 9998;
+}
+
+/* Chassis Bottom Rail */
+.rig-bottom-rail {
+  position: relative;
+  z-index: 10;
+  width: min(96vw, calc((94vh - 46px) * (960 / 640)));
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 3px 10px 0 10px;
+  font-family: 'Rajdhani', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: #64748b;
+}
+
+.rig-bottom-rail span.active {
+  color: #ffd602;
+  text-shadow: 0 0 8px rgba(255, 214, 2, 0.5);
+}
+
+@media (max-width: 800px) {
+  .rig-stadium-pillars {
+    display: none;
+  }
+  .rig-hud-header,
+  .rig-bottom-rail {
+    display: none;
+  }
 }
 
 #game-canvas {

@@ -347,6 +347,11 @@ class CampusClashGame {
 
       this.sound.init(); // Initialize Web Audio on first user interaction
 
+      if (e.code === 'KeyF' && !e.ctrlKey && !e.metaKey && !e.altKey) {
+        this.toggleFullscreen();
+        return;
+      }
+
       if (this.currentScreen === GAME_SCREENS.LANDING) {
         if (this.landingScene) this.landingScene.handleKeyDown(e);
       } else if (this.currentScreen === GAME_SCREENS.MODE_SELECT) {
@@ -357,6 +362,24 @@ class CampusClashGame {
         this.handleStageSelectKeyDown(e);
       } else if (this.currentScreen === GAME_SCREENS.MATCH) {
         this.handleMatchKeyDown(e);
+      }
+    });
+
+    // Rig HUD Fullscreen button
+    const rigFsBtn = document.getElementById('rig-btn-fullscreen');
+    if (rigFsBtn) {
+      rigFsBtn.addEventListener('click', () => this.toggleFullscreen());
+    }
+
+    document.addEventListener('fullscreenchange', () => {
+      const isFs = !!document.fullscreenElement;
+      const fsBtn = document.getElementById('rig-btn-fullscreen');
+      const portalFsBtn = document.getElementById('portal-btn-fullscreen');
+      if (fsBtn) {
+        fsBtn.innerHTML = `<span>${isFs ? '🗗 EXIT FULLSCREEN (F)' : '⛶ FULLSCREEN (F)'}</span>`;
+      }
+      if (portalFsBtn) {
+        portalFsBtn.textContent = isFs ? '🗗 EXIT FULLSCREEN' : '⛶ FULLSCREEN';
       }
     });
 
@@ -379,6 +402,22 @@ class CampusClashGame {
         this.handleMatchClick(x, y);
       }
     });
+  }
+
+  toggleFullscreen() {
+    if (!document.fullscreenElement) {
+      if (document.documentElement.requestFullscreen) {
+        document.documentElement.requestFullscreen().catch(() => {});
+      } else if (document.documentElement.webkitRequestFullscreen) {
+        document.documentElement.webkitRequestFullscreen();
+      }
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen().catch(() => {});
+      } else if (document.webkitExitFullscreen) {
+        document.webkitExitFullscreen();
+      }
+    }
   }
 
   // =========================================================================

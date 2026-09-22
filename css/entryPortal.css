@@ -112,6 +112,12 @@
   box-shadow: 0 0 12px rgba(255, 214, 2, 0.35);
 }
 
+.portal-nav-btn.fullscreen-toggle:hover {
+  border-color: #ffd602;
+  color: #ffd602;
+  box-shadow: 0 0 12px rgba(255, 214, 2, 0.45);
+}
+
 /* Centerpiece Container */
 .portal-main-content {
   width: 100%;

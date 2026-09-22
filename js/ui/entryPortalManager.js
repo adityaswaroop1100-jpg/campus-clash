@@ -91,6 +91,21 @@ export class EntryPortalManager {
       });
     }
 
+    this.fullscreenBtn = document.getElementById('portal-btn-fullscreen');
+    if (this.fullscreenBtn) {
+      this.fullscreenBtn.addEventListener('click', () => {
+        if (!document.fullscreenElement) {
+          if (document.documentElement.requestFullscreen) {
+            document.documentElement.requestFullscreen().catch(() => {});
+          }
+        } else {
+          if (document.exitFullscreen) {
+            document.exitFullscreen().catch(() => {});
+          }
+        }
+      });
+    }
+
     // Modal close buttons
     document.querySelectorAll('.portal-modal-close').forEach(btn => {
       btn.addEventListener('click', (e) => {

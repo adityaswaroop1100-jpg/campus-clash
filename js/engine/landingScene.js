@@ -518,31 +518,6 @@ export class LandingScene {
   renderVersusSilhouettes(ctx, w, h) {
     const groundY = 500;
     
-    // Draw neon title
-    ctx.save();
-    const titleText = "CAMPUS CLASH 2D";
-    const cx = w / 2;
-    const cy = 160;
-    ctx.font = '900 64px "Arial Black", sans-serif';
-    ctx.textAlign = 'center';
-    
-    // Layer 1: Outer glow
-    ctx.shadowColor = '#ff6b35';
-    ctx.shadowBlur = 45;
-    ctx.fillStyle = '#ff6b35';
-    ctx.fillText(titleText, cx, cy);
-    // Layer 2: Mid glow
-    ctx.shadowColor = '#ffd700';
-    ctx.shadowBlur = 22;
-    ctx.fillStyle = '#ffd700';
-    ctx.fillText(titleText, cx, cy);
-    // Layer 3: Bright core
-    ctx.shadowColor = '#ffffff';
-    ctx.shadowBlur = 8;
-    ctx.fillStyle = '#ffffff';
-    ctx.fillText(titleText, cx, cy);
-    ctx.restore();
-
     ctx.save();
     
     // Silhouettes & Energy Line

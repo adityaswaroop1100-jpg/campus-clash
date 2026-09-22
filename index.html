@@ -69,8 +69,75 @@
   <main id="app-container" role="main">
     <h1 class="sr-only">Campus Clash — SRM Campus 2D Fighting Game</h1>
 
-    <!-- 960x640 Fixed Aspect Ratio Canvas Wrapper -->
-    <div id="canvas-wrapper">
+    <!-- Ambient Stadium Cyber Rig Backdrop (Eliminates Empty Box Margin) -->
+    <div class="rig-ambient-backdrop" aria-hidden="true">
+      <div class="rig-ambient-glow-left"></div>
+      <div class="rig-ambient-glow-right"></div>
+      <div class="rig-grid-perspective"></div>
+      <div class="rig-stadium-pillars left">
+        <div class="pillar-led"></div>
+        <div class="pillar-led"></div>
+        <div class="pillar-led"></div>
+        <div class="pillar-led"></div>
+        <div class="pillar-led"></div>
+        <div class="pillar-led"></div>
+      </div>
+      <div class="rig-stadium-pillars right">
+        <div class="pillar-led"></div>
+        <div class="pillar-led"></div>
+        <div class="pillar-led"></div>
+        <div class="pillar-led"></div>
+        <div class="pillar-led"></div>
+        <div class="pillar-led"></div>
+      </div>
+    </div>
+
+    <!-- Rig Top Status & Fullscreen Header -->
+    <header class="rig-hud-header">
+      <div class="rig-hud-badge">
+        <span class="rig-hud-dot"></span>
+        <span class="rig-hud-title">SRM TECH PARK ARCADE // CYBER RIG v2.5</span>
+      </div>
+      <div class="rig-hud-controls">
+        <button type="button" id="rig-btn-fullscreen" class="rig-hud-btn" title="Toggle Fullscreen (F)">
+          <span>⛶ FULLSCREEN (F)</span>
+        </button>
+      </div>
+      <div class="rig-hud-meta">
+        <span class="rig-hud-chip">60 FPS</span>
+        <span class="rig-hud-chip gold">AARUUSH GRID</span>
+      </div>
+    </header>
+
+    <!-- Cyber Screen Chassis Container (Angled Non-Rectangular Bezel) -->
+    <div class="cyber-screen-chassis-container">
+      <!-- Glowing Chamfered Sci-Fi Border -->
+      <div class="chassis-chamfer-border" aria-hidden="true">
+        <svg viewBox="0 0 960 640" preserveAspectRatio="none">
+          <polygon points="28,2 932,2 958,28 958,612 932,638 28,638 2,612 2,28" 
+                   fill="none" 
+                   stroke="url(#chassisBorderGrad)" 
+                   stroke-width="3" />
+          <defs>
+            <linearGradient id="chassisBorderGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#00f0ff" />
+              <stop offset="35%" stop-color="#ffd602" />
+              <stop offset="70%" stop-color="#fe6b00" />
+              <stop offset="100%" stop-color="#00f0ff" />
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+
+      <!-- High-Tech Corner Brackets -->
+      <div class="rig-bracket top-left" aria-hidden="true"></div>
+      <div class="rig-bracket top-right" aria-hidden="true"></div>
+      <div class="rig-bracket bottom-left" aria-hidden="true"></div>
+      <div class="rig-bracket bottom-right" aria-hidden="true"></div>
+      <div class="chassis-crt-glare" aria-hidden="true"></div>
+
+      <!-- 960x640 Fixed Aspect Ratio Canvas Wrapper with Chamfered Screen Cut -->
+      <div id="canvas-wrapper">
 
       <!-- Layer 50: Peak Quality Aaruush Clash Cyber Entry Portal -->
       <div id="entry-portal" class="entry-portal" role="region" aria-label="Aaruush Clash Entry Portal">
@@ -89,6 +156,7 @@
               <span class="icon-cal">📅</span> SCHEDULE
             </button>
             <button type="button" id="portal-btn-sound" class="portal-nav-btn sound-toggle" aria-label="Toggle Sound">🔊</button>
+            <button type="button" id="portal-btn-fullscreen" class="portal-nav-btn fullscreen-toggle" aria-label="Toggle Fullscreen">⛶ FULLSCREEN</button>
           </div>
         </header>
 
@@ -358,7 +426,7 @@
             <span class="fighter-name-badge backbencher">🔥 THE BACKBENCHER</span>
           </div>
           <div class="landing-controls-hint">
-            <span>[↑/↓]</span> NAVIGATE &nbsp;|&nbsp; <span>[ENTER / SPACE]</span> SELECT &nbsp;|&nbsp; <span>[ESC]</span> CREDITS
+            <span>[↑/↓]</span> NAVIGATE &nbsp;|&nbsp; <span>[ENTER / SPACE]</span> SELECT &nbsp;|&nbsp; <span>[F]</span> FULLSCREEN &nbsp;|&nbsp; <span>[ESC]</span> CREDITS
           </div>
         </footer>
       </div>
@@ -1090,8 +1158,18 @@
 
       <!-- Layer 2: Top Particles Canvas (Academic Dust / Fireflies drifting over UI) -->
       <canvas id="particles-canvas" width="960" height="640" class="fx-canvas" aria-hidden="true"></canvas>
-    </div>
-  </main>
+    </div> <!-- End #canvas-wrapper -->
+  </div> <!-- End .cyber-screen-chassis-container -->
+
+  <!-- Chassis Bottom Telemetry Rail -->
+  <footer class="rig-bottom-rail" aria-hidden="true">
+    <span class="active">[ INSERT COIN // FREE PLAY ]</span>
+    <span>•</span>
+    <span>DETERMINISTIC 60 FPS • PROCEDURAL WEB AUDIO</span>
+    <span>•</span>
+    <span>SRM KTR CAMPUS CLASH • WEBNEXUS</span>
+  </footer>
+</main>
 
   <!-- Dynamic ES6 Module Entry Point (Zero Stale Cache Guarantee) -->
   <script type="module">
