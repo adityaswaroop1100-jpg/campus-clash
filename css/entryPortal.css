@@ -346,6 +346,11 @@
   background: rgba(4, 12, 24, 0.95);
 }
 
+#entry-regno,
+#entry-partid {
+  text-transform: uppercase;
+}
+
 .portal-alert {
   padding: 6px 12px;
   border-radius: 6px;

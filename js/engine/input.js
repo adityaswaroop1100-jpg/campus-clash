@@ -80,9 +80,20 @@ export class InputHandler {
    * @param {KeyboardEvent} event
    */
   handleKeyDown(event) {
-    // Never intercept or preventDefault keystrokes if user is interacting with an input/form
+    // 1. If Entry Portal modal is displayed, ignore all game controls
+    const portal = document.getElementById('entry-portal');
+    if (portal && !portal.classList.contains('hidden')) {
+      return;
+    }
+
+    // 2. Never intercept keystrokes if focused on any input or form element
+    const activeEl = document.activeElement;
+    const activeTag = (activeEl && activeEl.tagName) ? activeEl.tagName.toLowerCase() : '';
     const targetTag = (event.target && event.target.tagName) ? event.target.tagName.toLowerCase() : '';
-    if (targetTag === 'input' || targetTag === 'textarea' || targetTag === 'select' || (event.target && event.target.isContentEditable)) {
+    if (
+      targetTag === 'input' || targetTag === 'textarea' || targetTag === 'select' || (event.target && event.target.isContentEditable) ||
+      activeTag === 'input' || activeTag === 'textarea' || activeTag === 'select' || (activeEl && activeEl.isContentEditable)
+    ) {
       return;
     }
 
@@ -109,8 +120,18 @@ export class InputHandler {
    * @param {KeyboardEvent} event
    */
   handleKeyUp(event) {
+    const portal = document.getElementById('entry-portal');
+    if (portal && !portal.classList.contains('hidden')) {
+      return;
+    }
+
+    const activeEl = document.activeElement;
+    const activeTag = (activeEl && activeEl.tagName) ? activeEl.tagName.toLowerCase() : '';
     const targetTag = (event.target && event.target.tagName) ? event.target.tagName.toLowerCase() : '';
-    if (targetTag === 'input' || targetTag === 'textarea' || targetTag === 'select' || (event.target && event.target.isContentEditable)) {
+    if (
+      targetTag === 'input' || targetTag === 'textarea' || targetTag === 'select' || (event.target && event.target.isContentEditable) ||
+      activeTag === 'input' || activeTag === 'textarea' || activeTag === 'select' || (activeEl && activeEl.isContentEditable)
+    ) {
       return;
     }
 

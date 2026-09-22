@@ -50,6 +50,15 @@ export class EntryPortalManager {
   }
 
   initEventListeners() {
+    // Shield all input fields from any window-level key handlers
+    const inputElements = [this.nameInput, this.regNoInput, this.srmMailInput, this.partIdInput, this.phoneInput];
+    inputElements.forEach(inp => {
+      if (!inp) return;
+      inp.addEventListener('keydown', (e) => e.stopPropagation());
+      inp.addEventListener('keyup', (e) => e.stopPropagation());
+      inp.addEventListener('keypress', (e) => e.stopPropagation());
+    });
+
     if (this.form) {
       this.form.addEventListener('submit', (e) => {
         e.preventDefault();

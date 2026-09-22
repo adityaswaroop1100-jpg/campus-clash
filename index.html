@@ -29,6 +29,22 @@
     };
   </script>
 
+  <!-- Input Field Keydown Interception Shield -->
+  <script>
+    (function() {
+      function shieldInputKeystrokes(e) {
+        var tag = (e.target && e.target.tagName) ? e.target.tagName.toUpperCase() : '';
+        if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || (e.target && e.target.isContentEditable)) {
+          // Stop other scripts on window from capturing or preventing default on typing
+          e.stopImmediatePropagation();
+        }
+      }
+      window.addEventListener('keydown', shieldInputKeystrokes, true);
+      window.addEventListener('keyup', shieldInputKeystrokes, true);
+      window.addEventListener('keypress', shieldInputKeystrokes, true);
+    })();
+  </script>
+
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

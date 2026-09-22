@@ -5,7 +5,7 @@
 
 import { CANVAS_WIDTH, CANVAS_HEIGHT, INPUT_ACTIONS, ROUND_STATES, COMBO_LEVELS, GAME_MODES } from './utils/constants.js';
 import { GameLoop } from './engine/gameLoop.js';
-import { InputHandler } from './engine/input.js';
+import { InputHandler } from './engine/input.js?v=2.4.3';
 import { ParticleSystem } from './engine/particleSystem.js';
 import { SoundManager } from './engine/soundManager.js';
 import { ScreenShake } from './engine/screenshake.js';
@@ -330,8 +330,18 @@ class CampusClashGame {
   setupListeners() {
     // Keyboard listeners
     window.addEventListener('keydown', (e) => {
+      const portal = document.getElementById('entry-portal');
+      if (portal && !portal.classList.contains('hidden')) {
+        return;
+      }
+
+      const activeEl = document.activeElement;
+      const activeTag = (activeEl && activeEl.tagName) ? activeEl.tagName.toLowerCase() : '';
       const targetTag = (e.target && e.target.tagName) ? e.target.tagName.toLowerCase() : '';
-      if (targetTag === 'input' || targetTag === 'textarea' || targetTag === 'select' || (e.target && e.target.isContentEditable)) {
+      if (
+        targetTag === 'input' || targetTag === 'textarea' || targetTag === 'select' || (e.target && e.target.isContentEditable) ||
+        activeTag === 'input' || activeTag === 'textarea' || activeTag === 'select' || (activeEl && activeEl.isContentEditable)
+      ) {
         return;
       }
 
