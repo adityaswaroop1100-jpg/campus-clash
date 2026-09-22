@@ -95,5 +95,4 @@ Open `http://localhost:8080` in your web browser.
 
 - **Developer**: Aditya Swaroop
 - **Registration No**: RA2511026010269
-- **Organization**: ACM SIGGRAPH SRM Student Chapter
 - **Tech Stack**: HTML5 Canvas 2D, Vanilla JavaScript (ES6+ Modules), CSS3, Web Audio API (Zero External Assets)
