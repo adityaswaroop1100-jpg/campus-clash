@@ -50,15 +50,15 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700;800;900&family=Press+Start+2P&family=Rajdhani:wght@600;700;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
 
-  <!-- External Stylesheets -->
-  <link rel="stylesheet" href="css/main.css?v=6">
-  <link rel="stylesheet" href="css/portal.css?v=6">
-  <link rel="stylesheet" href="css/landing.css?v=6">
-  <link rel="stylesheet" href="css/characterSelect.css?v=7">
-  <link rel="stylesheet" href="css/stageSelect.css?v=2">
-  <link rel="stylesheet" href="css/game.css?v=6">
-  <link rel="stylesheet" href="css/leaderboard.css?v=1">
-  <link rel="stylesheet" href="css/entryPortal.css?v=1">
+  <!-- External Stylesheets (v=11 cache bust) -->
+  <link rel="stylesheet" href="css/main.css?v=11">
+  <link rel="stylesheet" href="css/portal.css?v=11">
+  <link rel="stylesheet" href="css/landing.css?v=11">
+  <link rel="stylesheet" href="css/characterSelect.css?v=11">
+  <link rel="stylesheet" href="css/stageSelect.css?v=11">
+  <link rel="stylesheet" href="css/game.css?v=11">
+  <link rel="stylesheet" href="css/leaderboard.css?v=11">
+  <link rel="stylesheet" href="css/entryPortal.css?v=11">
 
   <!-- Supabase JS Client CDN -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -109,11 +109,11 @@
       </div>
     </header>
 
-    <!-- Cyber Screen Chassis Container (Angled Non-Rectangular Bezel) -->
-    <div class="cyber-screen-chassis-container">
-      <!-- Glowing Chamfered Sci-Fi Border -->
-      <div class="chassis-chamfer-border" aria-hidden="true">
-        <svg viewBox="0 0 960 640" preserveAspectRatio="none">
+    <!-- 960x640 Fixed Aspect Ratio Canvas Wrapper with Chamfered Screen Cut -->
+    <div id="canvas-wrapper">
+      <!-- High-Tech Chamfered Glowing Frame Border (Inside wrapper with inline absolute to guarantee zero displacement) -->
+      <div class="chassis-chamfer-border" style="position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999;" aria-hidden="true">
+        <svg viewBox="0 0 960 640" preserveAspectRatio="none" style="width: 100%; height: 100%; display: block;">
           <polygon points="28,2 932,2 958,28 958,612 932,638 28,638 2,612 2,28" 
                    fill="none" 
                    stroke="url(#chassisBorderGrad)" 
@@ -135,9 +135,6 @@
       <div class="rig-bracket bottom-left" aria-hidden="true"></div>
       <div class="rig-bracket bottom-right" aria-hidden="true"></div>
       <div class="chassis-crt-glare" aria-hidden="true"></div>
-
-      <!-- 960x640 Fixed Aspect Ratio Canvas Wrapper with Chamfered Screen Cut -->
-      <div id="canvas-wrapper">
 
       <!-- Layer 50: Peak Quality Aaruush Clash Cyber Entry Portal -->
       <div id="entry-portal" class="entry-portal" role="region" aria-label="Aaruush Clash Entry Portal">
@@ -1159,7 +1156,6 @@
       <!-- Layer 2: Top Particles Canvas (Academic Dust / Fireflies drifting over UI) -->
       <canvas id="particles-canvas" width="960" height="640" class="fx-canvas" aria-hidden="true"></canvas>
     </div> <!-- End #canvas-wrapper -->
-  </div> <!-- End .cyber-screen-chassis-container -->
 
   <!-- Chassis Bottom Telemetry Rail -->
   <footer class="rig-bottom-rail" aria-hidden="true">
