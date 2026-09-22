@@ -166,8 +166,8 @@
 
 .portal-logo-ring {
   position: absolute;
-  width: 104px;
-  height: 104px;
+  width: 110px;
+  height: 110px;
   border-radius: 50%;
   border: 1px solid rgba(255, 214, 2, 0.45);
   box-shadow: 0 0 20px rgba(255, 214, 2, 0.4);
@@ -176,11 +176,15 @@
 
 .portal-logo-img {
   position: relative;
-  width: 95px;
-  height: 95px;
+  width: 114px;
+  height: auto;
+  max-height: 96px;
   object-fit: contain;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
   z-index: 5;
-  filter: drop-shadow(0 0 16px rgba(255, 214, 2, 0.7));
+  filter: drop-shadow(0 0 18px rgba(255, 214, 2, 0.8));
   animation: logoFloat 4s ease-in-out infinite alternate;
 }
 
