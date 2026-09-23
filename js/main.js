@@ -23,7 +23,7 @@ import { CYPHER_CONFIG } from './entities/characters/cypher.js';
 import { GAVEL_CONFIG } from './entities/characters/gavel.js';
 import { BOLT_CONFIG } from './entities/characters/bolt.js';
 import { PALETTE_CONFIG } from './entities/characters/palette.js';
-import { Fighter } from './entities/fighter.js';
+import { Fighter } from './entities/fighter.js?v=2.5.0';
 import { TechParkStage } from './stages/techPark.js';
 import { UniversityBuildingStage } from './stages/universityBuilding.js';
 import { TPGanesanAuditoriumStage } from './stages/tpGanesanAuditorium.js';
@@ -997,7 +997,6 @@ class CampusClashGame {
       if (this.p1.stateMachine?.changeState) {
         this.p1.stateMachine.changeState(FIGHTER_STATES.IDLE);
       }
-      this.p1.state = 'idle';
       this.p1.activeHitboxes = [];
       this.p1.hitstopTimer = 0;
       this.p1.freezeTimer = 0;
@@ -1014,7 +1013,6 @@ class CampusClashGame {
       if (this.p2.stateMachine?.changeState) {
         this.p2.stateMachine.changeState(FIGHTER_STATES.IDLE);
       }
-      this.p2.state = 'idle';
       this.p2.activeHitboxes = [];
       this.p2.hitstopTimer = 0;
       this.p2.freezeTimer = 0;
