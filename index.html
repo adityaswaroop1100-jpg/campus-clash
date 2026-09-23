@@ -96,7 +96,7 @@
 
 
     <!-- 960x640 Fixed Aspect Ratio Canvas Wrapper with Chamfered Screen Cut -->
-    <div id="canvas-wrapper">
+    <div id="canvas-wrapper" class="cc-scanlines">
       <!-- High-Tech Chamfered Glowing Frame Border (Inside wrapper with inline absolute to guarantee zero displacement) -->
       <div class="chassis-chamfer-border" style="position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999;" aria-hidden="true">
         <svg viewBox="0 0 1024 642" preserveAspectRatio="none" style="width: 100%; height: 100%; display: block;">
@@ -540,6 +540,10 @@
 
           <div class="char-banner-right">
             <span class="char-banner-quote">SAME CAMPUS. DIFFERENT WARRIORS. 👑</span>
+            <button class="char-mode-pill view-pill-btn" id="char-view-toggle-btn" title="Toggle Select Layout (10-Card Deck vs Arcade Grid)" tabindex="0">
+              <span class="pill-dot">🎴</span>
+              <span class="pill-text" id="char-view-toggle-text">VIEW: 10-CARD DECK</span>
+            </button>
             <button class="char-mode-pill venue-pill-btn" id="char-venue-pill" title="Choose Battle Venue" tabindex="0">
               <span class="pill-dot">🏛️</span>
               <span class="pill-text" id="char-venue-text">VENUE: TECH PARK</span>
@@ -551,8 +555,9 @@
           </div>
         </header>
 
-        <!-- Main 5x2 Grid (Exact Reference Roster) -->
+        <!-- Main 5x2 Grid / 10-Card Deck Section -->
         <section class="char-grid-section" aria-label="Fighter Roster">
+          <div id="campus-select-root" class="hidden" style="width: 100%; max-width: 930px; z-index: 6;"></div>
           <div id="char-grid" class="char-grid" role="grid">
             <!-- Card 0: P1 — THE TOPPER -->
             <article class="char-card selected-p1" data-index="0" data-id="topper" style="--card-primary: #ffd700; --card-accent: #ffd700;" tabindex="0">

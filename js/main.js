@@ -505,6 +505,66 @@ class CampusClashGame {
       this.currentScreen = GAME_SCREENS.STAGE_SELECT;
     });
 
+    // View Toggle Button (10-Card Deck vs Arcade Grid)
+    this.charViewToggleBtn = document.getElementById('char-view-toggle-btn');
+    this.charViewToggleText = document.getElementById('char-view-toggle-text');
+    this.campusSelectRoot = document.getElementById('campus-select-root');
+    this.charGrid = document.getElementById('char-grid');
+
+    if (this.charViewToggleBtn && this.campusSelectRoot && this.charGrid) {
+      this.charViewToggleBtn.addEventListener('click', () => {
+        this.sound?.playCharNavTick();
+        const isDeckView = !this.campusSelectRoot.classList.contains('hidden');
+        if (isDeckView) {
+          this.campusSelectRoot.classList.add('hidden');
+          this.charGrid.classList.remove('hidden');
+          if (this.charViewToggleText) this.charViewToggleText.textContent = 'VIEW: 10-CARD DECK';
+        } else {
+          this.charGrid.classList.add('hidden');
+          this.campusSelectRoot.classList.remove('hidden');
+          if (this.charViewToggleText) this.charViewToggleText.textContent = 'VIEW: ARCADE GRID';
+        }
+      });
+    }
+
+    // Initialize CampusSelect 10-Card View
+    if (window.CampusSelect && this.campusSelectRoot) {
+      this.campusSelectInstance = window.CampusSelect.build(this.campusSelectRoot, {
+        base: 'assets/characters',
+        selected: this.roster[this.p1CharIndex]?.config?.id || 'topper',
+        onPreview: (id) => {
+          if (this.isCountingDown) return;
+          const idx = this.roster.findIndex(r => r.config.id === id);
+          if (idx !== -1) {
+            if (this.charSelectStep === 0) {
+              this.p1CharIndex = idx;
+            } else if (this.charSelectStep === 1) {
+              this.p2CharIndex = idx;
+            }
+            this.sound?.playCardWhoosh();
+            this.updateCharSelectUI();
+          }
+        },
+        onSelect: (id) => {
+          if (this.isCountingDown) return;
+          const idx = this.roster.findIndex(r => r.config.id === id);
+          if (idx !== -1) {
+            if (this.charSelectStep === 0) {
+              this.p1CharIndex = idx;
+              this.sound?.playCharNavTick();
+              this.updateCharSelectUI();
+              this.lockInCharacter(1, idx);
+            } else if (this.charSelectStep === 1) {
+              this.p2CharIndex = idx;
+              this.sound?.playCharNavTick();
+              this.updateCharSelectUI();
+              this.lockInCharacter(2, idx);
+            }
+          }
+        }
+      });
+    }
+
     // Bind Mini-Canvases to Portrait Manager
     const canvases = document.querySelectorAll('.char-portrait-canvas');
     if (canvases.length > 0) {
@@ -621,6 +681,12 @@ class CampusClashGame {
 
     // Update Portrait Manager state
     this.portraitManager?.setSelection(this.p1CharIndex, this.p2CharIndex, this.p1Locked, this.p2Locked);
+
+    // Sync CampusSelect if active
+    const activeCharId = this.roster[this.charSelectStep === 1 ? this.p2CharIndex : this.p1CharIndex]?.config?.id;
+    if (activeCharId && this.campusSelectInstance && this.campusSelectInstance.current !== activeCharId) {
+      this.campusSelectInstance.select(activeCharId);
+    }
 
     // Update Player 1 Profile Card
     const p1Item = this.roster[this.p1CharIndex];
@@ -1520,6 +1586,16 @@ class CampusClashGame {
       // 1. Render SRM Stage
       this.stage.render(ctx);
 
+      // 1.05 Sky Rim-Light (Stage Polish)
+      ctx.save();
+      const skyRimGrad = ctx.createLinearGradient(0, 0, 0, 240);
+      skyRimGrad.addColorStop(0, 'rgba(41, 211, 255, 0.14)');
+      skyRimGrad.addColorStop(0.4, 'rgba(255, 154, 46, 0.05)');
+      skyRimGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+      ctx.fillStyle = skyRimGrad;
+      ctx.fillRect(0, 0, CANVAS_WIDTH, 240);
+      ctx.restore();
+
       // 1.1 Ultimate Spotlight Dim
       if (window.CampusVisuals) {
         window.CampusVisuals.drawDim(ctx, CANVAS_WIDTH, CANVAS_HEIGHT);
@@ -2083,12 +2159,13 @@ class CampusClashGame {
     };
 
     const isLowHP = (fighter.health / fighter.maxHealth) < 0.25;
+    const accentColor = fighter.config.colors.accent || (fighter.config.id === 'topper' ? '#ffd602' : '#29d3ff');
 
     ctx.save();
     
     // Character Portrait (Hex-framed badge)
     const portraitX = isRightAligned ? x + w + 24 : x - 24;
-    const accentColor = fighter.config.colors.accent || (fighter.config.id === 'topper' ? '#ffd602' : '#fe6b00');
+    const portraitR = 21;
     
     // Outer hex ring
     ctx.save();
@@ -2096,37 +2173,40 @@ class CampusClashGame {
     ctx.beginPath();
     for (let i = 0; i < 6; i++) {
       const angle = (Math.PI / 3) * i;
-      const hx = Math.cos(angle) * 20;
-      const hy = Math.sin(angle) * 20;
+      const hx = Math.cos(angle) * portraitR;
+      const hy = Math.sin(angle) * portraitR;
       if (i === 0) ctx.moveTo(hx, hy);
       else ctx.lineTo(hx, hy);
     }
     ctx.closePath();
     
-    ctx.fillStyle = '#060c18';
+    ctx.fillStyle = '#050a1c';
     ctx.fill();
-    ctx.lineWidth = 2;
-    ctx.strokeStyle = accentColor;
-    ctx.shadowColor = accentColor;
-    ctx.shadowBlur = 12;
-    
-    if (isLowHP) {
-      ctx.shadowColor = '#ff0000';
-      ctx.shadowBlur = 16 + Math.sin(Date.now() * 0.01) * 8;
-      ctx.strokeStyle = '#ff0000';
+
+    // Render Character Portrait Sprite or Fallback Emoji
+    const pImg = window.CampusVisuals ? window.CampusVisuals.getPortrait(fighter.config.id) : null;
+    if (pImg && pImg.complete && pImg.naturalWidth > 0) {
+      ctx.save();
+      ctx.clip();
+      ctx.drawImage(pImg, -portraitR, -portraitR, portraitR * 2, portraitR * 2);
+      ctx.restore();
+    } else {
+      ctx.font = '16px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(charEmojiMap[fighter.config.id] || '🥊', 0, 1);
     }
+
+    ctx.lineWidth = 2.5;
+    ctx.strokeStyle = isLowHP ? '#ff1744' : accentColor;
+    ctx.shadowColor = isLowHP ? '#ff1744' : accentColor;
+    ctx.shadowBlur = isLowHP ? (16 + Math.sin(Date.now() * 0.01) * 8) : 10;
     ctx.stroke();
     ctx.restore();
 
-    // Emoji
-    ctx.font = '16px sans-serif';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(charEmojiMap[fighter.config.id] || '🥊', portraitX, y + h / 2 + 1);
-
     // Name label
-    ctx.font = 'bold 12px sans-serif';
-    ctx.fillStyle = accentColor;
+    ctx.font = 'bold 13px sans-serif';
+    ctx.fillStyle = '#ffd23f';
     ctx.shadowColor = accentColor;
     ctx.shadowBlur = 4;
     ctx.textAlign = isRightAligned ? 'right' : 'left';
@@ -2140,70 +2220,90 @@ class CampusClashGame {
     const curHp = Math.ceil(Math.max(0, fighter.health));
     ctx.fillText(`${curHp} / ${fighter.maxHealth} HP`, isRightAligned ? x : x + w, y - 6);
 
-    // 1. Dark background bar with border
-    ctx.fillStyle = '#040812';
-    ctx.fillRect(x, y, w, h);
-    ctx.strokeStyle = '#162238';
-    ctx.lineWidth = 2;
-    ctx.strokeRect(x, y, w, h);
-
-    // 2. Ghost/lag bar in solar amber that decays smoothly
-    const lagPct = Math.min(1, Math.max(0, (fighter.displayedHealth !== undefined ? fighter.displayedHealth : fighter.health) / fighter.maxHealth));
-    let lagFillW = Math.round((w - 4) * lagPct);
-    
-    ctx.fillStyle = '#fe6b00';
+    // Chamfered HP Bar Path
+    const chamfer = 10;
+    const barPath = new Path2D();
     if (isRightAligned) {
-      ctx.fillRect(x + w - 2 - lagFillW, y + 2, lagFillW, h - 4);
+      // Chamfer on top-left (matches .cc-hp--p2)
+      barPath.moveTo(x + chamfer, y);
+      barPath.lineTo(x + w, y);
+      barPath.lineTo(x + w, y + h);
+      barPath.lineTo(x, y + h);
+      barPath.lineTo(x, y + chamfer);
+      barPath.closePath();
     } else {
-      ctx.fillRect(x + 2, y + 2, lagFillW, h - 4);
+      // Chamfer on bottom-right (matches .cc-hp)
+      barPath.moveTo(x, y);
+      barPath.lineTo(x + w, y);
+      barPath.lineTo(x + w - chamfer, y + h);
+      barPath.lineTo(x, y + h);
+      barPath.closePath();
+    }
+
+    // 1. Dark background bar with border
+    ctx.fillStyle = '#07122b';
+    ctx.fill(barPath);
+    ctx.strokeStyle = '#0d2a5c';
+    ctx.lineWidth = 2;
+    ctx.stroke(barPath);
+
+    // Clip inner content to chamfered bar path
+    ctx.save();
+    ctx.clip(barPath);
+
+    // 2. White damage lag bar (rgba(255, 255, 255, 0.85))
+    const lagPct = Math.min(1, Math.max(0, (fighter.displayedHealth !== undefined ? fighter.displayedHealth : fighter.health) / fighter.maxHealth));
+    const lagFillW = Math.round(w * lagPct);
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
+    if (isRightAligned) {
+      ctx.fillRect(x + w - lagFillW, y, lagFillW, h);
+    } else {
+      ctx.fillRect(x, y, lagFillW, h);
     }
 
     // 3. Actual health fill as gradient
     const pct = Math.min(1, Math.max(0, fighter.health / fighter.maxHealth));
-    const fillW = Math.round((w - 4) * pct);
+    const fillW = Math.round(w * pct);
     const fillGrad = ctx.createLinearGradient(x, y, x + w, y);
     if (pct > 0.5) {
-      fillGrad.addColorStop(0, '#00e676');
-      fillGrad.addColorStop(1, '#76ff03');
+      fillGrad.addColorStop(0, '#6bff5c');
+      fillGrad.addColorStop(0.5, '#b6ff4d');
+      fillGrad.addColorStop(1, '#2fb83a');
     } else if (pct > 0.25) {
-      fillGrad.addColorStop(0, '#fe6b00');
-      fillGrad.addColorStop(1, '#ffd602');
+      fillGrad.addColorStop(0, '#ffd23f');
+      fillGrad.addColorStop(1, '#ff9a2e');
     } else {
-      fillGrad.addColorStop(0, '#d50000');
-      fillGrad.addColorStop(1, '#ff1744');
+      fillGrad.addColorStop(0, '#ff4b3a');
+      fillGrad.addColorStop(1, '#d50000');
     }
 
-    // 6. Subtle inner glow on bar fill
-    ctx.shadowColor = pct > 0.5 ? '#76ff03' : (pct > 0.25 ? '#ffd602' : '#ff1744');
-    ctx.shadowBlur = 8;
     ctx.fillStyle = fillGrad;
-    
     if (isRightAligned) {
-      ctx.fillRect(x + w - 2 - fillW, y + 2, fillW, h - 4);
+      ctx.fillRect(x + w - fillW, y, fillW, h);
     } else {
-      ctx.fillRect(x + 2, y + 2, fillW, h - 4);
+      ctx.fillRect(x, y, fillW, h);
     }
-    ctx.shadowBlur = 0;
 
-    // 4. Segment dividers (25, 50, 75)
-    ctx.fillStyle = 'rgba(255,255,255,0.2)';
+    // 4. Subtle inner glow on bar fill
+    ctx.shadowColor = pct > 0.5 ? '#6bff5c' : (pct > 0.25 ? '#ffd23f' : '#ff4b3a');
+    ctx.shadowBlur = 8;
+
+    // 5. Repeating segment dividers at 25%, 50%, 75%
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.22)';
     for (let i = 1; i <= 3; i++) {
       const segX = x + (w * (i * 0.25));
-      ctx.fillRect(segX, y + 2, 1, h - 4);
+      ctx.fillRect(segX, y, 2, h);
     }
 
-    // 5. Specular highlight strip
+    // 6. Specular highlight strip on top third
     const highlightGrad = ctx.createLinearGradient(x, y, x, y + h / 3);
-    highlightGrad.addColorStop(0, 'rgba(255,255,255,0.4)');
-    highlightGrad.addColorStop(1, 'rgba(255,255,255,0.0)');
+    highlightGrad.addColorStop(0, 'rgba(255, 255, 255, 0.35)');
+    highlightGrad.addColorStop(1, 'rgba(255, 255, 255, 0.0)');
     ctx.fillStyle = highlightGrad;
-    if (isRightAligned) {
-      ctx.fillRect(x + w - 2 - fillW, y + 2, fillW, h / 3);
-    } else {
-      ctx.fillRect(x + 2, y + 2, fillW, h / 3);
-    }
-    
-    ctx.restore();
+    ctx.fillRect(x, y, w, h / 3);
+
+    ctx.restore(); // restore clip
+    ctx.restore(); // restore initial save
   }
 
   renderUltimateMeter(ctx, x, y, w, h, fighter) {
