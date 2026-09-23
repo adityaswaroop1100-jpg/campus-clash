@@ -87,7 +87,7 @@ export class Fighter {
   }
 
   get state() {
-    if (!this.stateMachine) return 'idle';
+    if (!this.stateMachine) return this._customState || 'idle';
     const s = this.stateMachine.getState();
     if (s === FIGHTER_STATES.ATTACKING && this.currentMove) {
       if (this.currentMove.type === 'ultimate' || this.currentMove.type === 'viva' || this.currentMove.type === 'exam_mode') return 'ultimate';
@@ -101,6 +101,26 @@ export class Fighter {
     if (s === FIGHTER_STATES.JUMPING || !this.isGrounded) return 'jump';
     if (s === FIGHTER_STATES.WALKING) return Math.abs(this.vx) > 3.8 ? 'run' : 'walk';
     return 'idle';
+  }
+
+  set state(val) {
+    this._customState = val;
+    if (this.stateMachine && typeof this.stateMachine.changeState === 'function') {
+      const stateMap = {
+        'idle': FIGHTER_STATES.IDLE,
+        'walk': FIGHTER_STATES.WALKING,
+        'run': FIGHTER_STATES.WALKING,
+        'jump': FIGHTER_STATES.JUMPING,
+        'block': FIGHTER_STATES.BLOCKING,
+        'dodge': FIGHTER_STATES.DODGING,
+        'hit': FIGHTER_STATES.HITSTUN,
+        'attacking': FIGHTER_STATES.ATTACKING
+      };
+      const target = stateMap[val] || val;
+      if (Object.values(FIGHTER_STATES).includes(target)) {
+        this.stateMachine.changeState(target);
+      }
+    }
   }
 
   update(dt, inputHandler, opponent, stage, particleSystem, soundManager) {

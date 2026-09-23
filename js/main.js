@@ -994,6 +994,9 @@ class CampusClashGame {
       this.p1.facing = 1;
       this.p1.vx = 0;
       this.p1.vy = 0;
+      if (this.p1.stateMachine?.changeState) {
+        this.p1.stateMachine.changeState(FIGHTER_STATES.IDLE);
+      }
       this.p1.state = 'idle';
       this.p1.activeHitboxes = [];
       this.p1.hitstopTimer = 0;
@@ -1008,6 +1011,9 @@ class CampusClashGame {
       this.p2.facing = -1;
       this.p2.vx = 0;
       this.p2.vy = 0;
+      if (this.p2.stateMachine?.changeState) {
+        this.p2.stateMachine.changeState(FIGHTER_STATES.IDLE);
+      }
       this.p2.state = 'idle';
       this.p2.activeHitboxes = [];
       this.p2.hitstopTimer = 0;
