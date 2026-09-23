@@ -181,27 +181,38 @@ export class CharacterPortraitManager {
     }
     ctx.restore();
 
-    // 3. Render Fighter Full-Body with Reference Scale & Centering
-    ctx.save();
-    // Center at horizontal midpoint, positioned so full body (head to shoes) fits cleanly
-    const focalX = width / 2;
-    const focalY = height * 0.90; // Ground / feet anchor
-    const zoom = 1.15; // Full body showcase matching arcade reference artwork
+    // 3. Render Fighter Full-Body / Portrait
+    const portraitImg = window.CampusVisuals ? window.CampusVisuals.getPortrait(config.id) : null;
+    if (portraitImg && portraitImg.complete && portraitImg.naturalWidth > 0) {
+      ctx.save();
+      const pW = width * 0.92;
+      const pH = (pW * portraitImg.height) / portraitImg.width;
+      const meta = (window.CampusVisuals && window.CampusVisuals.CHARACTERS[config.id]) || {};
+      ctx.shadowColor = meta.accent || config.colors.accent || '#00e5ff';
+      ctx.shadowBlur = isHovered ? 20 : 10;
+      ctx.drawImage(portraitImg, (width - pW) / 2, Math.max(10, height - pH - 6), pW, pH);
+      ctx.restore();
+    } else {
+      ctx.save();
+      // Center at horizontal midpoint, positioned so full body (head to shoes) fits cleanly
+      const focalX = width / 2;
+      const focalY = height * 0.90; // Ground / feet anchor
+      const zoom = 1.15; // Full body showcase matching arcade reference artwork
 
-    ctx.translate(focalX, focalY);
-    ctx.scale(zoom, zoom);
+      ctx.translate(focalX, focalY);
+      ctx.scale(zoom, zoom);
 
-    // Let fighter draw using procedural canvas primitives
-    const state = FIGHTER_STATES.IDLE;
-    const isHurt = false;
-    const isBlock = false;
-    const isAttack = false;
+      // Let fighter draw using procedural canvas primitives
+      const state = FIGHTER_STATES.IDLE;
+      const isHurt = false;
+      const isBlock = false;
+      const isAttack = false;
 
-    // Slight breathing sway
-    fighter.animCycle = time * 0.003;
+      // Slight breathing sway
+      fighter.animCycle = time * 0.003;
 
-    if (config.id === 'topper') {
-      fighter.renderRealisticTopper(ctx, state, isHurt, isBlock, isAttack);
+      if (config.id === 'topper') {
+        fighter.renderRealisticTopper(ctx, state, isHurt, isBlock, isAttack);
     } else if (config.id === 'hosteler') {
       fighter.renderRealisticHosteler(ctx, state, isHurt, isBlock, isAttack);
     } else if (config.id === 'senior') {
@@ -223,6 +234,7 @@ export class CharacterPortraitManager {
     }
 
     ctx.restore();
+    }
 
     // 4. Foreground Lens Flares / Sparkles on Hover
     if (isHovered) {

@@ -42,6 +42,8 @@ import { StageSelectManager } from './ui/stageSelectManager.js';
 import { LeaderboardManager } from './multiplayer/leaderboard.js';
 import { supabaseService } from './database/supabaseClient.js';
 import { EntryPortalManager } from './ui/entryPortalManager.js';
+import './engine/campus-clash-visuals.js';
+import './ui/campus-clash-select.js';
 
 export const GAME_SCREENS = {
   LANDING: 'landing',
@@ -879,6 +881,11 @@ class CampusClashGame {
     const p1Cfg = this.roster[this.p1CharIndex].config;
     const p2Cfg = this.roster[this.p2CharIndex].config;
 
+    if (window.CampusVisuals) {
+      window.CampusVisuals.loadCharacter(p1Cfg.id);
+      window.CampusVisuals.loadCharacter(p2Cfg.id);
+    }
+
     // Instantiate selected SRM Arena
     this.stage = new this.arenas[this.currentArenaIndex].stageClass();
 
@@ -1363,6 +1370,9 @@ class CampusClashGame {
           this.sound.playBlock();
           this.particles.spawnBlockSparks(impactX, impactY);
           this.screenShake.shake(3, 8);
+          if (window.CampusVisuals) {
+            window.CampusVisuals.onBlock(defender);
+          }
         } else {
           // Trigger slow motion
           this.slowMotionTimer = 15;
@@ -1386,6 +1396,11 @@ class CampusClashGame {
           // Character-specific signature procedural audio & visual sparks
           this.sound.playCharacterHitSound(attacker.config.id, attacker.currentMove, isHeavyHit, false);
           this.particles.spawnCharacterSparks(attacker.config.id, impactX, impactY, ringColor, isHeavyHit);
+
+          if (window.CampusVisuals) {
+            const meta = window.CampusVisuals.CHARACTERS[attacker.charId] || window.CampusVisuals.CHARACTERS.topper;
+            window.CampusVisuals.onHit(impactX, impactY, isHeavyHit, meta);
+          }
 
           // Screen shake & hit flash based on attack type
           if (props.damage >= 25) {
@@ -1494,10 +1509,21 @@ class CampusClashGame {
 
       // MATCH RENDER
       ctx.save();
-      this.screenShake.apply(ctx);
+      const rawDt = 1 / 60;
+      let visualDt = rawDt;
+      if (window.CampusVisuals) {
+        visualDt = window.CampusVisuals.beginFrame(ctx, rawDt);
+      } else {
+        this.screenShake.apply(ctx);
+      }
 
       // 1. Render SRM Stage
       this.stage.render(ctx);
+
+      // 1.1 Ultimate Spotlight Dim
+      if (window.CampusVisuals) {
+        window.CampusVisuals.drawDim(ctx, CANVAS_WIDTH, CANVAS_HEIGHT);
+      }
 
       // 1.5. Render Nexus Modifiers (Holographic Tech Pods)
       if (this.nexusModifiers) {
@@ -1522,18 +1548,36 @@ class CampusClashGame {
         this.postProcess.renderGodRays(ctx);
       }
 
-      // 2. Render Fighters
-      this.p1.render(ctx, this.debugHitboxes);
-      this.p2.render(ctx, this.debugHitboxes);
+      // 2. Render Fighters (Sprite with procedural fallback)
+      let p1SpriteDrawn = false;
+      let p2SpriteDrawn = false;
+      if (window.CampusVisuals) {
+        p1SpriteDrawn = window.CampusVisuals.drawFighter(ctx, this.p1, visualDt);
+        p2SpriteDrawn = window.CampusVisuals.drawFighter(ctx, this.p2, visualDt);
+      }
+      if (!p1SpriteDrawn) {
+        this.p1.render(ctx, this.debugHitboxes);
+      }
+      if (!p2SpriteDrawn) {
+        this.p2.render(ctx, this.debugHitboxes);
+      }
 
       // 2.5. Render Nexus Buff Auras & Tech Shields
       if (this.nexusModifiers) {
         this.nexusModifiers.renderFighterBuffs(ctx, this.p1, this.p2);
       }
 
-      // 3. Render Particles
+      // 3. Render Particles & Visual FX
+      if (window.CampusVisuals) {
+        window.CampusVisuals.updateFX(visualDt);
+        window.CampusVisuals.drawFX(ctx);
+      }
       this.particles.render(ctx);
       ctx.restore();
+
+      if (window.CampusVisuals) {
+        window.CampusVisuals.endFrame(ctx, CANVAS_WIDTH, CANVAS_HEIGHT);
+      }
 
       // Screen Flash on heavy hits
       if (this.screenFlashFrames > 0) {
@@ -1914,15 +1958,31 @@ class CampusClashGame {
     }
     ctx.restore();
 
-    // Arena Name Badge under Timer
+    // Arena Name Badge under Timer (with solid backing plate to prevent overlap)
     const currArena = this.arenas[this.currentArenaIndex];
     ctx.save();
     ctx.font = 'bold 9px monospace';
+    const bannerText = `${currArena.emoji} ${currArena.name.toUpperCase()}`;
+    const textW = ctx.measureText(bannerText).width;
+    const plateW = Math.max(160, textW + 28);
+    const plateH = 18;
+    const plateX = CANVAS_WIDTH / 2 - plateW / 2;
+    const plateY = topY + 44;
+
+    ctx.fillStyle = 'rgba(5, 10, 28, 0.94)';
+    ctx.strokeStyle = '#1c3a6e';
+    ctx.lineWidth = 1.2;
+    ctx.beginPath();
+    ctx.roundRect(plateX, plateY, plateW, plateH, 4);
+    ctx.fill();
+    ctx.stroke();
+
     ctx.fillStyle = '#ffd602';
-    ctx.shadowColor = 'rgba(255, 214, 2, 0.5)';
+    ctx.shadowColor = 'rgba(255, 214, 2, 0.6)';
     ctx.shadowBlur = 4;
     ctx.textAlign = 'center';
-    ctx.fillText(`${currArena.emoji} ${currArena.name.toUpperCase()}`, CANVAS_WIDTH / 2, topY + 54);
+    ctx.textBaseline = 'middle';
+    ctx.fillText(bannerText, CANVAS_WIDTH / 2, plateY + plateH / 2);
     ctx.restore();
 
     // --- Combo Counters ---

@@ -1,0 +1,110 @@
+/* ==========================================================================
+   Campus Clash 2D — campus-clash-ui.css
+   Neon-arcade look from the reference sheet: navy panels, cyan→orange frame,
+   chamfered corners, per-character accent colour (--a).
+   ========================================================================== */
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Russo+One&display=swap');
+
+:root {
+  --cc-bg: #050a1c;
+  --cc-panel: rgba(8, 18, 44, 0.86);
+  --cc-line: #1c3a6e;
+  --cc-cyan: #29d3ff;
+  --cc-orange: #ff9a2e;
+  --cc-gold: #ffd23f;
+  --cc-hp-a: #6bff5c;
+  --cc-hp-b: #b6ff4d;
+  --cc-font-display: 'Russo One', 'Arial Black', Impact, sans-serif;
+  --cc-font-ui: 'Rajdhani', 'Segoe UI', system-ui, sans-serif;
+  --cc-chamfer: 14px;
+}
+
+.cc-chamfer {
+  clip-path: polygon(var(--cc-chamfer) 0, 100% 0, 100% calc(100% - var(--cc-chamfer)),
+                     calc(100% - var(--cc-chamfer)) 100%, 0 100%, 0 var(--cc-chamfer));
+}
+
+/* ------------------------------------------------ CHARACTER SELECT */
+.cc-select { color: #eaf2ff; font-family: var(--cc-font-ui); display: grid; gap: 14px; padding: 16px;
+  background: radial-gradient(120% 90% at 50% 0%, #0d1f4d 0%, var(--cc-bg) 60%); }
+
+.cc-grid { display: grid; grid-template-columns: repeat(10, minmax(0, 1fr)); gap: 8px; }
+@media (max-width: 1100px) { .cc-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
+@media (max-width: 520px)  { .cc-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+.cc-card { --a: var(--cc-cyan); position: relative; padding: 0; border: 0; background: none; cursor: pointer;
+  font: inherit; color: inherit; text-align: left; transition: transform .12s ease, filter .12s ease; }
+.cc-card__body { display: grid; grid-template-rows: auto 1fr auto; aspect-ratio: 3 / 4.6; padding: 6px; overflow: hidden;
+  background: linear-gradient(165deg, color-mix(in srgb, var(--a) 55%, #000) 0%, #070d22 70%);
+  border: 2px solid var(--a);
+  clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px); }
+.cc-card__top { display: flex; justify-content: space-between; align-items: center;
+  font: 700 22px/1 var(--cc-font-display); color: #fff; text-shadow: 0 0 8px var(--a); }
+.cc-card__icon { font-size: 15px; color: var(--a); text-shadow: 0 0 8px var(--a); }
+.cc-card__art { position: relative; min-height: 0; }
+.cc-card__art img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 12%; }
+.cc-card__name { font: 700 15px/1.05 var(--cc-font-display); text-transform: uppercase; }
+.cc-card__role { font-size: 11px; font-weight: 700; letter-spacing: .04em; color: var(--a); text-transform: uppercase; }
+.cc-card__dots { display: flex; gap: 4px; margin-top: 4px; }
+.cc-card__dots i { width: 10px; height: 10px; border-radius: 50%; border: 1px solid rgba(255,255,255,.35); }
+.cc-card__label { padding: 6px 4px 2px; background: linear-gradient(#0000, #050a1ccc 40%); }
+
+.cc-card:hover, .cc-card:focus-visible { transform: translateY(-3px); filter: drop-shadow(0 0 10px var(--a)); outline: none; }
+.cc-card[aria-selected="true"] { filter: drop-shadow(0 0 14px var(--a)) drop-shadow(0 0 4px var(--cc-gold)); transform: translateY(-4px); }
+.cc-card[aria-selected="true"] .cc-card__body { border-color: var(--cc-gold); }
+.cc-card:focus-visible .cc-card__body { outline: 2px dashed #fff; outline-offset: -5px; }
+
+.cc-detail { --a: var(--cc-cyan); display: grid; grid-template-columns: minmax(200px, 1fr) minmax(220px, 1.2fr); gap: 18px; align-items: center;
+  padding: 16px 20px; background: var(--cc-panel); border: 1px solid var(--cc-line);
+  clip-path: polygon(16px 0, 100% 0, 100% calc(100% - 16px), calc(100% - 16px) 100%, 0 100%, 0 16px); }
+@media (max-width: 720px) { .cc-detail { grid-template-columns: 1fr; } }
+.cc-detail__art { height: 240px; display: flex; align-items: flex-end; justify-content: center;
+  background: radial-gradient(60% 70% at 50% 60%, color-mix(in srgb, var(--a) 45%, transparent), transparent 70%); }
+.cc-detail__art img { max-height: 100%; max-width: 100%; object-fit: contain; filter: drop-shadow(0 0 14px var(--a)); }
+.cc-detail__name { margin: 0; font: 700 clamp(28px, 4vw, 44px)/1 var(--cc-font-display); font-style: italic; color: var(--cc-gold); text-shadow: 0 0 14px var(--a); }
+.cc-detail__role { font-weight: 700; color: var(--a); letter-spacing: .06em; text-transform: uppercase; }
+.cc-detail__quote { margin: 8px 0 14px; font-size: 20px; font-style: italic; opacity: .9; }
+.cc-stats { display: grid; grid-template-columns: 78px 1fr; gap: 6px 10px; align-items: center; font-size: 13px; font-weight: 700; text-transform: uppercase; }
+.cc-stats__bar { height: 6px; background: #ffffff1f; }
+.cc-stats__bar b { display: block; height: 100%; background: linear-gradient(90deg, var(--a), var(--cc-gold)); }
+
+/* ------------------------------------------------------------ HUD */
+.cc-frame { position: relative; border: 3px solid transparent;
+  border-image: linear-gradient(120deg, var(--cc-cyan), var(--cc-gold) 45%, var(--cc-orange)) 1; }
+
+.cc-hp { position: relative; height: 22px; background: #07122b; border: 2px solid #0d2a5c;
+  clip-path: polygon(0 0, 100% 0, calc(100% - 10px) 100%, 0 100%); }
+.cc-hp__lag  { position: absolute; inset: 0; width: 100%; background: #fff; opacity: .85; transition: width .6s ease .25s; }
+.cc-hp__fill { position: absolute; inset: 0; width: 100%; transition: width .12s linear;
+  background: linear-gradient(180deg, var(--cc-hp-b), var(--cc-hp-a) 55%, #2fb83a); }
+.cc-hp__fill::after { content: ''; position: absolute; inset: 0;
+  background: repeating-linear-gradient(90deg, transparent 0 18px, rgba(0,0,0,.18) 18px 20px); }
+.cc-hp--low .cc-hp__fill { background: linear-gradient(180deg, #ffb35c, #ff4b3a); }
+.cc-hp--p2 { clip-path: polygon(10px 0, 100% 0, 100% 100%, 0 100%); }
+.cc-hp--p2 .cc-hp__fill, .cc-hp--p2 .cc-hp__lag { left: auto; right: 0; }
+
+.cc-name { font: 700 22px/1 var(--cc-font-display); font-style: italic; color: var(--cc-gold); text-shadow: 0 2px 0 #0008; }
+.cc-hpnum { font: 700 18px var(--cc-font-ui); color: #fff; text-shadow: 0 2px 0 #0008; }
+
+.cc-meter { display: flex; gap: 12px; align-items: center; }
+.cc-meter i { width: 12px; height: 12px; border-radius: 50%; background: #0a1024; border: 1px solid #ffffff40; }
+.cc-meter i.on { background: var(--cc-gold); border-color: #fff; box-shadow: 0 0 8px var(--cc-gold); }
+.cc-ult-ready { font: 700 16px var(--cc-font-ui); letter-spacing: .08em; color: var(--cc-gold); text-shadow: 0 0 10px var(--cc-gold); animation: cc-pulse 1s ease-in-out infinite; }
+@keyframes cc-pulse { 50% { opacity: .45; } }
+
+.cc-timer { width: 96px; height: 84px; display: grid; place-items: center; background: #050a1c; color: #fff;
+  font: 700 44px var(--cc-font-display); border: 2px solid var(--cc-gold);
+  clip-path: polygon(25% 0, 75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%); }
+.cc-portrait { width: 84px; height: 84px; overflow: hidden; border: 2px solid var(--a, var(--cc-cyan));
+  clip-path: polygon(25% 0, 75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%); background: #050a1c; }
+.cc-portrait img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 15%; }
+
+/* CRT scanlines over the game canvas (subtle) */
+.cc-scanlines { position: relative; }
+.cc-scanlines::after { content: ''; position: absolute; inset: 0; pointer-events: none; mix-blend-mode: multiply;
+  background: repeating-linear-gradient(0deg, rgba(0,0,0,.07) 0 1px, transparent 1px 3px); }
+
+@media (prefers-reduced-motion: reduce) {
+  .cc-ult-ready { animation: none; }
+  .cc-card, .cc-hp__fill, .cc-hp__lag { transition: none; }
+}

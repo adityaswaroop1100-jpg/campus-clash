@@ -79,6 +79,30 @@ export class Fighter {
     this._particleSystem = null; // Set by game after spawn (optional, checked before use)
   }
 
+  get charId() {
+    let id = this.config ? this.config.id : 'topper';
+    if (id === 'placementWarrior') id = 'placement';
+    if (id === 'sportsStar') id = 'sports';
+    return id;
+  }
+
+  get state() {
+    if (!this.stateMachine) return 'idle';
+    const s = this.stateMachine.getState();
+    if (s === FIGHTER_STATES.ATTACKING && this.currentMove) {
+      if (this.currentMove.type === 'ultimate' || this.currentMove.type === 'viva' || this.currentMove.type === 'exam_mode') return 'ultimate';
+      if (this.currentMove.type === 'heavy' || this.currentMove.type === 'textbook' || this.currentMove.name === 'Textbook Slam') return 'heavy';
+      if (this.currentMove.type === 'special') return 'special';
+      return 'light';
+    }
+    if (s === FIGHTER_STATES.BLOCKING) return 'block';
+    if (s === FIGHTER_STATES.DODGING) return 'dodge';
+    if (s === FIGHTER_STATES.HITSTUN || s === FIGHTER_STATES.KNOCKDOWN) return 'hit';
+    if (s === FIGHTER_STATES.JUMPING || !this.isGrounded) return 'jump';
+    if (s === FIGHTER_STATES.WALKING) return Math.abs(this.vx) > 3.8 ? 'run' : 'walk';
+    return 'idle';
+  }
+
   update(dt, inputHandler, opponent, stage, particleSystem, soundManager) {
     // Hitstop freeze
     if (this.hitstopTimer > 0) {
@@ -213,6 +237,7 @@ export class Fighter {
     // Block / Parry System
     if (isBlockJustPressed && this.isGrounded) {
       this.parry.attemptParry();
+      if (window.CampusVisuals) window.CampusVisuals.onBlock(this);
     }
 
     if (isBlockHeld && this.isGrounded && this.parry.parryCooldown <= 0) {
@@ -328,6 +353,18 @@ export class Fighter {
       moveConfig.glowRadius || 20
     );
     this.weaponTrail.clear();
+
+    if (window.CampusVisuals) {
+      if (moveConfig.type === 'ultimate' || moveConfig.type === 'viva' || moveConfig.type === 'exam_mode') {
+        window.CampusVisuals.onUltimate(this);
+      } else if (moveConfig.type === 'heavy' || moveConfig.name === 'Textbook Slam' || (moveConfig.damage && moveConfig.damage >= 14)) {
+        window.CampusVisuals.onHeavyAttack(this);
+      } else if (moveConfig.type === 'special') {
+        window.CampusVisuals.onSpecial(this);
+      } else {
+        window.CampusVisuals.onLightAttack(this);
+      }
+    }
   }
 
   getWeaponTipPosition() {
