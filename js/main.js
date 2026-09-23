@@ -3,7 +3,7 @@
  * @module main
  */
 
-import { CANVAS_WIDTH, CANVAS_HEIGHT, INPUT_ACTIONS, ROUND_STATES, COMBO_LEVELS, GAME_MODES } from './utils/constants.js';
+import { CANVAS_WIDTH, CANVAS_HEIGHT, FIGHTER_STATES, INPUT_ACTIONS, ROUND_STATES, COMBO_LEVELS, GAME_MODES } from './utils/constants.js';
 import { GameLoop } from './engine/gameLoop.js';
 import { InputHandler } from './engine/input.js?v=2.4.3';
 import { ParticleSystem } from './engine/particleSystem.js';
