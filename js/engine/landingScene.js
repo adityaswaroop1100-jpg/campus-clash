@@ -263,7 +263,7 @@ export class LandingScene {
         }
       }
     } catch (e) {}
-    chipText.textContent = 'PILOT: CLEARANCE PENDING';
+    chipText.textContent = 'PILOT: READY';
   }
 
   openClearanceModal() {
@@ -385,22 +385,10 @@ export class LandingScene {
 
     if (index === 0) {
       // [ VS COMPUTER ] Option (Expert AI)
-      if (!hasRegistered) {
-        this.pendingMode = GAME_MODES.PVC;
-        this.fromMenuAction = true;
-        this.openClearanceModal();
-      } else {
-        this.triggerFightTransition(GAME_MODES.PVC);
-      }
+      this.triggerFightTransition(GAME_MODES.PVC);
     } else if (index === 1) {
       // [ 2-PLAYER LOCAL ] Option
-      if (!hasRegistered) {
-        this.pendingMode = GAME_MODES.PVP;
-        this.fromMenuAction = true;
-        this.openClearanceModal();
-      } else {
-        this.triggerFightTransition(GAME_MODES.PVP);
-      }
+      this.triggerFightTransition(GAME_MODES.PVP);
     } else if (index === 2) {
       // [ TRAINING DOJO ] Option
       this.triggerFightTransition(GAME_MODES.TRAINING);
