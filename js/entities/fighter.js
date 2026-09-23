@@ -1018,249 +1018,652 @@ export class Fighter {
   }
 
   renderRealisticTopper(ctx, state, isHurt, isBlock, isAttack) {
-    // Athletic breathing & weight-shift
-    const breath = Math.sin(performance.now() * 0.006) * 2;
-    const walkSwing = Math.sin(this.animCycle) * 16;
+    const t = performance.now() * 0.001;
+    const breath = Math.sin(t * 3.5) * 2.2;
     const isJumping = !this.isGrounded;
+    const isDodge = state === FIGHTER_STATES.DODGING;
+    const isWalk = state === FIGHTER_STATES.WALKING;
+    const isRage = Boolean(this.rage && this.rage.isRage);
+    const isUltFreeze = state === FIGHTER_STATES.ULTIMATE_FREEZE;
+    const isUltimate = (isAttack && this.currentMove && (this.currentMove.type === 'viva' || this.currentMove.type === 'exam_mode')) || isUltFreeze;
 
-    // 1. Dynamic Drop Shadow — scales with jump height
+    // -------------------------------------------------------------
+    // 1. DYNAMIC GROUND DROP SHADOW (Vector Ellipse)
+    // -------------------------------------------------------------
     const jumpHeight = isJumping ? Math.max(0, this.y - (this._groundY || this.y)) : 0;
-    const shadowW = isJumping ? Math.max(12, 34 - jumpHeight * 0.1) : 34;
-    const shadowH = isJumping ? Math.max(2, 8 - jumpHeight * 0.04) : 8;
-    const shadowAlpha = isJumping ? Math.max(0.08, 0.45 - jumpHeight * 0.003) : 0.45;
-    ctx.fillStyle = `rgba(0, 0, 0, ${shadowAlpha})`;
+    const shadowW = isJumping ? Math.max(14, 40 - jumpHeight * 0.12) : (isBlock ? 46 : 38);
+    const shadowH = isJumping ? Math.max(3, 9 - jumpHeight * 0.04) : 9;
+    const shadowAlpha = isJumping ? Math.max(0.1, 0.45 - jumpHeight * 0.003) : 0.45;
+
+    ctx.save();
+    ctx.fillStyle = `rgba(3, 8, 20, ${shadowAlpha})`;
     ctx.beginPath();
     ctx.ellipse(0, 0, shadowW, shadowH, 0, 0, Math.PI * 2);
     ctx.fill();
+    ctx.restore();
 
-    // 2. Muscular Legs (SRM Navy Trousers with fabric folds & highlights)
-    let lFootX = -14, lFootY = 0, rFootX = 16, rFootY = 0;
-    if (state === FIGHTER_STATES.WALKING) {
-      lFootX = -14 - walkSwing;
-      rFootX = 16 + walkSwing;
+    // -------------------------------------------------------------
+    // 2. POSE & KINEMATICS SETUP
+    // -------------------------------------------------------------
+    let torsoTilt = 0;
+    let torsoY = -66 + breath;
+    let lFootX = -12, lFootY = 0;
+    let rFootX = 14, rFootY = 0;
+    let lKneeBend = 0, rKneeBend = 0;
+
+    let leadArmAngle = 0;
+    let rearArmAngle = 0;
+    let headTilt = 0;
+
+    if (isHurt) {
+      // HIT REACTION: Recoiled stance, torso thrown back
+      torsoTilt = -0.28;
+      torsoY = -62;
+      headTilt = -0.22;
+      lFootX = -20; lFootY = -4;
+      rFootX = 8; rFootY = 0;
+      leadArmAngle = -0.6;
+      rearArmAngle = -0.8;
     } else if (isBlock) {
-      lFootX = -22; rFootX = 22; // Deep braced stance
+      // BLOCK GUARD: Braced low crouch
+      torsoTilt = 0.08;
+      torsoY = -58;
+      lFootX = -22; lFootY = 0;
+      rFootX = 22; rFootY = 0;
+      lKneeBend = 6; rKneeBend = 6;
+      leadArmAngle = 0.9;
+      rearArmAngle = 0.7;
+    } else if (isDodge) {
+      // DODGE: Low slipstream dash pose
+      torsoTilt = 0.35;
+      torsoY = -54;
+      lFootX = -24; lFootY = -8;
+      rFootX = 20; rFootY = 0;
+      leadArmAngle = -0.5;
+      rearArmAngle = -0.9;
     } else if (isJumping) {
-      lFootY = -18; rFootY = -12; // Airborne tuck
+      // JUMP: Airborne dynamic tuck
+      torsoTilt = 0.12;
+      torsoY = -70;
+      lFootX = -16; lFootY = -18;
+      rFootX = 10; rFootY = -12;
+      lKneeBend = -10; rKneeBend = -8;
+      leadArmAngle = 0.4;
+      rearArmAngle = -0.4;
+    } else if (isWalk) {
+      // RUN / WALK: Athletic forward stride
+      const cycle = this.animCycle || (t * 8);
+      const stride = Math.sin(cycle) * 18;
+      const lift = Math.abs(Math.cos(cycle)) * 6;
+      torsoTilt = 0.15;
+      torsoY = -66 + Math.abs(Math.sin(cycle)) * 3;
+      lFootX = -12 - stride;
+      lFootY = stride < 0 ? -lift : 0;
+      rFootX = 14 + stride;
+      rFootY = stride > 0 ? -lift : 0;
+      leadArmAngle = -Math.sin(cycle) * 0.6;
+      rearArmAngle = Math.sin(cycle) * 0.6;
+    } else if (isUltimate) {
+      // ULTIMATE: Floating Academic Ascension Pose
+      const ultFloat = Math.sin(t * 6) * 4;
+      torsoTilt = -0.05;
+      torsoY = -74 + ultFloat;
+      lFootX = -14; lFootY = -10;
+      rFootX = 16; rFootY = -12;
+      leadArmAngle = -0.8;
+      rearArmAngle = 0.8;
+      headTilt = -0.1;
+    } else if (isAttack && this.currentMove) {
+      const moveProgress = Math.min(1, Math.max(0, this.moveFrame / (this.currentMove.getTotalFrames() || 20)));
+      if (this.currentMove.type === 'document' || this.currentMove.name === 'Document Thrust' || this.currentMove.name === 'Pen Jab') {
+        // LIGHT ATTACK: Snappy straight punch thrust
+        const ext = Math.sin(moveProgress * Math.PI);
+        torsoTilt = 0.22 * ext;
+        torsoY = -65 + ext * 2;
+        lFootX = -18 - ext * 4;
+        rFootX = 20 + ext * 8;
+        leadArmAngle = 1.35 * ext;
+        rearArmAngle = -0.4 * ext;
+      } else {
+        // HEAVY ATTACK: Huge Textbook Arc Slam
+        const swing = Math.sin(moveProgress * Math.PI);
+        torsoTilt = -0.15 + swing * 0.45;
+        torsoY = -66 + swing * 4;
+        lFootX = -20;
+        rFootX = 22 + swing * 6;
+        leadArmAngle = -0.8 + swing * 2.2;
+        rearArmAngle = -0.5 + swing * 1.5;
+      }
+    } else {
+      // IDLE: Crisp, confident academic stance
+      lFootX = -13; lFootY = 0;
+      rFootX = 15; rFootY = 0;
+      leadArmAngle = 0.15 + Math.sin(t * 2) * 0.05;
+      rearArmAngle = -0.15 - Math.sin(t * 2) * 0.05;
     }
 
-    // Rear Leg
-    ctx.fillStyle = '#101838';
+    // -------------------------------------------------------------
+    // 3. BACKPACK (Rear Layer, strapped behind torso)
+    // -------------------------------------------------------------
+    ctx.save();
+    ctx.translate(-12, torsoY + 12);
+    ctx.rotate(torsoTilt);
+    // Dark Navy Backpack Body
+    ctx.fillStyle = '#1e293b';
     ctx.beginPath();
-    ctx.moveTo(-6, -58);
-    ctx.lineTo(lFootX - 10, lFootY);
-    ctx.lineTo(lFootX + 8, lFootY);
-    ctx.lineTo(6, -58);
+    ctx.roundRect(-10, -22, 16, 26, [8, 4, 4, 8]);
+    ctx.fill();
+    // Backpack Pocket
+    ctx.fillStyle = '#0f172a';
+    ctx.beginPath();
+    ctx.roundRect(-8, -10, 12, 12, 3);
+    ctx.fill();
+    // Subtle Cyan Tech Trim
+    ctx.fillStyle = '#00f0ff';
+    ctx.fillRect(-6, -8, 8, 2);
+    ctx.restore();
+
+    // -------------------------------------------------------------
+    // 4. REAR LEG (Shaded Deep Navy)
+    // -------------------------------------------------------------
+    ctx.save();
+    ctx.fillStyle = '#0f172a'; // Shaded rear navy
+    ctx.beginPath();
+    ctx.moveTo(-4, torsoY + 28);
+    ctx.lineTo(lFootX - 8, lFootY - 6 + lKneeBend);
+    ctx.lineTo(lFootX + 8, lFootY - 6 + lKneeBend);
+    ctx.lineTo(4, torsoY + 28);
     ctx.closePath();
     ctx.fill();
 
-    // Lead Leg
-    ctx.fillStyle = '#1a2a6c';
+    // Rear Lower Leg / Cuff
+    ctx.fillStyle = '#111c38';
     ctx.beginPath();
-    ctx.moveTo(-2, -58);
-    ctx.lineTo(rFootX - 10, rFootY);
-    ctx.lineTo(rFootX + 10, rFootY);
-    ctx.lineTo(12, -58);
+    ctx.moveTo(lFootX - 7, lFootY - 14);
+    ctx.lineTo(lFootX + 7, lFootY - 14);
+    ctx.lineTo(lFootX + 8, lFootY - 5);
+    ctx.lineTo(lFootX - 8, lFootY - 5);
     ctx.closePath();
     ctx.fill();
 
-    // White Sneakers with Navy Soles
-    ctx.fillStyle = '#ffffff';
-    ctx.fillRect(lFootX - 12, lFootY - 7, 24, 7);
-    ctx.fillRect(rFootX - 12, rFootY - 7, 26, 7);
-    ctx.fillStyle = '#1a2a6c';
-    ctx.fillRect(lFootX - 12, lFootY - 2, 24, 2);
-    ctx.fillRect(rFootX - 12, rFootY - 2, 26, 2);
+    // Rear Sneaker (Crisp white with shaded navy sole)
+    ctx.fillStyle = '#e2e8f0';
+    ctx.beginPath();
+    ctx.roundRect(lFootX - 10, lFootY - 7, 21, 6, [3, 4, 1, 1]);
+    ctx.fill();
+    ctx.fillStyle = '#0f172a';
+    ctx.fillRect(lFootX - 10, lFootY - 2, 21, 2);
+    ctx.restore();
 
-    // 3. Torso: Pure White Hoodie with Navy SRM Logo & Backpack Straps
-    const torsoY = isBlock ? -60 : -66 + breath;
-    const torsoTilt = isHurt ? -0.22 : (isAttack ? 0.18 : 0);
+    // -------------------------------------------------------------
+    // 5. REAR ARM (Behind Torso)
+    // -------------------------------------------------------------
+    ctx.save();
+    ctx.translate(-10, torsoY - 8);
+    ctx.rotate(rearArmAngle + torsoTilt);
+    // Upper Arm (White Hoodie Sleeve)
+    ctx.fillStyle = '#cbd5e1';
+    ctx.beginPath();
+    ctx.roundRect(-5, 0, 10, 20, 4);
+    ctx.fill();
+    // Forearm
+    ctx.fillStyle = '#e2e8f0';
+    ctx.beginPath();
+    ctx.roundRect(-4, 16, 9, 18, 3);
+    ctx.fill();
+    // Hand (Stylized Peach)
+    ctx.fillStyle = '#fcd3a1';
+    ctx.beginPath();
+    ctx.arc(0, 37, 5, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
 
+    // -------------------------------------------------------------
+    // 6. TORSO (Crisp White SRM Hoodie with Royal Blue Insignia)
+    // -------------------------------------------------------------
     ctx.save();
     ctx.translate(0, torsoY);
     ctx.rotate(torsoTilt);
 
-    // Backpack Straps on Shoulders
-    ctx.fillStyle = '#1a1f2c';
-    ctx.fillRect(-22, -48, 6, 42);
-    ctx.fillRect(16, -48, 6, 42);
-
-    // Volumetric White Hoodie
-    const hoodieBaseColor = isHurt ? '#ef9a9a' : '#f8fafc';
-    const hoodieGrad = ctx.createRadialGradient(-6, -30, 6, 0, -20, 36);
-    hoodieGrad.addColorStop(0, '#ffffff');
-    hoodieGrad.addColorStop(0.6, hoodieBaseColor);
-    hoodieGrad.addColorStop(1, isHurt ? '#c62828' : '#cbd5e1');
-    ctx.fillStyle = hoodieGrad;
-
+    // Hoodie Body (Clean Sharp Vector Trapezoid)
+    ctx.fillStyle = isHurt ? '#fee2e2' : '#ffffff';
     ctx.beginPath();
-    ctx.moveTo(-24, -48);
-    ctx.lineTo(24, -48);
-    ctx.lineTo(14, 8);
-    ctx.lineTo(-14, 8);
+    ctx.moveTo(-20, -28);
+    ctx.lineTo(20, -28);
+    ctx.lineTo(15, 28);
+    ctx.lineTo(-15, 28);
     ctx.closePath();
     ctx.fill();
 
-    // Hoodie Kangaroo Pocket
-    ctx.fillStyle = '#e2e8f0';
+    // Subtle 2-Tone Cel Shadow on Flank/Bottom
+    ctx.fillStyle = isHurt ? '#fca5a5' : '#e2e8f0';
     ctx.beginPath();
-    ctx.moveTo(-11, -8);
-    ctx.lineTo(11, -8);
-    ctx.lineTo(13, 6);
-    ctx.lineTo(-13, 6);
+    ctx.moveTo(-20, -28);
+    ctx.lineTo(-12, -28);
+    ctx.lineTo(-9, 28);
+    ctx.lineTo(-15, 28);
     ctx.closePath();
     ctx.fill();
 
-    // SRM Chest Logo
-    ctx.font = '900 8.5px "Arial Black", sans-serif';
-    ctx.fillStyle = '#1a2a6c';
+    // Hoodie Bottom Ribbed Hem
+    ctx.fillStyle = '#cbd5e1';
+    ctx.fillRect(-15, 24, 30, 4);
+
+    // Bold "SRM" Chest Insignia (Royal Blue #1d4ed8)
+    ctx.font = '900 10px "Arial Black", sans-serif';
+    ctx.fillStyle = '#1d4ed8';
     ctx.textAlign = 'center';
-    ctx.fillText('SRM', 0, -28);
+    ctx.textBaseline = 'middle';
+    ctx.fillText('SRM', 0, -8);
 
-    // Hoodie Drawstrings
-    ctx.strokeStyle = '#94a3b8';
-    ctx.lineWidth = 1.8;
+    // Hoodie Neck Collar & Hood Rim Behind Neck
+    ctx.fillStyle = '#f1f5f9';
     ctx.beginPath();
-    ctx.moveTo(-3, -44); ctx.lineTo(-3, -18);
-    ctx.moveTo(3, -44); ctx.lineTo(3, -18);
-    ctx.stroke();
-
-    // 4. Arms, Attacks & Laptop Prop
-    if (isBlock) {
-      // DEFENSE GUARD: Open Laptop Held Up As Shield
-      ctx.fillStyle = '#475569';
-      ctx.fillRect(-16, -48, 32, 28);
-      ctx.strokeStyle = '#00e5ff';
-      ctx.lineWidth = 2;
-      ctx.strokeRect(-16, -48, 32, 28);
-      // Glowing Cyan Screen
-      ctx.fillStyle = '#00f0ff';
-      ctx.fillRect(-13, -45, 26, 22);
-      ctx.fillStyle = '#061124';
-      ctx.font = 'bold 6px monospace';
-      ctx.fillText('SHIELD:100%', 0, -32);
-    } else if (isAttack && this.currentMove) {
-      if (this.currentMove.name === 'Pen Jab') {
-        // LIGHT ATTACK: Explosive forward jab with gold pen thrust!
-        const ext = Math.sin((this.moveFrame / this.currentMove.getTotalFrames()) * Math.PI) * 38;
-
-        ctx.fillStyle = '#e2e8f0';
-        ctx.fillRect(-18, -38, 14, 24);
-
-        ctx.fillStyle = '#ffffff';
-        ctx.fillRect(10, -42, 28 + ext, 11);
-        ctx.fillStyle = '#ffd180';
-        ctx.fillRect(36 + ext, -43, 14, 13);
-
-        ctx.fillStyle = '#ffd700';
-        ctx.fillRect(48 + ext, -40, 24, 6);
-        ctx.fillStyle = '#00e5ff';
-        ctx.fillRect(72 + ext, -39, 12, 4);
-
-        ctx.strokeStyle = 'rgba(255, 215, 0, 0.75)';
-        ctx.lineWidth = 2;
-        ctx.beginPath();
-        ctx.moveTo(10, -32); ctx.lineTo(60 + ext, -32);
-        ctx.moveTo(15, -46); ctx.lineTo(75 + ext, -46);
-        ctx.stroke();
-      } else {
-        // HEAVY ATTACK: Laptop Shockwave Slam
-        const ext = Math.sin((this.moveFrame / this.currentMove.getTotalFrames()) * Math.PI) * 44;
-        ctx.fillStyle = '#ffffff';
-        ctx.fillRect(10, -42, 32 + ext, 13);
-        ctx.fillStyle = '#ffd180';
-        ctx.fillRect(40 + ext, -44, 16, 15);
-
-        // Open Laptop Prop Slamming
-        ctx.fillStyle = '#334155';
-        ctx.fillRect(52 + ext, -55, 28, 22);
-        ctx.fillStyle = '#00f0ff';
-        ctx.fillRect(54 + ext, -53, 24, 18);
-        ctx.fillStyle = '#061124';
-        ctx.font = 'bold 7px monospace';
-        ctx.fillText('10 CGPA', 66 + ext, -41);
-      }
-    } else {
-      // IDLE: Confident Stance Holding Open Sleek Laptop
-      const guardBob = Math.sin(performance.now() * 0.008) * 2;
-      // Rear Arm
-      ctx.fillStyle = '#e2e8f0';
-      ctx.fillRect(-18, -38 + guardBob, 14, 22);
-      ctx.fillStyle = '#ffd180';
-      ctx.fillRect(-14, -18 + guardBob, 10, 10);
-
-      // Lead Arm holding laptop
-      ctx.fillStyle = '#ffffff';
-      ctx.fillRect(10, -40 - guardBob, 14, 20);
-      ctx.fillStyle = '#ffd180';
-      ctx.fillRect(12, -22 - guardBob, 10, 10);
-
-      // Sleek Open Silver Laptop held in front
-      ctx.save();
-      ctx.translate(6, -28 - guardBob);
-      // Laptop Base
-      ctx.fillStyle = '#94a3b8';
-      ctx.fillRect(-6, 8, 26, 4);
-      // Keyboard area
-      ctx.fillStyle = '#1e293b';
-      ctx.fillRect(-4, 9, 22, 2);
-      // Screen (angled open)
-      ctx.fillStyle = '#64748b';
-      ctx.fillRect(12, -14, 4, 24);
-      // Glowing Cyan Display
-      ctx.fillStyle = '#00f0ff';
-      ctx.shadowColor = '#00f0ff';
-      ctx.shadowBlur = 8;
-      ctx.fillRect(10, -12, 3, 20);
-      ctx.shadowBlur = 0;
-      ctx.restore();
-    }
-
-    // 5. Head, Styled Dark Hair & Gold Glasses
-    ctx.fillStyle = '#ffd180';
-    ctx.beginPath();
-    ctx.arc(0, -62, 15, 0, Math.PI * 2);
+    ctx.roundRect(-14, -33, 28, 9, [4, 4, 2, 2]);
     ctx.fill();
 
-    // Dark styled combed hair
-    ctx.fillStyle = '#111111';
+    // White/Grey Drawstrings with Blue Tips
+    ctx.strokeStyle = '#94a3b8';
+    ctx.lineWidth = 1.5;
     ctx.beginPath();
-    ctx.arc(0, -66, 17, Math.PI, Math.PI * 2);
-    ctx.lineTo(16, -58);
-    ctx.lineTo(8, -60);
-    ctx.lineTo(-16, -58);
+    ctx.moveTo(-4, -26); ctx.lineTo(-4, -8);
+    ctx.moveTo(4, -26); ctx.lineTo(4, -8);
+    ctx.stroke();
+    ctx.fillStyle = '#1d4ed8';
+    ctx.fillRect(-5, -8, 2, 4);
+    ctx.fillRect(3, -8, 2, 4);
+
+    // Kangaroo Pocket Line
+    ctx.strokeStyle = '#cbd5e1';
+    ctx.lineWidth = 1.2;
+    ctx.strokeRect(-9, 6, 18, 14);
+
+    ctx.restore();
+
+    // -------------------------------------------------------------
+    // 7. LEAD LEG (Vibrant SRM Royal Navy Blue)
+    // -------------------------------------------------------------
+    ctx.save();
+    ctx.fillStyle = '#1e3a8a'; // Lead SRM Navy Blue
+    ctx.beginPath();
+    ctx.moveTo(-2, torsoY + 28);
+    ctx.lineTo(rFootX - 8, rFootY - 6 + rKneeBend);
+    ctx.lineTo(rFootX + 9, rFootY - 6 + rKneeBend);
+    ctx.lineTo(12, torsoY + 28);
     ctx.closePath();
     ctx.fill();
 
-    // Sleek Spectacles with Diagonal Lens Glint
-    ctx.strokeStyle = '#ffd700';
-    ctx.lineWidth = 2;
-    ctx.strokeRect(4, -66, 11, 8);
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.75)';
+    // Lead Leg Subtle Cel-Highlight Stripe
+    ctx.fillStyle = '#2563eb';
     ctx.beginPath();
-    ctx.moveTo(6, -65); ctx.lineTo(13, -59);
+    ctx.moveTo(5, torsoY + 28);
+    ctx.lineTo(rFootX + 3, rFootY - 6 + rKneeBend);
+    ctx.lineTo(rFootX + 8, rFootY - 6 + rKneeBend);
+    ctx.lineTo(11, torsoY + 28);
+    ctx.closePath();
+    ctx.fill();
+
+    // Lead Lower Leg / Cuff
+    ctx.fillStyle = '#172554';
+    ctx.beginPath();
+    ctx.moveTo(rFootX - 7, rFootY - 14);
+    ctx.lineTo(rFootX + 8, rFootY - 14);
+    ctx.lineTo(rFootX + 9, rFootY - 5);
+    ctx.lineTo(rFootX - 8, rFootY - 5);
+    ctx.closePath();
+    ctx.fill();
+
+    // Lead Sneaker (Crisp Pure White with Navy Sole & Cyan Accent)
+    ctx.fillStyle = '#ffffff';
+    ctx.beginPath();
+    ctx.roundRect(rFootX - 11, rFootY - 7, 24, 7, [4, 5, 1, 1]);
+    ctx.fill();
+    // Cyan speed trim
+    ctx.fillStyle = '#00f0ff';
+    ctx.fillRect(rFootX - 4, rFootY - 5, 12, 1.5);
+    // Navy Sole
+    ctx.fillStyle = '#1e3a8a';
+    ctx.fillRect(rFootX - 11, rFootY - 2, 24, 2);
+    ctx.restore();
+
+    // -------------------------------------------------------------
+    // 8. HEAD & SIGNATURE YELLOW VISOR (Matching Design Sheet)
+    // -------------------------------------------------------------
+    ctx.save();
+    ctx.translate(0, torsoY - 28);
+    ctx.rotate(torsoTilt * 0.7 + headTilt);
+
+    // Neck (Peach skin)
+    ctx.fillStyle = '#fcd3a1';
+    ctx.fillRect(-4, -6, 8, 8);
+
+    // Face / Head Contour (Clean geometric oval/polygon)
+    ctx.fillStyle = '#ffe0bd';
+    ctx.beginPath();
+    ctx.roundRect(-12, -26, 24, 23, [8, 8, 10, 10]);
+    ctx.fill();
+
+    // Stylized Dark Anime Hair (Crisp Geometric Silhouette)
+    ctx.fillStyle = '#0f172a';
+    ctx.beginPath();
+    // Crown and back
+    ctx.moveTo(-13, -18);
+    ctx.lineTo(-14, -28);
+    ctx.lineTo(-8, -34);
+    ctx.lineTo(6, -34);
+    ctx.lineTo(14, -29);
+    ctx.lineTo(15, -16);
+    // Sideburns and sharp geometric fringe spikes
+    ctx.lineTo(12, -18);
+    ctx.lineTo(9, -23);
+    ctx.lineTo(4, -18);
+    ctx.lineTo(0, -24);
+    ctx.lineTo(-5, -19);
+    ctx.lineTo(-9, -22);
+    ctx.lineTo(-12, -16);
+    ctx.closePath();
+    ctx.fill();
+
+    // Signature Angular Yellow Cyber Visor / Glasses (Design Sheet Wedge)
+    ctx.fillStyle = '#ffd700';
+    ctx.beginPath();
+    ctx.moveTo(-2, -21);
+    ctx.lineTo(13, -21);
+    ctx.lineTo(11, -13);
+    ctx.lineTo(2, -13);
+    ctx.lineTo(-2, -17);
+    ctx.closePath();
+    ctx.fill();
+
+    // Visor Bright Specular Glint
+    ctx.fillStyle = '#fffbeb';
+    ctx.beginPath();
+    ctx.moveTo(3, -20);
+    ctx.lineTo(11, -20);
+    ctx.lineTo(9, -17);
+    ctx.lineTo(1, -17);
+    ctx.closePath();
+    ctx.fill();
+
+    // Visor Golden Edge Rim
+    ctx.strokeStyle = '#eab308';
+    ctx.lineWidth = 1.2;
     ctx.stroke();
 
-    // Rage Mode Eye Glow
-    if (this.rage && this.rage.isRage) {
-      const eyePulse = (Math.sin(performance.now() * 0.02) + 1) * 0.5;
-      const eyeGrad = ctx.createRadialGradient(8, -63, 0, 8, -63, 9);
-      eyeGrad.addColorStop(0, `rgba(255, 23, 68, ${0.7 + eyePulse * 0.3})`);
-      eyeGrad.addColorStop(0.5, `rgba(255, 100, 30, ${0.4 + eyePulse * 0.2})`);
-      eyeGrad.addColorStop(1, 'rgba(255,0,0,0)');
-      ctx.fillStyle = eyeGrad;
-      ctx.beginPath();
-      ctx.arc(8, -63, 9, 0, Math.PI * 2);
-      ctx.fill();
+    // Confident mouth line / expression
+    ctx.strokeStyle = '#d97706';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(1, -8);
+    ctx.lineTo(6, -9);
+    ctx.stroke();
+
+    // Rage Mode Eye/Visor Flaming Glint
+    if (isRage) {
       ctx.shadowColor = '#ff1744';
-      ctx.shadowBlur = 12;
+      ctx.shadowBlur = 10;
       ctx.fillStyle = '#ff1744';
       ctx.beginPath();
-      ctx.arc(8, -63, 2.5, 0, Math.PI * 2);
+      ctx.arc(8, -17, 3, 0, Math.PI * 2);
       ctx.fill();
+      ctx.shadowBlur = 0;
     }
 
     ctx.restore();
+
+    // -------------------------------------------------------------
+    // 9. LEAD ARM & ATTACK PROPS (Textbook, Punch, Shield, Matrix)
+    // -------------------------------------------------------------
+    ctx.save();
+    ctx.translate(6, torsoY - 8);
+    ctx.rotate(leadArmAngle + torsoTilt);
+
+    if (isBlock) {
+      // Cross-guard arm
+      ctx.fillStyle = '#ffffff';
+      ctx.beginPath();
+      ctx.roundRect(-4, 0, 10, 20, 3);
+      ctx.fill();
+      ctx.fillStyle = '#fcd3a1';
+      ctx.beginPath();
+      ctx.arc(1, 23, 5, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+
+      // HOLOGRAPHIC FORMULA MATRIX SHIELD (In front of fighter)
+      ctx.save();
+      const shieldPulse = (Math.sin(t * 10) + 1) * 0.5;
+      ctx.translate(26, torsoY + 2);
+      ctx.strokeStyle = '#00f0ff';
+      ctx.lineWidth = 2.2;
+      ctx.shadowColor = '#00f0ff';
+      ctx.shadowBlur = 14 + shieldPulse * 8;
+
+      // Hexagonal Matrix Barrier
+      ctx.beginPath();
+      for (let i = 0; i < 6; i++) {
+        const rad = (i * Math.PI) / 3;
+        const hx = Math.cos(rad) * (36 + shieldPulse * 4);
+        const hy = Math.sin(rad) * (48 + shieldPulse * 5);
+        if (i === 0) ctx.moveTo(hx, hy);
+        else ctx.lineTo(hx, hy);
+      }
+      ctx.closePath();
+      ctx.fillStyle = 'rgba(0, 240, 255, 0.15)';
+      ctx.fill();
+      ctx.stroke();
+
+      // Shimmering Academic Equations in Barrier
+      ctx.fillStyle = '#00f0ff';
+      ctx.font = 'bold 8px monospace';
+      ctx.textAlign = 'center';
+      ctx.fillText('∫ f(x)dx', 0, -14);
+      ctx.fillText('∑ P(k) = 1', 0, 0);
+      ctx.fillText('DEFENSE: 100%', 0, 16);
+      ctx.restore();
+
+    } else if (isAttack && this.currentMove) {
+      const moveProgress = Math.min(1, Math.max(0, this.moveFrame / (this.currentMove.getTotalFrames() || 20)));
+
+      if (this.currentMove.type === 'document' || this.currentMove.name === 'Document Thrust' || this.currentMove.name === 'Pen Jab') {
+        // LIGHT ATTACK: Snappy straight punch + streaming cyan holographic document trail
+        const punchExt = Math.sin(moveProgress * Math.PI) * 36;
+
+        // Extended Arm
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(-2, -6, 26 + punchExt, 11);
+        ctx.fillStyle = '#fcd3a1';
+        ctx.beginPath();
+        ctx.arc(26 + punchExt, 0, 6, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+
+        // Projectile Stream of Cyan Documents flying forward
+        if (moveProgress > 0.2 && moveProgress < 0.85) {
+          ctx.save();
+          ctx.translate(45 + punchExt, torsoY - 8);
+          ctx.shadowColor = '#00f0ff';
+          ctx.shadowBlur = 12;
+
+          for (let p = 0; p < 3; p++) {
+            const docOffset = p * 18;
+            ctx.fillStyle = 'rgba(0, 240, 255, 0.8)';
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = 1.2;
+            ctx.beginPath();
+            ctx.roundRect(docOffset, -12 + (p % 2) * 5, 20, 14, 2);
+            ctx.fill();
+            ctx.stroke();
+
+            // Formula lines inside document
+            ctx.strokeStyle = '#0f172a';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(docOffset + 3, -7 + (p % 2) * 5);
+            ctx.lineTo(docOffset + 17, -7 + (p % 2) * 5);
+            ctx.moveTo(docOffset + 3, -3 + (p % 2) * 5);
+            ctx.lineTo(docOffset + 13, -3 + (p % 2) * 5);
+            ctx.stroke();
+          }
+          ctx.restore();
+        }
+
+      } else {
+        // HEAVY ATTACK: Massive Holographic Textbook Swing
+        const swingExt = Math.sin(moveProgress * Math.PI);
+
+        // Arm Holding Giant Tome
+        ctx.fillStyle = '#ffffff';
+        ctx.beginPath();
+        ctx.roundRect(-4, 0, 12, 28, 4);
+        ctx.fill();
+        ctx.fillStyle = '#fcd3a1';
+        ctx.beginPath();
+        ctx.arc(2, 30, 6, 0, Math.PI * 2);
+        ctx.fill();
+
+        // GIANT HOLOGRAPHIC TEXTBOOK
+        ctx.save();
+        ctx.translate(6, 32);
+        ctx.rotate(0.3 + swingExt * 0.8);
+        ctx.shadowColor = '#00f0ff';
+        ctx.shadowBlur = 18;
+
+        // Glowing Cyan Tome Cover
+        ctx.fillStyle = 'rgba(0, 240, 255, 0.85)';
+        ctx.beginPath();
+        ctx.roundRect(-6, -26, 34, 46, 4);
+        ctx.fill();
+
+        // Golden Binding Trim
+        ctx.fillStyle = '#ffd700';
+        ctx.fillRect(-6, -26, 7, 46);
+
+        // Neon White / Cyan Cover Art: "10.0 CGPA"
+        ctx.fillStyle = '#ffffff';
+        ctx.font = '900 8px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('10.0', 12, -4);
+        ctx.font = 'bold 6px monospace';
+        ctx.fillText('CGPA', 12, 6);
+
+        ctx.restore();
+        ctx.restore();
+      }
+
+    } else if (isUltimate) {
+      // ULTIMATE: Arms Outstretched Summoning Academic Matrix
+      ctx.fillStyle = '#ffffff';
+      ctx.beginPath();
+      ctx.roundRect(-4, 0, 11, 24, 4);
+      ctx.fill();
+      ctx.fillStyle = '#fcd3a1';
+      ctx.beginPath();
+      ctx.arc(1, 26, 5, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+
+      // FULL ACADEMIC MATRIX: Holographic Exam Interface & Floating Tomes
+      ctx.save();
+      ctx.translate(0, torsoY);
+      const ringAngle = t * 2.5;
+
+      // Orbiting Cyan Formula Slates (Design Sheet)
+      for (let i = 0; i < 4; i++) {
+        const angle = ringAngle + (i * Math.PI) / 2;
+        const ox = Math.cos(angle) * 54;
+        const oy = Math.sin(angle) * 26 - 8;
+        const scale = 0.8 + (Math.sin(angle) + 1) * 0.2;
+
+        ctx.save();
+        ctx.translate(ox, oy);
+        ctx.scale(scale, scale);
+        ctx.shadowColor = '#00f0ff';
+        ctx.shadowBlur = 14;
+
+        // Cyan Glowing Slate
+        ctx.fillStyle = 'rgba(0, 240, 255, 0.4)';
+        ctx.strokeStyle = '#00f0ff';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.roundRect(-14, -18, 28, 36, 3);
+        ctx.fill();
+        ctx.stroke();
+
+        // Math glyph inside slate
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 10px monospace';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        const glyphs = ['∫', '∑', '∇', 'lim'];
+        ctx.fillText(glyphs[i % glyphs.length], 0, 0);
+        ctx.restore();
+      }
+
+      // Golden Circular Formula Ring
+      ctx.strokeStyle = 'rgba(255, 215, 0, 0.6)';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.ellipse(0, -6, 60, 28, 0, 0, Math.PI * 2);
+      ctx.stroke();
+
+      // Grand "EXAM MODE // DISTINCTION" Announcement Aura
+      ctx.fillStyle = '#ffd700';
+      ctx.font = '900 10px monospace';
+      ctx.textAlign = 'center';
+      ctx.shadowColor = '#ffd700';
+      ctx.shadowBlur = 12;
+      ctx.fillText('EXAM MODE: ACTIVE', 0, -64);
+      ctx.restore();
+
+    } else {
+      // IDLE: Relaxed combat arm with floating cyan data slate
+      ctx.fillStyle = '#ffffff';
+      ctx.beginPath();
+      ctx.roundRect(-4, 0, 11, 24, 4);
+      ctx.fill();
+      ctx.fillStyle = '#fcd3a1';
+      ctx.beginPath();
+      ctx.arc(1, 26, 5, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+
+      // TWO FLOATING CYAN HOLOGRAPHIC DATA SLATES (Matching Design Sheet Idle)
+      ctx.save();
+      const floatY1 = Math.sin(t * 3) * 4;
+      const floatY2 = Math.cos(t * 2.8) * 4;
+
+      // Front Slate
+      ctx.translate(24, torsoY + 4 + floatY1);
+      ctx.shadowColor = '#00f0ff';
+      ctx.shadowBlur = 10;
+      ctx.fillStyle = 'rgba(0, 240, 255, 0.35)';
+      ctx.strokeStyle = '#00f0ff';
+      ctx.lineWidth = 1.4;
+      ctx.beginPath();
+      ctx.roundRect(-8, -12, 18, 24, 2);
+      ctx.fill();
+      ctx.stroke();
+
+      // Internal cyan formula lines
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(-5, -6); ctx.lineTo(6, -6);
+      ctx.moveTo(-5, -2); ctx.lineTo(4, -2);
+      ctx.moveTo(-5, 2); ctx.lineTo(7, 2);
+      ctx.stroke();
+
+      // Rear Slate
+      ctx.translate(-46, -10 + floatY2);
+      ctx.fillStyle = 'rgba(0, 240, 255, 0.25)';
+      ctx.strokeStyle = 'rgba(0, 240, 255, 0.8)';
+      ctx.beginPath();
+      ctx.roundRect(-7, -10, 16, 20, 2);
+      ctx.fill();
+      ctx.stroke();
+      ctx.restore();
+    }
   }
 
 

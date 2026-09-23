@@ -6,14 +6,15 @@
 export const TOPPER_CONFIG = {
   id: 'topper',
   displayName: 'The Topper',
-  tagline: 'The Academic Assassin',
+  tagline: 'Academic Assassin',
   colors: {
-    primary: '#FFFFFF',     // Crisp White Shirt
-    secondary: '#1A2A6C',   // SRM Navy Blue Trousers
-    accent: '#FFD700',      // Gold Pen & Trim
-    glow: '#FFD700',        // Gold outer glow
-    hair: '#111111',        // Neat dark hair
-    glasses: '#000000'      // Rectangular spectacles
+    primary: '#FFFFFF',     // Clean White SRM Hoodie
+    secondary: '#1A2A6C',   // SRM Royal Navy Blue Trousers
+    accent: '#00F0FF',      // Luminous Cyan Holographic Panels
+    glow: '#00E5FF',        // Cyan HUD Matrix Glow
+    visor: '#FFD700',       // Cyber Gold Academic Visor
+    hair: '#0F172A',        // Sharp Geometric Black Hair
+    skin: '#FFE0BD'         // Stylized Peach Skin Tone
   },
   stats: {
     speed: 5.5,
@@ -24,9 +25,9 @@ export const TOPPER_CONFIG = {
   visualSignature: {
     trailStyle: 'ribbon',
     sparkType: 'slash',
-    trailWidth: 4,
+    trailWidth: 5,
     glowColor: '#00E5FF',
-    color: '#FFD700',
+    color: '#00F0FF',
     fadeSpeed: 0.06
   },
   audioProfile: {
@@ -40,81 +41,81 @@ export const TOPPER_CONFIG = {
   whiffRecovery: 2,
   moves: {
     light: {
-      name: 'Pen Jab',
-      type: 'pen',
+      name: 'Document Thrust',
+      type: 'document',
       trajectory: 'thrust',
       hitStop: 4,
       whiffRecovery: 2,
       trailStyle: 'ribbon',
       sparkType: 'slash',
-      color: '#FFD700',
+      color: '#00F0FF',
       glowColor: '#00E5FF',
       trailWidth: 4,
-      trailLength: 20,
-      glowRadius: 15,
-      startup: 8,
+      trailLength: 22,
+      glowRadius: 16,
+      startup: 7,
       active: 5,
-      recovery: 10,
+      recovery: 9,
       damage: 8,
       hitstun: 14,
       knockback: { x: 5, y: 0 },
-      hitbox: { x: 45, y: -72, w: 46, h: 28 },
-      particles: 'gold_sparkles',
+      hitbox: { x: 45, y: -72, w: 48, h: 28 },
+      particles: 'cyan_sparkles',
       blockable: true
     },
     heavy: {
-      name: 'Calculator Throw',
-      type: 'calculator',
+      name: 'Textbook Slam',
+      type: 'textbook',
       trajectory: 'thrust',
       hitStop: 6,
       whiffRecovery: 4,
       trailStyle: 'ribbon',
       sparkType: 'slash',
-      color: '#FFD700',
-      glowColor: '#00E5FF',
-      trailWidth: 6,
-      trailLength: 25,
-      glowRadius: 20,
-      startup: 14,
+      color: '#00F0FF',
+      glowColor: '#FFD700',
+      trailWidth: 7,
+      trailLength: 26,
+      glowRadius: 22,
+      startup: 13,
       active: 8,
-      recovery: 16,
-      damage: 14,
-      hitstun: 18,
+      recovery: 15,
+      damage: 15,
+      hitstun: 19,
       knockback: { x: 10, y: -3 },
-      hitbox: { x: 50, y: -76, w: 55, h: 40 },
-      particles: 'number_explosion',
+      hitbox: { x: 50, y: -80, w: 60, h: 48 },
+      particles: 'formula_burst',
       blockable: true
     },
     ultimate: {
-      name: 'Viva Voce',
-      type: 'viva',
+      name: 'Exam Mode',
+      type: 'exam_mode',
       trajectory: 'thrust',
-      hitStop: 10,
+      hitStop: 12,
       whiffRecovery: 6,
       trailStyle: 'ribbon',
       sparkType: 'slash',
-      color: '#00E5FF',
-      glowColor: '#00E5FF',
-      trailWidth: 8,
-      trailLength: 30,
-      glowRadius: 25,
-      startup: 18,
-      active: 20,
-      recovery: 14,
-      hitbox: { x: 25, y: -110, w: 150, h: 105 },
-      damage: 25,
-      hitstun: 28,
-      knockback: { x: 6, y: -2 },
+      color: '#00F0FF',
+      glowColor: '#FFD700',
+      trailWidth: 10,
+      trailLength: 35,
+      glowRadius: 30,
+      startup: 16,
+      active: 22,
+      recovery: 16,
+      hitbox: { x: 25, y: -115, w: 160, h: 110 },
+      damage: 28,
+      hitstun: 30,
+      knockback: { x: 8, y: -3 },
       blockable: false,
       specialEffect: 'freeze',
       freezeDuration: 90,
-      particles: 'gold_sparkles'
+      particles: 'academic_matrix'
     }
   },
   dialogue: {
     intro: 'First rank is mine. Class is in session!',
     taunt: 'You should have studied more.',
-    ultimate: 'Define your own failure in 50 words.',
+    ultimate: 'EXAM MODE: Maximum Distinction!',
     win: 'Another victory for the top ranker.',
     lose: 'I was distracted. Rematch.'
   }
