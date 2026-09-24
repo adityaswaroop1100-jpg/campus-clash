@@ -320,6 +320,10 @@ class CampusClashGame {
     this.initCharacterSelect();
     if (this.stageSelectManager) this.stageSelectManager.initDOM();
 
+    if (window.CampusVisuals && window.CampusVisuals.preloadAll) {
+      window.CampusVisuals.preloadAll();
+    }
+
     // Render first frame immediately so canvas is never left blank
     try {
       this.render(1);
@@ -942,14 +946,16 @@ class CampusClashGame {
   // =========================================================================
   // MATCH HANDLING & START
   // =========================================================================
-  startMatch() {
+  async startMatch() {
     this.sound.playUltimate();
     const p1Cfg = this.roster[this.p1CharIndex].config;
     const p2Cfg = this.roster[this.p2CharIndex].config;
 
     if (window.CampusVisuals) {
-      window.CampusVisuals.loadCharacter(p1Cfg.id);
-      window.CampusVisuals.loadCharacter(p2Cfg.id);
+      await Promise.all([
+        window.CampusVisuals.loadCharacter(p1Cfg.id),
+        window.CampusVisuals.loadCharacter(p2Cfg.id)
+      ]);
     }
 
     // Instantiate selected SRM Arena

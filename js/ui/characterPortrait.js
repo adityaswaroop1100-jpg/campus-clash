@@ -57,6 +57,11 @@ export class CharacterPortraitManager {
         color: item.config.colors?.accent || '#ffd700'
       }));
     });
+
+    // Preload portraits for CampusVisuals
+    if (window.CampusVisuals && window.CampusVisuals.preloadAll) {
+      window.CampusVisuals.preloadAll();
+    }
   }
 
   /**
@@ -185,12 +190,25 @@ export class CharacterPortraitManager {
     const portraitImg = window.CampusVisuals ? window.CampusVisuals.getPortrait(config.id) : null;
     if (portraitImg && portraitImg.complete && portraitImg.naturalWidth > 0) {
       ctx.save();
-      const pW = width * 0.92;
-      const pH = (pW * portraitImg.height) / portraitImg.width;
       const meta = (window.CampusVisuals && window.CampusVisuals.CHARACTERS[config.id]) || {};
       ctx.shadowColor = meta.accent || config.colors.accent || '#00e5ff';
       ctx.shadowBlur = isHovered ? 20 : 10;
-      ctx.drawImage(portraitImg, (width - pW) / 2, Math.max(10, height - pH - 6), pW, pH);
+
+      // Full-bleed cover art
+      const scale = Math.max(width / portraitImg.width, height / portraitImg.height);
+      const pW = portraitImg.width * scale;
+      const pH = portraitImg.height * scale;
+      const pX = (width - pW) / 2;
+      const pY = (height - pH) * 0.15; // align toward upper 15% for face visibility
+      ctx.drawImage(portraitImg, pX, pY, pW, pH);
+
+      // Subtle bottom gradient fade to ground the portrait
+      const fadeGrad = ctx.createLinearGradient(0, height * 0.65, 0, height);
+      fadeGrad.addColorStop(0, 'rgba(6, 12, 22, 0)');
+      fadeGrad.addColorStop(1, 'rgba(6, 12, 22, 0.75)');
+      ctx.fillStyle = fadeGrad;
+      ctx.fillRect(0, height * 0.65, width, height * 0.35);
+
       ctx.restore();
     } else {
       ctx.save();

@@ -146,7 +146,10 @@
       } catch (e) { /* file:// or missing manifest — fine */ }
       await Promise.all(STATES.map(async (s) => {
         const img = await loadImage(`${base}/${id}/${s}.png`);
-        if (!img) return;
+        if (!img) {
+          console.warn(`[CampusVisuals] Missing sprite for character "${id}", state "${s}": ${base}/${id}/${s}.png`);
+          return;
+        }
         const m = manifest[s] || {};
         const frames = m.frames || 1;
         entry.states[s] = {
@@ -156,7 +159,15 @@
         };
       }));
       entry.portrait = await loadImage(`${base}/${id}/portrait.png`);
+      if (!entry.portrait) {
+        console.warn(`[CampusVisuals] Missing portrait for character "${id}": ${base}/${id}/portrait.png`);
+      }
       entry.ready = !!entry.states.idle;
+      if (!entry.ready) {
+        console.warn(`[CampusVisuals] Character "${id}" is NOT ready (idle.png missing in ${base}/${id}/). Falling back to procedural renderer.`);
+      } else {
+        console.log(`[CampusVisuals] Character "${id}" loaded successfully (${Object.keys(entry.states).length} states ready).`);
+      }
       return entry;
     })();
     return entry.promise;
@@ -232,6 +243,9 @@
     ctx.restore();
   }
 
+  const warnedFallbacks = new Set();
+  const warnedStates = new Set();
+
   /** Draws one fighter. Returns false if sprites aren't available (use legacy renderer). */
   function drawFighter(ctx, f, dt = 1 / 60) {
     let charId = f.charId || (f.config && f.config.id);
@@ -239,8 +253,21 @@
     if (charId === 'sportsStar') charId = 'sports';
 
     const entry = store[charId];
-    if (!entry || !entry.ready) return false;
+    if (!entry || !entry.ready) {
+      if (!warnedFallbacks.has(charId)) {
+        warnedFallbacks.add(charId);
+        console.warn(`[CampusVisuals] drawFighter: Character "${charId}" sprite set not ready (missing idle.png). Using procedural vector fallback.`);
+      }
+      return false;
+    }
     const state = mapState(f.state);
+    if (!entry.states[state]) {
+      const warnKey = `${charId}_${state}`;
+      if (!warnedStates.has(warnKey)) {
+        warnedStates.add(warnKey);
+        console.warn(`[CampusVisuals] drawFighter: Character "${charId}" is missing sprite for state "${state}". Falling back to idle pose.`);
+      }
+    }
     const set = entry.states[state] || entry.states.idle;
     const meta = CHARACTERS[charId] || CHARACTERS.topper;
     const facing = f.facing < 0 ? -1 : 1;
