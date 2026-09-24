@@ -1,0 +1,272 @@
+{
+  "topper": {
+    "light": {
+      "frames": 3,
+      "fps": 12,
+      "loop": false
+    },
+    "heavy": {
+      "frames": 3,
+      "fps": 8,
+      "loop": false
+    },
+    "special": {
+      "frames": 3,
+      "fps": 10,
+      "loop": false
+    },
+    "dash": {
+      "frames": 1,
+      "fps": 14,
+      "loop": false
+    },
+    "air": {
+      "frames": 1,
+      "fps": 10,
+      "loop": false
+    }
+  },
+  "backbencher": {
+    "light": {
+      "frames": 3,
+      "fps": 12,
+      "loop": false
+    },
+    "heavy": {
+      "frames": 3,
+      "fps": 8,
+      "loop": false
+    },
+    "special": {
+      "frames": 3,
+      "fps": 10,
+      "loop": false
+    },
+    "dash": {
+      "frames": 1,
+      "fps": 14,
+      "loop": false
+    },
+    "air": {
+      "frames": 1,
+      "fps": 10,
+      "loop": false
+    }
+  },
+  "hosteler": {
+    "light": {
+      "frames": 3,
+      "fps": 12,
+      "loop": false
+    },
+    "heavy": {
+      "frames": 3,
+      "fps": 8,
+      "loop": false
+    },
+    "special": {
+      "frames": 3,
+      "fps": 10,
+      "loop": false
+    },
+    "dash": {
+      "frames": 1,
+      "fps": 14,
+      "loop": false
+    },
+    "air": {
+      "frames": 1,
+      "fps": 10,
+      "loop": false
+    }
+  },
+  "sports": {
+    "light": {
+      "frames": 3,
+      "fps": 12,
+      "loop": false
+    },
+    "heavy": {
+      "frames": 3,
+      "fps": 8,
+      "loop": false
+    },
+    "special": {
+      "frames": 3,
+      "fps": 10,
+      "loop": false
+    },
+    "dash": {
+      "frames": 1,
+      "fps": 14,
+      "loop": false
+    },
+    "air": {
+      "frames": 1,
+      "fps": 10,
+      "loop": false
+    }
+  },
+  "bolt": {
+    "light": {
+      "frames": 3,
+      "fps": 12,
+      "loop": false
+    },
+    "heavy": {
+      "frames": 3,
+      "fps": 8,
+      "loop": false
+    },
+    "special": {
+      "frames": 3,
+      "fps": 10,
+      "loop": false
+    },
+    "dash": {
+      "frames": 1,
+      "fps": 14,
+      "loop": false
+    },
+    "air": {
+      "frames": 1,
+      "fps": 10,
+      "loop": false
+    }
+  },
+  "placement": {
+    "light": {
+      "frames": 3,
+      "fps": 12,
+      "loop": false
+    },
+    "heavy": {
+      "frames": 3,
+      "fps": 8,
+      "loop": false
+    },
+    "special": {
+      "frames": 3,
+      "fps": 10,
+      "loop": false
+    },
+    "dash": {
+      "frames": 1,
+      "fps": 14,
+      "loop": false
+    },
+    "air": {
+      "frames": 1,
+      "fps": 10,
+      "loop": false
+    }
+  },
+  "gavel": {
+    "light": {
+      "frames": 3,
+      "fps": 12,
+      "loop": false
+    },
+    "heavy": {
+      "frames": 3,
+      "fps": 8,
+      "loop": false
+    },
+    "special": {
+      "frames": 3,
+      "fps": 10,
+      "loop": false
+    },
+    "dash": {
+      "frames": 1,
+      "fps": 14,
+      "loop": false
+    },
+    "air": {
+      "frames": 1,
+      "fps": 10,
+      "loop": false
+    }
+  },
+  "senior": {
+    "light": {
+      "frames": 3,
+      "fps": 12,
+      "loop": false
+    },
+    "heavy": {
+      "frames": 3,
+      "fps": 8,
+      "loop": false
+    },
+    "special": {
+      "frames": 3,
+      "fps": 10,
+      "loop": false
+    },
+    "dash": {
+      "frames": 1,
+      "fps": 14,
+      "loop": false
+    },
+    "air": {
+      "frames": 1,
+      "fps": 10,
+      "loop": false
+    }
+  },
+  "cypher": {
+    "light": {
+      "frames": 3,
+      "fps": 12,
+      "loop": false
+    },
+    "heavy": {
+      "frames": 3,
+      "fps": 8,
+      "loop": false
+    },
+    "special": {
+      "frames": 3,
+      "fps": 10,
+      "loop": false
+    },
+    "dash": {
+      "frames": 1,
+      "fps": 14,
+      "loop": false
+    },
+    "air": {
+      "frames": 1,
+      "fps": 10,
+      "loop": false
+    }
+  },
+  "palette": {
+    "light": {
+      "frames": 3,
+      "fps": 12,
+      "loop": false
+    },
+    "heavy": {
+      "frames": 3,
+      "fps": 8,
+      "loop": false
+    },
+    "special": {
+      "frames": 3,
+      "fps": 10,
+      "loop": false
+    },
+    "dash": {
+      "frames": 1,
+      "fps": 14,
+      "loop": false
+    },
+    "air": {
+      "frames": 1,
+      "fps": 10,
+      "loop": false
+    }
+  }
+}

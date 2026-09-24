@@ -26,24 +26,25 @@
   const reduceMotion = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   /* ---------------------------------------------------------------- data */
-  const STATES = ['idle', 'walk', 'run', 'jump', 'crouch', 'light', 'heavy',
-                  'block', 'dodge', 'hit', 'special', 'ultimate'];
+  const STATES = ['idle', 'walk', 'run', 'jump', 'air', 'crouch', 'light', 'heavy',
+                  'block', 'dodge', 'dash', 'hit', 'special', 'ultimate'];
 
   const DEFAULT_ANIM = {
-    idle: { fps: 8, loop: true },   walk: { fps: 10, loop: true },  run: { fps: 14, loop: true },
-    jump: { fps: 10, loop: false }, crouch: { fps: 10, loop: false }, light: { fps: 18, loop: false },
-    heavy: { fps: 14, loop: false }, block: { fps: 10, loop: false }, dodge: { fps: 14, loop: false },
-    hit: { fps: 14, loop: false },  special: { fps: 14, loop: false }, ultimate: { fps: 12, loop: true },
+    idle:     { fps: 8,  loop: true  }, walk:    { fps: 10, loop: true  }, run:     { fps: 14, loop: true  },
+    jump:     { fps: 10, loop: false }, air:     { fps: 10, loop: false }, crouch:  { fps: 10, loop: false },
+    light:    { fps: 18, loop: false }, heavy:   { fps: 14, loop: false }, block:   { fps: 10, loop: false },
+    dodge:    { fps: 14, loop: false }, dash:    { fps: 18, loop: false }, hit:     { fps: 14, loop: false },
+    special:  { fps: 14, loop: false }, ultimate:{ fps: 12, loop: true  },
   };
 
-  // Map whatever the game calls its states -> our 12 canonical states.
+  // Map whatever the game calls its states -> our canonical states.
   const ALIASES = {
     attack: 'light', punch: 'light', kick: 'light', 'light-attack': 'light', lightattack: 'light',
     'heavy-attack': 'heavy', heavyattack: 'heavy', smash: 'heavy',
     parry: 'block', shield: 'block', blocking: 'block', guard: 'block',
     hurt: 'hit', hitstun: 'hit', stunned: 'hit', ko: 'hit', dead: 'hit',
-    walking: 'walk', running: 'run', jumping: 'jump', falling: 'jump', crouching: 'crouch',
-    dodging: 'dodge', roll: 'dodge', dash: 'dodge',
+    walking: 'walk', running: 'run', jumping: 'jump', falling: 'air', crouching: 'crouch',
+    dodging: 'dodge', roll: 'dodge',
     ult: 'ultimate', super: 'special', win: 'idle', victory: 'idle', stand: 'idle',
     ultimatefreeze: 'ultimate'
   };
@@ -210,6 +211,7 @@
       case 'walk':   p.dy = -Math.abs(Math.sin(t * 9)) * 4;  p.rot = 0.03 * facing; break;
       case 'run':    p.dy = -Math.abs(Math.sin(t * 13)) * 6; p.rot = 0.09 * facing; break;
       case 'jump':   p.sy = 1.06; p.sx = 0.96; break;
+      case 'air':    p.sy = 0.94; p.sx = 1.04; p.dy = -4; break;  // descending stretch
       case 'crouch': p.sy = 0.88; p.sx = 1.05; break;
       case 'light': {
         const k = clamp01(t / 0.18);
@@ -222,6 +224,10 @@
       }
       case 'block':  p.sx = 1.03; p.sy = 0.97; break;
       case 'dodge':  p.dx = -facing * 24 * Math.sin(clamp01(t / 0.3) * Math.PI * 0.5); p.rot = -0.14 * facing; p.a = 0.7; break;
+      case 'dash': {
+        const k = clamp01(t / 0.2);
+        p.dx = facing * 38 * Math.sin(k * Math.PI * 0.5); p.rot = 0.12 * facing * (1 - k); p.sy = 0.92; p.sx = 1.08; p.a = 0.9; break;
+      }
       case 'hit':    p.dx = -facing * 16 * (1 - clamp01(t / 0.25)); p.rot = -0.1 * facing * (1 - clamp01(t / 0.25)); break;
       case 'special': p.sy = 1 + 0.02 * Math.sin(t * 22); p.dx = facing * Math.sin(t * 10) * 6; break;
       case 'ultimate': p.sy = 1 + 0.03 * Math.sin(t * 6); p.dy = -Math.abs(Math.sin(t * 3)) * 5; break;
@@ -229,7 +235,8 @@
     return p;
   }
 
-  const TRAIL_STATES = { run: 1, dodge: 1, heavy: 1, special: 1, ultimate: 1 };
+  const TRAIL_STATES = { run: 1, dodge: 1, dash: 1, heavy: 1, special: 1, ultimate: 1 };
+
   const TRAIL_LIFE = 0.22;
 
   function blit(ctx, set, frame, x, y, facing, pose, H, alpha, source) {
