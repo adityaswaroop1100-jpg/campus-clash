@@ -316,6 +316,8 @@ class CampusClashGame {
     // Game loop
     this.loop = new GameLoop(this.update.bind(this), this.render.bind(this));
     this.setupListeners();
+    this.initPauseMenu();
+    this.initTouchControls();
     this.loop.start();
     this.initCharacterSelect();
     if (this.stageSelectManager) this.stageSelectManager.initDOM();
@@ -424,6 +426,157 @@ class CampusClashGame {
         document.webkitExitFullscreen();
       }
     }
+  }
+
+  // =========================================================================
+  // PAUSE & SETTINGS SYSTEM
+  // =========================================================================
+  initPauseMenu() {
+    this.isPaused = false;
+    this.pauseMenuEl = document.getElementById('in-game-pause-menu');
+    this.hudPauseBtn = document.getElementById('hud-btn-pause');
+
+    // Floating HUD button
+    this.hudPauseBtn?.addEventListener('click', () => this.togglePause());
+
+    // Modal buttons
+    document.getElementById('pause-btn-close')?.addEventListener('click', () => this.togglePause(false));
+    document.getElementById('pause-btn-resume')?.addEventListener('click', () => this.togglePause(false));
+
+    document.getElementById('pause-btn-restart')?.addEventListener('click', () => {
+      this.togglePause(false);
+      this.sound.playHeavyHit();
+      this.startRound(1);
+    });
+
+    document.getElementById('pause-btn-char-select')?.addEventListener('click', () => {
+      this.togglePause(false);
+      this.sound.playLightHit();
+      this.openCharSelect();
+    });
+
+    document.getElementById('pause-btn-main-menu')?.addEventListener('click', () => {
+      this.togglePause(false);
+      this.sound.playBlock();
+      this.currentScreen = GAME_SCREENS.LANDING;
+      if (this.landingScene) this.landingScene.show();
+      this.sound.startTitleMusic();
+      document.getElementById('hud-btn-pause')?.classList.add('hidden');
+      document.getElementById('virtual-touch-controls')?.classList.add('hidden');
+    });
+
+    document.getElementById('pause-btn-fullscreen')?.addEventListener('click', () => {
+      this.toggleFullscreen();
+    });
+
+    // Volume sliders
+    const masterSlider = document.getElementById('pause-slider-master');
+    const musicSlider = document.getElementById('pause-slider-music');
+    const sfxSlider = document.getElementById('pause-slider-sfx');
+    const muteBtn = document.getElementById('pause-btn-mute');
+
+    if (masterSlider) {
+      masterSlider.value = Math.round((this.sound.masterVolume || 0.8) * 100);
+      masterSlider.addEventListener('input', (e) => {
+        const val = parseInt(e.target.value);
+        this.sound.setMasterVolume(val / 100);
+        const label = document.getElementById('pause-val-master');
+        if (label) label.textContent = `${val}%`;
+      });
+    }
+
+    if (musicSlider) {
+      musicSlider.value = Math.round((this.sound.musicVolume || 0.55) * 100);
+      musicSlider.addEventListener('input', (e) => {
+        const val = parseInt(e.target.value);
+        this.sound.setMusicVolume(val / 100);
+        const label = document.getElementById('pause-val-music');
+        if (label) label.textContent = `${val}%`;
+      });
+    }
+
+    if (sfxSlider) {
+      sfxSlider.value = Math.round((this.sound.sfxVolume || 0.8) * 100);
+      sfxSlider.addEventListener('input', (e) => {
+        const val = parseInt(e.target.value);
+        this.sound.setSFXVolume(val / 100);
+        const label = document.getElementById('pause-val-sfx');
+        if (label) label.textContent = `${val}%`;
+      });
+    }
+
+    if (muteBtn) {
+      muteBtn.textContent = this.sound.isMuted ? 'MUTE (ON)' : 'MUTE (OFF)';
+      if (this.sound.isMuted) muteBtn.classList.add('active');
+      muteBtn.addEventListener('click', () => {
+        const isMuted = this.sound.toggleMute();
+        muteBtn.textContent = isMuted ? 'MUTE (ON)' : 'MUTE (OFF)';
+        muteBtn.classList.toggle('active', isMuted);
+      });
+    }
+
+    // Toggle touch controls button in pause menu
+    const toggleTouchBtn = document.getElementById('pause-btn-toggle-touch');
+    toggleTouchBtn?.addEventListener('click', () => {
+      const tc = document.getElementById('virtual-touch-controls');
+      if (tc) {
+        tc.classList.toggle('hidden');
+        toggleTouchBtn.textContent = tc.classList.contains('hidden') ? 'OFF' : 'ON';
+        toggleTouchBtn.classList.toggle('active', !tc.classList.contains('hidden'));
+      }
+    });
+  }
+
+  togglePause(forceState = null) {
+    if (this.currentScreen !== GAME_SCREENS.MATCH) return;
+    this.isPaused = forceState !== null ? forceState : !this.isPaused;
+
+    if (this.pauseMenuEl) {
+      this.pauseMenuEl.classList.toggle('hidden', !this.isPaused);
+    }
+    if (this.isPaused) {
+      this.sound.playBlock();
+    } else {
+      this.sound.playLightHit();
+    }
+  }
+
+  // =========================================================================
+  // VIRTUAL TOUCH CONTROLS (MOBILE & KIOSK)
+  // =========================================================================
+  initTouchControls() {
+    const touchEl = document.getElementById('virtual-touch-controls');
+    if (!touchEl) return;
+
+    const hasTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+    if (!hasTouch) {
+      touchEl.classList.add('hidden');
+    }
+
+    const actionButtons = touchEl.querySelectorAll('[data-action]');
+    actionButtons.forEach(btn => {
+      const action = btn.getAttribute('data-action');
+      const startAction = (e) => {
+        e.preventDefault();
+        btn.classList.add('pressed');
+        if (this.input) {
+          this.input.touchActionsActive.P1.add(action);
+          this.input.touchActionsJustPressed.P1.add(action);
+        }
+      };
+      const stopAction = (e) => {
+        e.preventDefault();
+        btn.classList.remove('pressed');
+        if (this.input) {
+          this.input.touchActionsActive.P1.delete(action);
+        }
+      };
+
+      btn.addEventListener('pointerdown', startAction);
+      btn.addEventListener('pointerup', stopAction);
+      btn.addEventListener('pointercancel', stopAction);
+      btn.addEventListener('pointerleave', stopAction);
+    });
   }
 
   // =========================================================================
@@ -617,6 +770,10 @@ class CampusClashGame {
 
   openCharSelect() {
     this.currentScreen = GAME_SCREENS.CHAR_SELECT;
+    document.getElementById('hud-btn-pause')?.classList.add('hidden');
+    document.getElementById('virtual-touch-controls')?.classList.add('hidden');
+    if (this.isPaused) this.togglePause(false);
+
     if (this.charSelectScreen) {
       this.charSelectScreen.classList.remove('hidden');
     }
@@ -982,6 +1139,13 @@ class CampusClashGame {
 
     this.startRound(1);
     this.currentScreen = GAME_SCREENS.MATCH;
+
+    // Show in-match HUD controls
+    document.getElementById('hud-btn-pause')?.classList.remove('hidden');
+    const hasTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+    if (hasTouch) {
+      document.getElementById('virtual-touch-controls')?.classList.remove('hidden');
+    }
   }
 
   startRound(roundNum) {
@@ -991,6 +1155,10 @@ class CampusClashGame {
     this.matchTimer = 99;
     this.matchTimerFrames = 0;
     this.roundWinner = null;
+
+    // Start procedural combat music and voice announcer
+    this.sound.startCombatMusic();
+    this.sound.announceRound(roundNum);
 
     if (this.p1) {
       this.p1.health = this.p1.maxHealth;
@@ -1082,9 +1250,7 @@ class CampusClashGame {
         this.leaderboardManager.close();
         return;
       }
-      this.sound.playBlock();
-      this.currentScreen = GAME_SCREENS.LANDING;
-      if (this.landingScene) this.landingScene.show();
+      this.togglePause();
       return;
     }
   }
@@ -1155,6 +1321,20 @@ class CampusClashGame {
   // MAIN UPDATE LOOP
   // =========================================================================
   update(dt) {
+    this.input.pollGamepads();
+
+    // Check Gamepad Start / Pause button (Button 9)
+    if (this.currentScreen === GAME_SCREENS.MATCH) {
+      if (this.input.currGamepadButtons[0]?.[9] && !this.input.prevGamepadButtons[0]?.[9]) {
+        this.togglePause();
+      }
+    }
+
+    if (this.isPaused) {
+      this.input.endFrame();
+      return;
+    }
+
     if (this.currentScreen === GAME_SCREENS.LANDING) {
       this.screenShake.update();
       if (this.landingScene) this.landingScene.update(dt);
@@ -1218,8 +1398,14 @@ class CampusClashGame {
       this.stage.update(dt, [this.p1, this.p2], this.particles, this.sound);
       if (this.phaseTimer <= 0) {
         this.roundPhase = ROUND_STATES.FIGHT;
+        this.sound.announceFight();
       }
     } else if (this.roundPhase === ROUND_STATES.FIGHT) {
+      // Dynamic combat music tension
+      if (this.p1 && this.p2) {
+        const isDanger = (this.p1.health / this.p1.maxHealth < 0.28) || (this.p2.health / this.p2.maxHealth < 0.28);
+        this.sound.setMusicDanger(isDanger);
+      }
       // Round Timer (60 frames = 1 second)
       this.matchTimerFrames++;
       if (this.matchTimerFrames >= 60) {
@@ -1321,6 +1507,9 @@ class CampusClashGame {
           this.isMatchOver = true;
           this.winner = this.p1RoundWins >= 2 ? this.p1 : this.p2;
           this.submitMatchToDatabase();
+          const isP1 = this.winner === this.p1;
+          const winnerName = this.winner ? (this.winner.config.name || (isP1 ? 'Player 1' : 'Player 2')) : '';
+          this.sound.announceWinner(winnerName, isP1);
         } else {
           this.roundPhase = ROUND_STATES.ROUND_OVER;
           this.phaseTimer = 120; // 2 seconds round winner banner
@@ -1355,6 +1544,8 @@ class CampusClashGame {
     this.screenShake.shake(18, 25);
     this.screenFlashFrames = 4;
     this.sound.playHeavyHit();
+    this.sound.announceKO();
+    this.sound.stopMusic();
   }
 
   resolveCombat(attacker, defender, attackerId) {

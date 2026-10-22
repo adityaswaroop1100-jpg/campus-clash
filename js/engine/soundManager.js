@@ -7,21 +7,107 @@ export class SoundManager {
   constructor() {
     this.ctx = null;
     this.isMuted = false;
+    this.masterVolume = 0.8;
+    this.sfxVolume = 0.8;
+    this.musicVolume = 0.55;
+
+    // Load saved volume preferences
+    try {
+      const saved = JSON.parse(localStorage.getItem('campus_clash_audio') || '{}');
+      if (typeof saved.masterVolume === 'number') this.masterVolume = saved.masterVolume;
+      if (typeof saved.sfxVolume === 'number') this.sfxVolume = saved.sfxVolume;
+      if (typeof saved.musicVolume === 'number') this.musicVolume = saved.musicVolume;
+      if (typeof saved.isMuted === 'boolean') this.isMuted = saved.isMuted;
+    } catch (e) {}
+
+    this.masterGain = null;
+    this.sfxGain = null;
+    this.musicGain = null;
+
+    // BGM sequencer state
+    this.musicPlaying = false;
+    this.musicTimer = null;
+    this.musicStep = 0;
+    this.musicBpm = 132;
+    this.isDangerMusic = false;
+    this.musicType = 'none'; // 'title' | 'combat'
   }
 
   /**
-   * Initializes audio context on first user interaction
+   * Initializes audio context and gain routing on first user interaction
    */
   init() {
     if (!this.ctx) {
       const AudioCtx = window.AudioContext || window.webkitAudioContext;
       if (AudioCtx) {
         this.ctx = new AudioCtx();
+        // Setup master gain graph
+        this.masterGain = this.ctx.createGain();
+        this.sfxGain = this.ctx.createGain();
+        this.musicGain = this.ctx.createGain();
+
+        this.sfxGain.connect(this.masterGain);
+        this.musicGain.connect(this.masterGain);
+        this.masterGain.connect(this.ctx.destination);
+
+        this.updateGainNodes();
       }
     }
     if (this.ctx && this.ctx.state === 'suspended') {
       this.ctx.resume();
     }
+  }
+
+  updateGainNodes() {
+    if (!this.ctx || !this.masterGain) return;
+    const now = this.ctx.currentTime;
+    const effectiveMaster = this.isMuted ? 0 : this.masterVolume;
+    this.masterGain.gain.setValueAtTime(effectiveMaster, now);
+    this.sfxGain.gain.setValueAtTime(this.sfxVolume, now);
+    this.musicGain.gain.setValueAtTime(this.musicVolume, now);
+  }
+
+  saveAudioPreferences() {
+    try {
+      localStorage.setItem('campus_clash_audio', JSON.stringify({
+        masterVolume: this.masterVolume,
+        sfxVolume: this.sfxVolume,
+        musicVolume: this.musicVolume,
+        isMuted: this.isMuted
+      }));
+    } catch (e) {}
+  }
+
+  setMasterVolume(val) {
+    this.masterVolume = Math.max(0, Math.min(1, val));
+    this.updateGainNodes();
+    this.saveAudioPreferences();
+  }
+
+  setSFXVolume(val) {
+    this.sfxVolume = Math.max(0, Math.min(1, val));
+    this.updateGainNodes();
+    this.saveAudioPreferences();
+  }
+
+  setMusicVolume(val) {
+    this.musicVolume = Math.max(0, Math.min(1, val));
+    this.updateGainNodes();
+    this.saveAudioPreferences();
+  }
+
+  toggleMute() {
+    this.isMuted = !this.isMuted;
+    this.updateGainNodes();
+    this.saveAudioPreferences();
+    return this.isMuted;
+  }
+
+  getOutputNode(isMusic = false) {
+    if (!this.ctx) return null;
+    if (this.sfxGain && !isMusic) return this.sfxGain;
+    if (this.musicGain && isMusic) return this.musicGain;
+    return this.ctx.destination;
   }
 
   playTone(freq, type, duration, vol = 0.15) {
@@ -34,7 +120,7 @@ export class SoundManager {
       gain.gain.setValueAtTime(vol, this.ctx.currentTime);
       gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + duration);
       osc.connect(gain);
-      gain.connect(this.ctx.destination);
+      gain.connect(this.getOutputNode(false));
       osc.start();
       osc.stop(this.ctx.currentTime + duration);
     } catch (e) {}
@@ -668,6 +754,256 @@ export class SoundManager {
         }
       }
     } catch (e) {}
+  }
+
+  // =========================================================================
+  // PROCEDURAL ARCADE BACKGROUND MUSIC SYNTHESIZER
+  // =========================================================================
+
+  /**
+   * Starts high-energy procedural synthwave combat music
+   */
+  startCombatMusic() {
+    this.init();
+    if (this.musicPlaying && this.musicType === 'combat') return;
+    this.stopMusic();
+
+    this.musicPlaying = true;
+    this.musicType = 'combat';
+    this.musicStep = 0;
+    this.musicBpm = 132;
+    this.isDangerMusic = false;
+
+    this.runMusicSequencer();
+  }
+
+  /**
+   * Starts atmospheric title / menu music
+   */
+  startTitleMusic() {
+    this.init();
+    if (this.musicPlaying && this.musicType === 'title') return;
+    this.stopMusic();
+
+    this.musicPlaying = true;
+    this.musicType = 'title';
+    this.musicStep = 0;
+    this.musicBpm = 95;
+
+    this.runMusicSequencer();
+  }
+
+  /**
+   * Stops background music cleanly
+   */
+  stopMusic() {
+    this.musicPlaying = false;
+    this.musicType = 'none';
+    if (this.musicTimer) {
+      clearTimeout(this.musicTimer);
+      this.musicTimer = null;
+    }
+  }
+
+  /**
+   * Toggles danger / tension mode in music (when a fighter is on low HP)
+   */
+  setMusicDanger(isDanger) {
+    if (this.isDangerMusic === isDanger) return;
+    this.isDangerMusic = isDanger;
+    if (this.musicPlaying && this.musicType === 'combat') {
+      this.musicBpm = isDanger ? 148 : 132;
+    }
+  }
+
+  runMusicSequencer() {
+    if (!this.musicPlaying || !this.ctx) return;
+
+    const stepInterval = (60 / this.musicBpm) / 4; // 16th note in seconds
+    const time = this.ctx.currentTime;
+
+    if (this.musicType === 'combat') {
+      this.playCombatStep(this.musicStep, time);
+    } else if (this.musicType === 'title') {
+      this.playTitleStep(this.musicStep, time);
+    }
+
+    this.musicStep = (this.musicStep + 1) % 64;
+
+    this.musicTimer = setTimeout(() => {
+      this.runMusicSequencer();
+    }, stepInterval * 1000);
+  }
+
+  playCombatStep(step, time) {
+    if (this.isMuted) return;
+    const dest = this.getOutputNode(true);
+    if (!dest) return;
+
+    // 1. Kick Drum: on steps 0, 4, 8, 12 of every 16
+    const step16 = step % 16;
+    if (step16 === 0 || step16 === 4 || step16 === 8 || step16 === 12) {
+      try {
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(this.isDangerMusic ? 145 : 125, time);
+        osc.frequency.exponentialRampToValueAtTime(32, time + 0.12);
+        gain.gain.setValueAtTime(0.28, time);
+        gain.gain.exponentialRampToValueAtTime(0.001, time + 0.14);
+        osc.connect(gain);
+        gain.connect(dest);
+        osc.start(time);
+        osc.stop(time + 0.14);
+      } catch (e) {}
+    }
+
+    // 2. Snare Drum: on steps 4 and 12
+    if (step16 === 4 || step16 === 12) {
+      try {
+        // High-frequency burst
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(220, time);
+        gain.gain.setValueAtTime(0.18, time);
+        gain.gain.exponentialRampToValueAtTime(0.001, time + 0.10);
+        osc.connect(gain);
+        gain.connect(dest);
+        osc.start(time);
+        osc.stop(time + 0.10);
+      } catch (e) {}
+    }
+
+    // 3. Hi-Hat: on every odd step
+    if (step % 2 === 1) {
+      try {
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'square';
+        osc.frequency.setValueAtTime(4200, time);
+        gain.gain.setValueAtTime(step % 4 === 2 ? 0.04 : 0.02, time);
+        gain.gain.exponentialRampToValueAtTime(0.0001, time + 0.025);
+        osc.connect(gain);
+        gain.connect(dest);
+        osc.start(time);
+        osc.stop(time + 0.025);
+      } catch (e) {}
+    }
+
+    // 4. Synth Bassline Arpeggio (Am -> F -> C -> G progression)
+    const bar = Math.floor(step / 16) % 4;
+    const rootPitches = [
+      [55, 110, 82.4, 110],  // A1, A2, E2, A2
+      [43.65, 87.3, 65.4, 87.3], // F1, F2, C2, F2
+      [65.4, 130.8, 98.0, 130.8], // C2, C3, G2, C3
+      [49.0, 98.0, 73.4, 98.0]   // G1, G2, D2, G2
+    ];
+    const barNotes = rootPitches[bar];
+    const noteFreq = barNotes[step16 % 4];
+
+    if (noteFreq) {
+      try {
+        const osc = this.ctx.createOscillator();
+        const filter = this.ctx.createBiquadFilter();
+        const gain = this.ctx.createGain();
+
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(noteFreq, time);
+
+        filter.type = 'lowpass';
+        filter.frequency.setValueAtTime(this.isDangerMusic ? 1800 : 900, time);
+        filter.frequency.exponentialRampToValueAtTime(220, time + 0.10);
+
+        gain.gain.setValueAtTime(0.12, time);
+        gain.gain.exponentialRampToValueAtTime(0.001, time + 0.11);
+
+        osc.connect(filter);
+        filter.connect(gain);
+        gain.connect(dest);
+        osc.start(time);
+        osc.stop(time + 0.11);
+      } catch (e) {}
+    }
+  }
+
+  playTitleStep(step, time) {
+    if (this.isMuted) return;
+    const dest = this.getOutputNode(true);
+    if (!dest) return;
+
+    // Atmospheric chill pulse every 8 steps
+    if (step % 8 === 0) {
+      try {
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'sine';
+        const notes = [130.81, 164.81, 196.00, 246.94]; // C chord tones
+        const note = notes[(step / 8) % notes.length];
+        osc.frequency.setValueAtTime(note, time);
+        gain.gain.setValueAtTime(0.08, time);
+        gain.gain.exponentialRampToValueAtTime(0.0001, time + 0.45);
+        osc.connect(gain);
+        gain.connect(dest);
+        osc.start(time);
+        osc.stop(time + 0.45);
+      } catch (e) {}
+    }
+  }
+
+  // =========================================================================
+  // ARCADE ANNOUNCER VOICE & SYNTH STABS
+  // =========================================================================
+
+  /**
+   * Speaks announcer line with speech synthesis and layered audio chime
+   */
+  speakAnnouncer(text, chimePitch = 440) {
+    // 1. Synth Chime Stabs
+    this.playTone(chimePitch, 'sawtooth', 0.25, 0.35);
+    setTimeout(() => this.playTone(chimePitch * 1.5, 'triangle', 0.35, 0.25), 80);
+
+    // 2. Web Speech API Announcer Voice
+    if (!this.isMuted && typeof window !== 'undefined' && window.speechSynthesis) {
+      try {
+        window.speechSynthesis.cancel(); // Cancel any lingering utterance
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.rate = 1.08;
+        utterance.pitch = 0.78; // Deep, booming arcade voice
+        utterance.volume = Math.min(1, this.masterVolume * this.sfxVolume * 1.2);
+
+        // Select an English voice if available
+        const voices = window.speechSynthesis.getVoices();
+        const englishVoice = voices.find(v => v.lang.startsWith('en') && (v.name.includes('Male') || v.name.includes('David') || v.name.includes('Google') || v.name.includes('Natural')));
+        if (englishVoice) utterance.voice = englishVoice;
+
+        window.speechSynthesis.speak(utterance);
+      } catch (e) {}
+    }
+  }
+
+  announceRound(roundNumber) {
+    const text = roundNumber === 3 ? "FINAL ROUND" : `ROUND ${roundNumber}`;
+    this.speakAnnouncer(text, 523.25);
+  }
+
+  announceFight() {
+    this.playFightGong();
+    this.speakAnnouncer("FIGHT!", 659.25);
+  }
+
+  announceKO() {
+    // Massive seismic drop
+    this.playTitleThump();
+    this.speakAnnouncer("K. O.!", 320);
+  }
+
+  announceWinner(characterName, isPlayer1 = true) {
+    const winnerLabel = isPlayer1 ? "PLAYER ONE WINS" : "PLAYER TWO WINS";
+    this.speakAnnouncer(`${winnerLabel}!`, 783.99);
+    setTimeout(() => {
+      this.playFightFanfare();
+    }, 450);
   }
 }
 

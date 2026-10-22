@@ -43,25 +43,106 @@ export const DEFAULT_CONTROLS = {
 
 export class InputHandler {
   /**
-   * Initializes input listeners for both players
+   * Initializes input listeners for both players (Keyboard + Gamepad + Virtual Touch)
    */
   constructor() {
     this.rawKeys = new Set();
     this.justPressedKeys = new Set();
     this.previousKeys = new Set();
 
+    // Gamepad state
+    this.gamepadConnected = [false, false];
+    this.prevGamepadButtons = [{}, {}];
+    this.currGamepadButtons = [{}, {}];
+    this.currGamepadAxes = [{ x: 0, y: 0 }, { x: 0, y: 0 }];
+
+    // Virtual Touch state (for mobile / arcade kiosk touch screens)
+    this.touchActionsActive = { P1: new Set(), P2: new Set() };
+    this.touchActionsJustPressed = { P1: new Set(), P2: new Set() };
+
     this.onKeyDown = this.handleKeyDown.bind(this);
     this.onKeyUp = this.handleKeyUp.bind(this);
+    this.onGamepadConnected = this.handleGamepadConnected.bind(this);
+    this.onGamepadDisconnected = this.handleGamepadDisconnected.bind(this);
 
     this.attachListeners();
   }
 
   /**
-   * Attaches window keyboard event listeners
+   * Attaches window keyboard and gamepad event listeners
    */
   attachListeners() {
     window.addEventListener('keydown', this.onKeyDown);
     window.addEventListener('keyup', this.onKeyUp);
+    window.addEventListener('gamepadconnected', this.onGamepadConnected);
+    window.addEventListener('gamepaddisconnected', this.onGamepadDisconnected);
+  }
+
+  handleGamepadConnected(e) {
+    const pad = e.gamepad;
+    console.log(`[Input] Gamepad connected at index ${pad.index}: ${pad.id}`);
+    this.showGamepadToast(`🎮 Gamepad ${pad.index + 1} Connected: ${pad.id.slice(0, 24)}...`);
+  }
+
+  handleGamepadDisconnected(e) {
+    const pad = e.gamepad;
+    console.log(`[Input] Gamepad disconnected from index ${pad.index}`);
+    this.showGamepadToast(`⚠️ Gamepad ${pad.index + 1} Disconnected`);
+  }
+
+  showGamepadToast(message) {
+    let toast = document.getElementById('gamepad-hud-toast');
+    if (!toast) {
+      toast = document.createElement('div');
+      toast.id = 'gamepad-hud-toast';
+      toast.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:rgba(4,14,30,0.92);border:1px solid #00e5ff;color:#00e5ff;padding:8px 18px;border-radius:20px;font-family:Orbitron,monospace;font-size:12px;font-weight:700;letter-spacing:1px;box-shadow:0 0 15px rgba(0,229,255,0.4);z-index:999999;transition:opacity 0.4s, transform 0.4s;pointer-events:none;display:flex;align-items:center;gap:8px;';
+      document.body.appendChild(toast);
+    }
+    toast.textContent = message;
+    toast.style.opacity = '1';
+    toast.style.transform = 'translateX(-50%) translateY(0)';
+    clearTimeout(this._toastTimer);
+    this._toastTimer = setTimeout(() => {
+      if (toast) {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateX(-50%) translateY(12px)';
+      }
+    }, 3200);
+  }
+
+  /**
+   * Polls gamepads on every frame update
+   */
+  pollGamepads() {
+    if (!navigator.getGamepads) return;
+    const gamepads = navigator.getGamepads();
+    for (let playerIdx = 0; playerIdx < 2; playerIdx++) {
+      const pad = gamepads[playerIdx];
+      if (!pad) {
+        this.gamepadConnected[playerIdx] = false;
+        continue;
+      }
+      this.gamepadConnected[playerIdx] = true;
+
+      // Store previous state for edge detection
+      this.prevGamepadButtons[playerIdx] = { ...this.currGamepadButtons[playerIdx] };
+
+      // Poll buttons
+      const btnState = {};
+      for (let b = 0; b < pad.buttons.length; b++) {
+        btnState[b] = pad.buttons[b].pressed;
+      }
+      this.currGamepadButtons[playerIdx] = btnState;
+
+      // Poll axes with 0.35 deadzone
+      const deadzone = 0.35;
+      const rawX = pad.axes[0] || 0;
+      const rawY = pad.axes[1] || 0;
+      this.currGamepadAxes[playerIdx] = {
+        x: Math.abs(rawX) > deadzone ? rawX : 0,
+        y: Math.abs(rawY) > deadzone ? rawY : 0
+      };
+    }
   }
 
   /**
@@ -70,6 +151,8 @@ export class InputHandler {
   destroy() {
     window.removeEventListener('keydown', this.onKeyDown);
     window.removeEventListener('keyup', this.onKeyUp);
+    window.removeEventListener('gamepadconnected', this.onGamepadConnected);
+    window.removeEventListener('gamepaddisconnected', this.onGamepadDisconnected);
     this.rawKeys.clear();
     this.justPressedKeys.clear();
     this.previousKeys.clear();
@@ -144,15 +227,95 @@ export class InputHandler {
    */
   endFrame() {
     this.justPressedKeys.clear();
+    this.touchActionsJustPressed.P1.clear();
+    this.touchActionsJustPressed.P2.clear();
   }
 
   /**
-   * Checks if an action is currently held down for a player
+   * Helper to check gamepad action hold state
+   */
+  isGamepadActionActive(action, padIdx) {
+    if (!this.gamepadConnected[padIdx]) return false;
+    const btns = this.currGamepadButtons[padIdx] || {};
+    const axes = this.currGamepadAxes[padIdx] || { x: 0, y: 0 };
+
+    switch (action) {
+      case INPUT_ACTIONS.UP:
+        return !!btns[12] || axes.y < -0.4;
+      case INPUT_ACTIONS.DOWN:
+        return !!btns[13] || axes.y > 0.4;
+      case INPUT_ACTIONS.LEFT:
+        return !!btns[14] || axes.x < -0.4;
+      case INPUT_ACTIONS.RIGHT:
+        return !!btns[15] || axes.x > 0.4;
+      case INPUT_ACTIONS.LIGHT:
+        return !!btns[0]; // A / Cross
+      case INPUT_ACTIONS.HEAVY:
+        return !!btns[2]; // X / Square
+      case INPUT_ACTIONS.BLOCK:
+        return !!btns[1]; // B / Circle
+      case INPUT_ACTIONS.DODGE:
+        return !!btns[3]; // Y / Triangle
+      case INPUT_ACTIONS.ULTIMATE:
+        return !!btns[4] || !!btns[5] || !!btns[6] || !!btns[7] || (!!btns[0] && !!btns[2]);
+      default:
+        return false;
+    }
+  }
+
+  /**
+   * Helper to check gamepad action just-pressed state (edge trigger)
+   */
+  isGamepadActionJustPressed(action, padIdx) {
+    if (!this.gamepadConnected[padIdx]) return false;
+    const curr = this.currGamepadButtons[padIdx] || {};
+    const prev = this.prevGamepadButtons[padIdx] || {};
+    const justPress = (b) => !!curr[b] && !prev[b];
+
+    switch (action) {
+      case INPUT_ACTIONS.UP:
+        return justPress(12);
+      case INPUT_ACTIONS.DOWN:
+        return justPress(13);
+      case INPUT_ACTIONS.LEFT:
+        return justPress(14);
+      case INPUT_ACTIONS.RIGHT:
+        return justPress(15);
+      case INPUT_ACTIONS.LIGHT:
+        return justPress(0);
+      case INPUT_ACTIONS.HEAVY:
+        return justPress(2);
+      case INPUT_ACTIONS.BLOCK:
+        return justPress(1);
+      case INPUT_ACTIONS.DODGE:
+        return justPress(3);
+      case INPUT_ACTIONS.ULTIMATE:
+        return justPress(4) || justPress(5) || justPress(6) || justPress(7) ||
+               (justPress(0) && !!curr[2]) || (justPress(2) && !!curr[0]);
+      default:
+        return false;
+    }
+  }
+
+  /**
+   * Checks if an action is currently held down for a player (Keyboard + Gamepad + Touch)
    * @param {string} action - Action name from INPUT_ACTIONS
    * @param {'P1'|'P2'} [player='P1'] - Player ID
    * @returns {boolean}
    */
   isActionActive(action, player = 'P1') {
+    const padIdx = player === 'P1' ? 0 : 1;
+
+    // Check Gamepad
+    if (this.isGamepadActionActive(action, padIdx)) {
+      return true;
+    }
+
+    // Check Virtual Touch
+    if (this.touchActionsActive[player] && this.touchActionsActive[player].has(action)) {
+      return true;
+    }
+
     const controls = DEFAULT_CONTROLS[player] || DEFAULT_CONTROLS.P1;
 
     // Check simultaneous press for Ultimate
@@ -175,12 +338,24 @@ export class InputHandler {
   }
 
   /**
-   * Checks if an action was pressed on this exact frame
+   * Checks if an action was pressed on this exact frame (Keyboard + Gamepad + Touch)
    * @param {string} action - Action name from INPUT_ACTIONS
    * @param {'P1'|'P2'} [player='P1'] - Player ID
    * @returns {boolean}
    */
   isActionJustPressed(action, player = 'P1') {
+    const padIdx = player === 'P1' ? 0 : 1;
+
+    // Check Gamepad
+    if (this.isGamepadActionJustPressed(action, padIdx)) {
+      return true;
+    }
+
+    // Check Virtual Touch
+    if (this.touchActionsJustPressed[player] && this.touchActionsJustPressed[player].has(action)) {
+      return true;
+    }
+
     const controls = DEFAULT_CONTROLS[player] || DEFAULT_CONTROLS.P1;
 
     if (action === INPUT_ACTIONS.ULTIMATE) {

@@ -60,6 +60,9 @@
   <link rel="stylesheet" href="css/leaderboard.css?v=12">
   <link rel="stylesheet" href="css/entryPortal.css?v=12">
   <link rel="stylesheet" href="css/campus-clash-ui.css?v=1">
+  <link rel="stylesheet" href="css/pauseMenu.css?v=1">
+  <link rel="stylesheet" href="css/touchControls.css?v=1">
+  <link rel="manifest" href="manifest.webmanifest">
 
   <!-- Supabase JS Client CDN -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -1343,6 +1346,130 @@
 
       <!-- Layer 2: Top Particles Canvas (Academic Dust / Fireflies drifting over UI) -->
       <canvas id="particles-canvas" width="960" height="640" class="fx-canvas" aria-hidden="true"></canvas>
+
+      <!-- Floating In-Match Pause Button (Visible during match) -->
+      <button type="button" id="hud-btn-pause" class="hidden" aria-label="Pause Match (ESC)">
+        <span>⏸</span> PAUSE
+      </button>
+
+      <!-- Layer 60: In-Game Cyberpunk Pause & Settings Menu -->
+      <div id="in-game-pause-menu" class="pause-overlay hidden" role="dialog" aria-modal="true" aria-label="Game Paused">
+        <div class="pause-modal-card">
+          <header class="pause-header">
+            <div class="pause-title">
+              <span>⏸</span> // MATCH PAUSED //
+            </div>
+            <button type="button" id="pause-btn-close" class="pause-btn-close" aria-label="Resume Match">✕ RESUME [ESC]</button>
+          </header>
+
+          <div class="pause-body">
+            <!-- Left: Action Navigation -->
+            <div class="pause-menu-actions">
+              <button type="button" id="pause-btn-resume" class="pause-action-btn primary">
+                <span>▶ RESUME MATCH</span>
+                <span class="shortcut-hint">[ESC / START]</span>
+              </button>
+              <button type="button" id="pause-btn-restart" class="pause-action-btn">
+                <span>🔄 RESTART ROUND</span>
+                <span class="shortcut-hint">[R]</span>
+              </button>
+              <button type="button" id="pause-btn-char-select" class="pause-action-btn">
+                <span>👥 CHANGE FIGHTERS</span>
+                <span class="shortcut-hint">[C]</span>
+              </button>
+              <button type="button" id="pause-btn-main-menu" class="pause-action-btn">
+                <span>🏠 MAIN MENU</span>
+                <span class="shortcut-hint">[M]</span>
+              </button>
+              <button type="button" id="pause-btn-fullscreen" class="pause-action-btn">
+                <span>⛶ TOGGLE FULLSCREEN</span>
+                <span class="shortcut-hint">[F]</span>
+              </button>
+            </div>
+
+            <!-- Right: Realtime Audio & Arcade Settings -->
+            <div class="pause-settings-panel">
+              <div class="pause-setting-row">
+                <div class="pause-setting-label">
+                  <span>MASTER VOLUME</span>
+                  <span id="pause-val-master">80%</span>
+                </div>
+                <input type="range" id="pause-slider-master" class="pause-slider" min="0" max="100" value="80">
+              </div>
+
+              <div class="pause-setting-row">
+                <div class="pause-setting-label">
+                  <span>BGM / MUSIC</span>
+                  <span id="pause-val-music">55%</span>
+                </div>
+                <input type="range" id="pause-slider-music" class="pause-slider" min="0" max="100" value="55">
+              </div>
+
+              <div class="pause-setting-row">
+                <div class="pause-setting-label">
+                  <span>SFX / VOICE</span>
+                  <span id="pause-val-sfx">80%</span>
+                </div>
+                <input type="range" id="pause-slider-sfx" class="pause-slider" min="0" max="100" value="80">
+              </div>
+
+              <div class="pause-toggle-row">
+                <span style="font-size:12px; font-weight:700; color:#ffd700;">AUDIO MUTE</span>
+                <button type="button" id="pause-btn-mute" class="pause-toggle-btn">MUTE (OFF)</button>
+              </div>
+
+              <div class="pause-toggle-row">
+                <span style="font-size:12px; font-weight:700; color:#00e5ff;">TOUCH CONTROLS</span>
+                <button type="button" id="pause-btn-toggle-touch" class="pause-toggle-btn">AUTO</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Footer Movelist Summary -->
+          <footer class="pause-movelist-footer">
+            <div class="pause-movelist-col">
+              <strong>P1 (KEYBOARD):</strong> [W/A/S/D] Move/Jump • [J] Light • [K] Heavy • [L] Block • [SPACE] Dodge • [J+K] Ultimate
+            </div>
+            <div class="pause-movelist-col">
+              <strong>GAMEPAD:</strong> [D-Pad/Stick] Move • [A] Light • [X] Heavy • [B] Block • [Y] Dodge • [LB/RB] Ultimate
+            </div>
+          </footer>
+        </div>
+      </div>
+
+      <!-- Layer 70: Mobile / Touch Virtual On-Screen Gamepad Cluster -->
+      <div id="virtual-touch-controls" class="touch-controls-container hidden" aria-hidden="true">
+        <!-- Left: Virtual D-Pad -->
+        <div class="touch-dpad-cluster">
+          <button type="button" class="touch-dpad-btn touch-dpad-up" data-action="up" aria-label="Jump">▲</button>
+          <button type="button" class="touch-dpad-btn touch-dpad-down" data-action="down" aria-label="Crouch">▼</button>
+          <button type="button" class="touch-dpad-btn touch-dpad-left" data-action="left" aria-label="Left">◀</button>
+          <button type="button" class="touch-dpad-btn touch-dpad-right" data-action="right" aria-label="Right">▶</button>
+        </div>
+
+        <!-- Right: Action Buttons -->
+        <div class="touch-actions-cluster">
+          <button type="button" class="touch-action-btn touch-btn-light" data-action="light">
+            <span>L</span>
+            <span class="btn-subtext">ATK</span>
+          </button>
+          <button type="button" class="touch-action-btn touch-btn-heavy" data-action="heavy">
+            <span>H</span>
+            <span class="btn-subtext">SMASH</span>
+          </button>
+          <button type="button" class="touch-action-btn touch-btn-block" data-action="block">
+            <span>BLK</span>
+            <span class="btn-subtext">GUARD</span>
+          </button>
+          <button type="button" class="touch-action-btn touch-btn-dodge" data-action="dodge">
+            <span>DDG</span>
+            <span class="btn-subtext">EVADE</span>
+          </button>
+          <button type="button" class="touch-action-btn touch-btn-ultimate" data-action="ultimate">
+            <span>ULT</span>
+          </button>
+        </div>
+      </div>
     </div> <!-- End #canvas-wrapper -->
 
 

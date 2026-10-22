@@ -1,0 +1,22 @@
+{
+  "name": "Campus Clash 2D — Arcade Fighting Game",
+  "short_name": "Campus Clash",
+  "start_url": "./index.html",
+  "display": "fullscreen",
+  "orientation": "landscape",
+  "background_color": "#030814",
+  "theme_color": "#00e5ff",
+  "description": "High-octane 2D anime fighting game set in university campus. Fight for the 10 CGPA!",
+  "icons": [
+    {
+      "src": "assets/characters/topper/portrait.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/characters/topper/portrait.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

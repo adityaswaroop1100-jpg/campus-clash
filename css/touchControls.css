@@ -1,0 +1,160 @@
+/**
+ * Campus Clash — Mobile / Touch Screen Virtual Gamepad
+ */
+.touch-controls-container {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 9998;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding: 24px;
+  box-sizing: border-box;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
+}
+
+.touch-controls-container.hidden {
+  display: none !important;
+}
+
+/* Left Virtual D-Pad */
+.touch-dpad-cluster {
+  position: relative;
+  width: 150px;
+  height: 150px;
+  pointer-events: auto;
+}
+
+.touch-dpad-btn {
+  position: absolute;
+  width: 46px;
+  height: 46px;
+  background: rgba(4, 18, 38, 0.72);
+  border: 2px solid rgba(0, 229, 255, 0.5);
+  border-radius: 8px;
+  color: #00e5ff;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  touch-action: none;
+  box-shadow: 0 0 10px rgba(0, 229, 255, 0.2);
+  transition: transform 0.08s, background 0.08s;
+}
+
+.touch-dpad-btn:active,
+.touch-dpad-btn.pressed {
+  background: rgba(0, 229, 255, 0.45);
+  box-shadow: 0 0 18px rgba(0, 229, 255, 0.6);
+  transform: scale(0.92);
+}
+
+.touch-dpad-up    { top: 0; left: 52px; }
+.touch-dpad-down  { bottom: 0; left: 52px; }
+.touch-dpad-left  { top: 52px; left: 0; }
+.touch-dpad-right { top: 52px; right: 0; }
+
+/* Right Action Buttons Cluster */
+.touch-actions-cluster {
+  position: relative;
+  width: 170px;
+  height: 150px;
+  pointer-events: auto;
+}
+
+.touch-action-btn {
+  position: absolute;
+  border-radius: 50%;
+  color: #fff;
+  font-family: 'Orbitron', monospace;
+  font-weight: 900;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  touch-action: none;
+  transition: transform 0.08s, box-shadow 0.08s;
+  cursor: pointer;
+}
+
+.touch-action-btn .btn-subtext {
+  font-size: 8px;
+  opacity: 0.8;
+  margin-top: 1px;
+}
+
+.touch-action-btn:active,
+.touch-action-btn.pressed {
+  transform: scale(0.92);
+}
+
+/* Light Attack */
+.touch-btn-light {
+  width: 48px;
+  height: 48px;
+  bottom: 12px;
+  left: 10px;
+  background: rgba(0, 229, 255, 0.25);
+  border: 2px solid #00e5ff;
+  font-size: 14px;
+  box-shadow: 0 0 10px rgba(0, 229, 255, 0.3);
+}
+.touch-btn-light:active { background: #00e5ff; color: #000; }
+
+/* Heavy Attack */
+.touch-btn-heavy {
+  width: 52px;
+  height: 52px;
+  top: 10px;
+  left: 56px;
+  background: rgba(255, 107, 53, 0.25);
+  border: 2px solid #ff6b35;
+  font-size: 15px;
+  box-shadow: 0 0 10px rgba(255, 107, 53, 0.3);
+}
+.touch-btn-heavy:active { background: #ff6b35; color: #000; }
+
+/* Block */
+.touch-btn-block {
+  width: 44px;
+  height: 44px;
+  bottom: 12px;
+  right: 12px;
+  background: rgba(46, 191, 113, 0.25);
+  border: 2px solid #2ebf71;
+  font-size: 12px;
+  box-shadow: 0 0 10px rgba(46, 191, 113, 0.3);
+}
+.touch-btn-block:active { background: #2ebf71; color: #000; }
+
+/* Dodge */
+.touch-btn-dodge {
+  width: 42px;
+  height: 42px;
+  top: 15px;
+  right: 0;
+  background: rgba(255, 215, 0, 0.25);
+  border: 2px solid #ffd700;
+  font-size: 11px;
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+.touch-btn-dodge:active { background: #ffd700; color: #000; }
+
+/* Ultimate */
+.touch-btn-ultimate {
+  width: 58px;
+  height: 32px;
+  border-radius: 16px;
+  bottom: 74px;
+  left: 48px;
+  background: linear-gradient(135deg, rgba(255, 0, 127, 0.4), rgba(138, 43, 226, 0.4));
+  border: 2px solid #ff007f;
+  font-size: 10px;
+  box-shadow: 0 0 12px rgba(255, 0, 127, 0.45);
+}
+.touch-btn-ultimate:active { background: #ff007f; color: #fff; }
