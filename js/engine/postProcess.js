@@ -142,17 +142,42 @@ export class PostProcessing {
   }
 
   /**
-   * Render subtle CRT scanlines over entire canvas
+   * Lazily creates a repeating 1-pass pattern for CRT scanlines
+   */
+  getScanlinePattern(ctx) {
+    if (!this.scanlinePattern && typeof document !== 'undefined') {
+      const pCanvas = document.createElement('canvas');
+      pCanvas.width = 32;
+      pCanvas.height = this.scanlineSpacing || 4;
+      const pCtx = pCanvas.getContext('2d');
+      pCtx.fillStyle = '#000000';
+      pCtx.fillRect(0, 0, 32, 1);
+      this.scanlinePattern = ctx.createPattern(pCanvas, 'repeat');
+    }
+    return this.scanlinePattern;
+  }
+
+  /**
+   * Render subtle CRT scanlines in 1 single batched pass (saves 159 draw calls/frame)
    */
   renderScanlines(ctx, canvasWidth, canvasHeight) {
     if (this.scanlineAlpha < 0.005) return;
-    ctx.save();
-    ctx.globalAlpha = this.scanlineAlpha;
-    ctx.fillStyle = '#000000';
-    for (let y = 0; y < canvasHeight; y += this.scanlineSpacing) {
-      ctx.fillRect(0, y, canvasWidth, 1);
+    const pattern = this.getScanlinePattern(ctx);
+    if (pattern) {
+      ctx.save();
+      ctx.globalAlpha = this.scanlineAlpha;
+      ctx.fillStyle = pattern;
+      ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+      ctx.restore();
+    } else {
+      ctx.save();
+      ctx.globalAlpha = this.scanlineAlpha;
+      ctx.fillStyle = '#000000';
+      for (let y = 0; y < canvasHeight; y += this.scanlineSpacing) {
+        ctx.fillRect(0, y, canvasWidth, 1);
+      }
+      ctx.restore();
     }
-    ctx.restore();
   }
 
   /**

@@ -34,6 +34,30 @@ export class ServerCoreStage extends StageBase {
       { x: 700, speed: 5, width: 18, color: '#00e5ff' },
       { x: 840, speed: 7, width: 24, color: '#d500f9' }
     ];
+
+    // Pre-bake static server towers to eliminate 480 draw calls per frame
+    this.initPrebakedLayers();
+  }
+
+  initPrebakedLayers() {
+    if (typeof document === 'undefined') return;
+    this.farTowersCanvas = document.createElement('canvas');
+    this.farTowersCanvas.width = 1600;
+    this.farTowersCanvas.height = 640;
+    const bCtx = this.farTowersCanvas.getContext('2d');
+
+    bCtx.fillStyle = '#110424';
+    for (let i = -1; i < 11; i++) {
+      const tx = (i + 1) * 160;
+      bCtx.fillRect(tx + 20, 40, 100, 500);
+      bCtx.fillStyle = '#2d0a54';
+      for (let w = 0; w < 4; w++) {
+        for (let h = 0; h < 12; h++) {
+          bCtx.fillRect(tx + 28 + w * 22, 60 + h * 35, 14, 18);
+        }
+      }
+      bCtx.fillStyle = '#110424';
+    }
   }
 
   updateAmbientParticles(dt) {
@@ -65,19 +89,16 @@ export class ServerCoreStage extends StageBase {
     const farOffsetX = -camX * 0.1;
     ctx.save();
     ctx.translate(farOffsetX, 0);
-    ctx.fillStyle = '#110424';
-    for (let i = -1; i < 9; i++) {
-      const tx = i * 160;
-      ctx.fillRect(tx + 20, 40, 100, 500);
-      // Faint purple window LED grid
-      ctx.fillStyle = '#2d0a54';
-      for (let w = 0; w < 4; w++) {
-        for (let h = 0; h < 12; h++) {
-          ctx.fillRect(tx + 28 + w * 22, 60 + h * 35, 14, 18);
-        }
-      }
+    if (this.farTowersCanvas) {
+      ctx.drawImage(this.farTowersCanvas, -160, 0);
+    } else {
       ctx.fillStyle = '#110424';
+      for (let i = -1; i < 9; i++) {
+        const tx = i * 160;
+        ctx.fillRect(tx + 20, 40, 100, 500);
+      }
     }
+    ctx.restore();
 
     // Central Distant Giant Planetoid / Ring Structure
     const planetX = 480;

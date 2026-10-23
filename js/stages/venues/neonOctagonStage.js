@@ -109,16 +109,17 @@ export class NeonOctagonStage extends StageBase {
     ctx.lineWidth = 2;
     ctx.strokeRect(-100, 220, 1200, 18);
 
-    // Cheering Crowds Upper
+    // Cheering Crowds Upper (Batched into 1 draw call)
     ctx.fillStyle = '#060e1e';
+    ctx.beginPath();
     for (let c = -5; c < 35; c++) {
       const cx = c * 36;
       const bob = Math.sin(t * 4 + c) * 3;
-      ctx.beginPath();
+      ctx.moveTo(cx + 6, 210 + bob);
       ctx.arc(cx, 210 + bob, 6, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.fillRect(cx - 5, 216 + bob, 10, 10);
+      ctx.rect(cx - 5, 216 + bob, 10, 10);
     }
+    ctx.fill();
 
     // Balcony 2 (Lower)
     ctx.fillStyle = '#081326';
@@ -126,16 +127,17 @@ export class NeonOctagonStage extends StageBase {
     ctx.strokeStyle = '#ff910044';
     ctx.strokeRect(-100, 310, 1200, 24);
 
-    // Cheering Crowds Lower (more dynamic bobbing)
+    // Cheering Crowds Lower (Batched into 1 draw call)
     ctx.fillStyle = '#040b17';
+    ctx.beginPath();
     for (let c = -5; c < 30; c++) {
       const cx = c * 42;
       const bob = Math.sin(t * 5 + c * 1.5) * 4;
-      ctx.beginPath();
+      ctx.moveTo(cx + 7, 298 + bob);
       ctx.arc(cx, 298 + bob, 7, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.fillRect(cx - 6, 305 + bob, 12, 14);
+      ctx.rect(cx - 6, 305 + bob, 12, 14);
     }
+    ctx.fill();
 
     // 5. Floating Curved Holographic Audio / Status Displays
     const holoLeftX = 140;
