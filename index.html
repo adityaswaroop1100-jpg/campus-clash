@@ -1342,6 +1342,32 @@
                 <input type="range" id="pause-slider-sfx" class="pause-slider" min="0" max="100" value="80">
               </div>
 
+              <div class="pause-setting-row">
+                <div class="pause-setting-label">
+                  <span style="color:#ff9100;">SCREEN SHAKE</span>
+                  <span id="pause-val-shake">100%</span>
+                </div>
+                <input type="range" id="pause-slider-shake" class="pause-slider" min="0" max="100" value="100" title="Adjust or disable screen shake for tournament clarity">
+              </div>
+
+              <div class="pause-setting-row">
+                <div class="pause-setting-label">
+                  <span style="color:#00e5ff;">HIT FLASH</span>
+                  <span id="pause-val-flash">100%</span>
+                </div>
+                <input type="range" id="pause-slider-flash" class="pause-slider" min="0" max="100" value="100" title="Adjust hit flash intensity">
+              </div>
+
+              <div class="pause-toggle-row">
+                <span style="font-size:12px; font-weight:700; color:#39ff14;">QUALITY</span>
+                <button type="button" id="pause-btn-quality" class="pause-toggle-btn active" title="Toggle Graphics Quality (HIGH / MEDIUM / LOW)">HIGH (60/120)</button>
+              </div>
+
+              <div class="pause-toggle-row">
+                <span style="font-size:12px; font-weight:700; color:#e040fb;">STREAM SAFE</span>
+                <button type="button" id="pause-btn-streamsafe" class="pause-toggle-btn" title="Toggle Stream-Safe audio cleared for broadcast">OFF</button>
+              </div>
+
               <div class="pause-toggle-row">
                 <span style="font-size:12px; font-weight:700; color:#ffd700;">AUDIO MUTE</span>
                 <button type="button" id="pause-btn-mute" class="pause-toggle-btn">MUTE (OFF)</button>

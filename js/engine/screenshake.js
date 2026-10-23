@@ -12,6 +12,20 @@ export class ScreenShake {
     this.offsetY = 0;
     // Chromatic aberration crush: decays each frame, read by render pipeline
     this.crushIntensity = 0;
+    // User-controlled shake scale (0% = disabled for motion sensitivity/esports clarity, 100% = full)
+    const savedScale = typeof localStorage !== 'undefined' ? localStorage.getItem('cc_shake_scale') : null;
+    this.userScale = savedScale !== null ? parseFloat(savedScale) : 1.0;
+  }
+
+  /**
+   * Sets the user shake intensity scale (0.0 to 1.0)
+   * @param {number} scale
+   */
+  setUserScale(scale) {
+    this.userScale = Math.max(0, Math.min(1, scale));
+    if (typeof localStorage !== 'undefined') {
+      try { localStorage.setItem('cc_shake_scale', this.userScale.toString()); } catch (e) {}
+    }
   }
 
   /**
@@ -34,9 +48,9 @@ export class ScreenShake {
   }
 
   update() {
-    if (this.duration > 0 && this.intensity > 0.1) {
+    if (this.duration > 0 && this.intensity > 0.1 && this.userScale > 0) {
       const progress = this.duration / (this.maxDuration || 1);
-      const currentIntensity = this.intensity * progress;
+      const currentIntensity = this.intensity * progress * this.userScale;
       this.offsetX = (Math.random() * 2 - 1) * currentIntensity;
       this.offsetY = (Math.random() * 2 - 1) * currentIntensity;
       this.duration--;

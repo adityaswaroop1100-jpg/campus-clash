@@ -197,6 +197,16 @@ class CampusClashGame {
     this.stage = new this.arenas[this.currentArenaIndex].stageClass();
     this.stageSelectManager = new StageSelectManager(this);
 
+    // Performance & Accessibility Settings
+    this.qualityTier = typeof localStorage !== 'undefined' ? (localStorage.getItem('cc_quality_tier') || 'high') : 'high';
+    const savedFlash = typeof localStorage !== 'undefined' ? localStorage.getItem('cc_flash_scale') : null;
+    this.hitFlashScale = savedFlash !== null ? parseFloat(savedFlash) : 1.0;
+    if (this.stage) {
+      this.stage.qualityTier = this.qualityTier;
+    }
+    if (this.particles) {
+      this.particles.setQualityTier(this.qualityTier);
+    }
 
     // Screen State
     this.landingScene = new LandingScene(this);
@@ -465,6 +475,59 @@ class CampusClashGame {
       });
     }
 
+    // Screen Shake Slider
+    const shakeSlider = document.getElementById('pause-slider-shake');
+    if (shakeSlider) {
+      const curShake = Math.round((this.screenShake.userScale ?? 1.0) * 100);
+      shakeSlider.value = curShake;
+      const label = document.getElementById('pause-val-shake');
+      if (label) label.textContent = `${curShake}%`;
+      shakeSlider.addEventListener('input', (e) => {
+        const val = parseInt(e.target.value);
+        this.screenShake.setUserScale(val / 100);
+        if (label) label.textContent = `${val}%`;
+      });
+    }
+
+    // Hit Flash Slider
+    const flashSlider = document.getElementById('pause-slider-flash');
+    if (flashSlider) {
+      const curFlash = Math.round((this.hitFlashScale ?? 1.0) * 100);
+      flashSlider.value = curFlash;
+      const label = document.getElementById('pause-val-flash');
+      if (label) label.textContent = `${curFlash}%`;
+      flashSlider.addEventListener('input', (e) => {
+        const val = parseInt(e.target.value);
+        this.setHitFlashScale(val / 100);
+        if (label) label.textContent = `${val}%`;
+      });
+    }
+
+    // Graphics Quality Preset Toggle (HIGH / MEDIUM / LOW)
+    const qualityBtn = document.getElementById('pause-btn-quality');
+    if (qualityBtn) {
+      const labels = { high: 'HIGH (60/120)', medium: 'MEDIUM (BALANCED)', low: 'LOW (MAX FPS)' };
+      qualityBtn.textContent = labels[this.qualityTier] || 'HIGH (60/120)';
+      qualityBtn.classList.toggle('active', this.qualityTier !== 'low');
+      qualityBtn.addEventListener('click', () => {
+        const cycle = { high: 'medium', medium: 'low', low: 'high' };
+        this.setQualityTier(cycle[this.qualityTier] || 'high');
+      });
+    }
+
+    // Stream-Safe Audio Mode Toggle
+    const streamSafeBtn = document.getElementById('pause-btn-streamsafe');
+    if (streamSafeBtn) {
+      const isSafe = this.sound.isStreamSafe;
+      streamSafeBtn.textContent = isSafe ? 'ON' : 'OFF';
+      streamSafeBtn.classList.toggle('active', isSafe);
+      streamSafeBtn.addEventListener('click', () => {
+        const newState = this.sound.toggleStreamSafe();
+        streamSafeBtn.textContent = newState ? 'ON' : 'OFF';
+        streamSafeBtn.classList.toggle('active', newState);
+      });
+    }
+
     // Toggle touch controls button in pause menu
     const toggleTouchBtn = document.getElementById('pause-btn-toggle-touch');
     toggleTouchBtn?.addEventListener('click', () => {
@@ -475,6 +538,32 @@ class CampusClashGame {
         toggleTouchBtn.classList.toggle('active', !tc.classList.contains('hidden'));
       }
     });
+  }
+
+  setQualityTier(tier) {
+    this.qualityTier = tier;
+    if (typeof localStorage !== 'undefined') {
+      try { localStorage.setItem('cc_quality_tier', tier); } catch (e) {}
+    }
+    if (this.stage) {
+      this.stage.qualityTier = tier;
+    }
+    if (this.particles) {
+      this.particles.setQualityTier(tier);
+    }
+    const btn = document.getElementById('pause-btn-quality');
+    if (btn) {
+      const labels = { high: 'HIGH (60/120)', medium: 'MEDIUM (BALANCED)', low: 'LOW (MAX FPS)' };
+      btn.textContent = labels[tier] || tier.toUpperCase();
+      btn.classList.toggle('active', tier !== 'low');
+    }
+  }
+
+  setHitFlashScale(val) {
+    this.hitFlashScale = Math.max(0, Math.min(1, val));
+    if (typeof localStorage !== 'undefined') {
+      try { localStorage.setItem('cc_flash_scale', this.hitFlashScale.toString()); } catch (e) {}
+    }
   }
 
   togglePause(forceState = null) {
@@ -1070,6 +1159,7 @@ class CampusClashGame {
 
     // Instantiate selected SRM Arena
     this.stage = new this.arenas[this.currentArenaIndex].stageClass();
+    this.stage.qualityTier = this.qualityTier;
 
     this.p1 = new Fighter(p1Cfg, 260, this.stage.groundY, 1, 'P1');
     this.p2 = new Fighter(p2Cfg, 700, this.stage.groundY, -1, 'P2');
@@ -1858,16 +1948,16 @@ class CampusClashGame {
       }
 
       // Tactical Esports Screen Flash (Preserves fighter silhouette readability on heavy hits)
-      if (this.screenFlashFrames > 0) {
+      if (this.screenFlashFrames > 0 && this.hitFlashScale > 0.01) {
         ctx.save();
-        const flashIntensity = Math.min(0.25, this.screenFlashFrames * 0.06);
+        const flashIntensity = Math.min(0.25, this.screenFlashFrames * 0.06) * this.hitFlashScale;
         ctx.fillStyle = `rgba(255, 255, 255, ${flashIntensity})`;
         ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
         ctx.restore();
       }
 
       // Chromatic Aberration post-process (3-frame double-draw on heavy/ultimate impact)
-      if (this.screenShake.crushIntensity > 0.05) {
+      if (this.qualityTier !== 'low' && this.screenShake.crushIntensity > 0.05) {
         const ci = this.screenShake.crushIntensity;
         const shift = Math.round(ci * 5);
         ctx.save();
@@ -2604,6 +2694,7 @@ class CampusClashGame {
 
   /**
    * Renders a subtle gold radial spotlight following the fighter with higher HP%
+   * Zero GC allocation via pre-baked off-screen canvas blit.
    */
   renderAdvantageSpotlight(ctx) {
     if (!this.p1 || !this.p2) return;
@@ -2612,17 +2703,29 @@ class CampusClashGame {
     const diff = Math.abs(p1Pct - p2Pct);
     if (diff < 0.20) return; // Only show when advantage ≥ 20% HP
     const leader = p1Pct > p2Pct ? this.p1 : this.p2;
-    ctx.save();
-    const grad = ctx.createRadialGradient(leader.x, leader.y - 70, 20, leader.x, leader.y - 70, 200);
-    grad.addColorStop(0, `rgba(255, 215, 0, ${Math.min(0.12, diff * 0.25)})`);
-    grad.addColorStop(1, 'rgba(255, 215, 0, 0)');
-    ctx.globalCompositeOperation = 'lighter';
-    ctx.fillStyle = grad;
-    ctx.beginPath();
-    ctx.arc(leader.x, leader.y - 70, 200, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.globalCompositeOperation = 'source-over';
-    ctx.restore();
+
+    if (!this._advSpotCanvas && typeof document !== 'undefined') {
+      this._advSpotCanvas = document.createElement('canvas');
+      this._advSpotCanvas.width = 400;
+      this._advSpotCanvas.height = 400;
+      const sCtx = this._advSpotCanvas.getContext('2d');
+      const grad = sCtx.createRadialGradient(200, 200, 20, 200, 200, 200);
+      grad.addColorStop(0, 'rgba(255, 215, 0, 1.0)');
+      grad.addColorStop(0.5, 'rgba(255, 215, 0, 0.4)');
+      grad.addColorStop(1, 'rgba(255, 215, 0, 0)');
+      sCtx.fillStyle = grad;
+      sCtx.beginPath();
+      sCtx.arc(200, 200, 200, 0, Math.PI * 2);
+      sCtx.fill();
+    }
+
+    if (this._advSpotCanvas) {
+      ctx.save();
+      ctx.globalCompositeOperation = 'lighter';
+      ctx.globalAlpha = Math.min(0.12, diff * 0.25);
+      ctx.drawImage(this._advSpotCanvas, leader.x - 200, leader.y - 70 - 200);
+      ctx.restore();
+    }
   }
 
   /**

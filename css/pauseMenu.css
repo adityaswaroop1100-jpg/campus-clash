@@ -24,17 +24,18 @@
 }
 
 .pause-modal-card {
-  width: 580px;
-  max-width: 90%;
+  width: 620px;
+  max-width: 92%;
+  max-height: 92vh;
+  overflow-y: auto;
   background: linear-gradient(145deg, rgba(8, 22, 45, 0.95), rgba(4, 12, 26, 0.98));
   border: 2px solid #00e5ff;
   border-radius: 12px;
   box-shadow: 0 0 35px rgba(0, 229, 255, 0.45), inset 0 0 20px rgba(0, 229, 255, 0.12);
-  padding: 24px;
+  padding: 20px;
   color: #fff;
   font-family: 'Rajdhani', sans-serif;
   position: relative;
-  overflow: hidden;
 }
 
 .pause-modal-card::before {
@@ -139,10 +140,10 @@
   background: rgba(0, 0, 0, 0.35);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 8px;
-  padding: 14px;
+  padding: 12px;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 10px;
 }
 
 .pause-setting-row {

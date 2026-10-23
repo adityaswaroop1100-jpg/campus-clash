@@ -116,6 +116,19 @@ export class SoundManager {
     return this.isMuted;
   }
 
+  toggleStreamSafe() {
+    if (this.audioManager && this.audioManager.busController) {
+      const current = this.audioManager.busController.streamSafeMode;
+      this.audioManager.busController.setStreamSafeMode(!current);
+      return !current;
+    }
+    return false;
+  }
+
+  get isStreamSafe() {
+    return this.audioManager?.busController?.streamSafeMode || false;
+  }
+
   getOutputNode(isMusic = false) {
     if (!this.ctx) return null;
     if (this.sfxGain && !isMusic) return this.sfxGain;
