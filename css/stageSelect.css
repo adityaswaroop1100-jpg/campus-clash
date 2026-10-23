@@ -109,8 +109,8 @@
 .stage-grid {
   display: grid;
   grid-template-columns: repeat(5, 172px);
-  grid-template-rows: repeat(2, 192px);
-  gap: 10px 14px;
+  grid-template-rows: 200px;
+  gap: 12px;
   justify-content: center;
 }
 

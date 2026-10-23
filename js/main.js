@@ -24,16 +24,11 @@ import { GAVEL_CONFIG } from './entities/characters/gavel.js';
 import { BOLT_CONFIG } from './entities/characters/bolt.js';
 import { PALETTE_CONFIG } from './entities/characters/palette.js';
 import { Fighter } from './entities/fighter.js?v=2.5.0';
-import { TechParkStage } from './stages/techPark.js';
-import { UniversityBuildingStage } from './stages/universityBuilding.js';
-import { TPGanesanAuditoriumStage } from './stages/tpGanesanAuditorium.js';
-import { ArchGateStage } from './stages/archGate.js';
-import { VendharSquareStage } from './stages/vendarSquare.js';
-import { ArchitectureBlockStage } from './stages/architectureBlock.js';
-import { CloudCitadelStage } from './stages/cloudCitadel.js';
-import { CyberFortressStage } from './stages/cyberFortress.js';
-import { IoTSensorMatrixStage } from './stages/iotSensorMatrix.js';
-import { EdgeGatewayStage } from './stages/edgeGateway.js';
+import { VerticalSprawlStage } from './stages/venues/verticalSprawlStage.js';
+import { NeonOctagonStage } from './stages/venues/neonOctagonStage.js';
+import { ServerCoreStage } from './stages/venues/serverCoreStage.js';
+import { ModularArenaStage } from './stages/venues/modularArenaStage.js';
+import { ArchiveVaultStage } from './stages/venues/archiveVaultStage.js';
 import { NexusModifierSystem } from './engine/nexusModifiers.js';
 import { PostProcessing } from './engine/postProcess.js';
 import { LandingScene } from './engine/landingScene.js';
@@ -140,110 +135,60 @@ class CampusClashGame {
     this.nexusModifiers = new NexusModifierSystem();
     this.postProcess = new PostProcessing();
     
-    // Playable SRM Campus & WebNexus Tech Arenas
+    // The Global Arena Pack (5 Venues with Real 3D Depth & Character Sync)
     this.arenas = [
       {
-        id: 'techpark',
-        name: 'Tech Park Steps & Plaza',
-        shortName: 'TECH PARK PLAZA',
-        subtitle: '15-Floor IT Powerhouse & Skywalk',
-        stageClass: TechParkStage,
-        emoji: '🏛️',
-        landmark: '15-Tier Stairs, Solar Glass & Skywalk',
-        hazard: 'ID Check Whistle & Sea Breeze Papers'
+        id: 'verticalsprawl',
+        name: 'The Vertical Sprawl',
+        shortName: 'VERTICAL SPRAWL',
+        subtitle: 'Five-Tier Cyber City Courtyard',
+        stageClass: VerticalSprawlStage,
+        emoji: '🏙️',
+        landmark: 'Multi-Level Walkways, Skybridge & Neon Alley',
+        hazard: 'Acid Rain Sheen & High-Voltage Neon Glow'
       },
       {
-        id: 'universitybuilding',
-        name: 'University Building (UB) Quadrangle',
-        shortName: 'UB CLOCK TOWER',
-        subtitle: 'The Administrative Heart',
-        stageClass: UniversityBuildingStage,
-        emoji: '🔔',
-        landmark: 'Neoclassical Colonnade & Clock Tower',
-        hazard: 'Clock Bell Toll & Ambassador Car'
-      },
-      {
-        id: 'tpganesan',
-        name: 'Dr. T.P. Ganesan Auditorium',
-        shortName: 'TP GANESAN AUDITORIUM',
-        subtitle: 'Asia\'s Premier 4000-Seat Hall',
-        stageClass: TPGanesanAuditoriumStage,
-        emoji: '🎭',
-        landmark: 'Acoustic Wood Ribs & Milan LED Banner',
-        hazard: 'Moving Spotlights & Bass Subwoofer'
-      },
-      {
-        id: 'archgate',
-        name: 'SRM Grand Arch Gate',
-        shortName: 'GRAND ARCH GATE',
-        subtitle: 'GST Road (NH45) Entrance',
-        stageClass: ArchGateStage,
-        emoji: '⛩️',
-        landmark: 'Pink Twin Arch & Suburban EMU Train',
-        hazard: 'SRM Bus Horn & Highway Traffic'
-      },
-      {
-        id: 'vendharsquare',
-        name: 'Vendhar Square',
-        shortName: 'VENDHAR SQUARE',
-        subtitle: 'The Grand Founder Monument & Plaza',
-        stageClass: VendharSquareStage,
-        emoji: '👑',
-        landmark: 'Golden Paarivendhar Statue & Dome Fountains',
-        hazard: 'Geodesic Fountain Sprays & Sunset Flare'
-      },
-      {
-        id: 'architectureblock',
-        name: 'School of Architecture',
-        shortName: 'ARCHITECTURE BLOCK',
-        subtitle: 'SRM School of Architecture & Design',
-        stageClass: ArchitectureBlockStage,
-        emoji: '📐',
-        landmark: 'Teal Solar Glass Curtain, White Louvers & Portico',
-        hazard: 'Drafting Blueprints & Jury Laser Scan'
-      },
-      {
-        id: 'cloudcitadel',
-        name: 'The Cloud Citadel',
-        shortName: 'CLOUD CITADEL',
-        subtitle: 'WebNexus Cloud Computing & Serverless Cluster',
-        stageClass: CloudCitadelStage,
-        emoji: '☁️',
-        landmark: 'Server Blade Skyscrapers & K8S Pods',
-        hazard: 'Fiber Streams & Container Drop'
-      },
-      {
-        id: 'cyberfortress',
-        name: 'Cyber Fortress Zero-Day',
-        shortName: 'CYBER FORTRESS',
-        subtitle: 'WebNexus Cyber Security & Cryptographic Firewall',
-        stageClass: CyberFortressStage,
-        emoji: '🛡️',
-        landmark: 'Zero-Day Terminal & Laser Grid',
-        hazard: 'Binary Rain & Security Laser Perimeter'
-      },
-      {
-        id: 'iotsensormatrix',
-        name: 'IoT Sensor Matrix',
-        shortName: 'IOT SENSOR MATRIX',
-        subtitle: 'WebNexus Internet of Things & Mesh Network',
-        stageClass: IoTSensorMatrixStage,
-        emoji: '📡',
-        landmark: 'PCB Copper Traces & ESP32 Microchips',
-        hazard: '2.4GHz WiFi Waves & Telemetry Feed'
-      },
-      {
-        id: 'edgegateway',
-        name: 'Edge Gateway Station',
-        shortName: 'EDGE GATEWAY',
-        subtitle: 'WebNexus Edge Computing & Ultra-Low Latency Hub',
-        stageClass: EdgeGatewayStage,
+        id: 'neonoctagon',
+        name: 'The Neon Octagon',
+        shortName: 'NEON OCTAGON',
+        subtitle: 'Underground Cybernetic Fight Cage',
+        stageClass: NeonOctagonStage,
         emoji: '⚡',
-        landmark: 'Optical Bus Lines & Edge Node Towers',
-        hazard: 'High-Speed Optical Pulses (0.2ms)'
+        landmark: 'Raised Octagonal Dais, Crowd Balconies & Holograms',
+        hazard: 'Overhead Spotlights & Crowd Audio Reactive Spikes'
+      },
+      {
+        id: 'servercore',
+        name: 'The Server Core',
+        shortName: 'SERVER CORE',
+        subtitle: 'Floating Cyberspace Quantum Abyss',
+        stageClass: ServerCoreStage,
+        emoji: '🌐',
+        landmark: 'Concentric Circuit Traces, Energy Beam & Data Streams',
+        hazard: 'Bottomless Cyber Void & Breathing Reactor Pulse'
+      },
+      {
+        id: 'modulararena',
+        name: 'The Modular Arena',
+        shortName: 'MODULAR ARENA',
+        subtitle: 'Reconfigurable High-Tech Combat Stadium',
+        stageClass: ModularArenaStage,
+        emoji: '🏟️',
+        landmark: 'Hydraulic Hex Panels, Jumbotron Rig & Camera Crane',
+        hazard: 'Pneumatic Floor Reconfiguration & Warning Beams'
+      },
+      {
+        id: 'archivevault',
+        name: 'The Archive Vault',
+        shortName: 'ARCHIVE VAULT',
+        subtitle: 'Tri-Era Temporal Architectural Nexus',
+        stageClass: ArchiveVaultStage,
+        emoji: '⏳',
+        landmark: 'Medieval Fortress / Foundry / Cyberspace Matrix',
+        hazard: 'Molten Cascades, Torchlight & Holographic Grid Shift'
       }
     ];
-    this.currentArenaIndex = 0; // Tech Park Steps is primary default!
+    this.currentArenaIndex = 1; // Neon Octagon default!
     this.stage = new this.arenas[this.currentArenaIndex].stageClass();
     this.stageSelectManager = new StageSelectManager(this);
 
@@ -1160,10 +1105,18 @@ class CampusClashGame {
     this.sound.startCombatMusic();
     this.sound.announceRound(roundNum);
 
+    // Notify stage of round transition (e.g. Archive Vault era switch or Modular Arena reconfiguration)
+    if (this.stage && typeof this.stage.onRoundTransition === 'function') {
+      this.stage.onRoundTransition(roundNum);
+    }
+
+    const spawnP1X = this.stage?.config?.spawnPoints?.P1?.x || 260;
+    const spawnP2X = this.stage?.config?.spawnPoints?.P2?.x || 700;
+
     if (this.p1) {
       this.p1.health = this.p1.maxHealth;
       this.p1.displayedHealth = this.p1.maxHealth;
-      this.p1.x = 260;
+      this.p1.x = spawnP1X;
       this.p1.y = this.stage.groundY;
       this.p1.facing = 1;
       this.p1.vx = 0;
@@ -1179,7 +1132,7 @@ class CampusClashGame {
     if (this.p2) {
       this.p2.health = this.p2.maxHealth;
       this.p2.displayedHealth = this.p2.maxHealth;
-      this.p2.x = 700;
+      this.p2.x = spawnP2X;
       this.p2.y = this.stage.groundY;
       this.p2.facing = -1;
       this.p2.vx = 0;
@@ -1637,12 +1590,20 @@ class CampusClashGame {
           this.sound.playBlock();
           this.particles.spawnBlockSparks(impactX, impactY);
           this.screenShake.shake(3, 8);
+          if (this.stage && typeof this.stage.onFighterHit === 'function') {
+            this.stage.onFighterHit(impactX, impactY, false);
+          }
           if (window.CampusVisuals) {
             window.CampusVisuals.onBlock(defender);
           }
         } else {
           // Trigger slow motion
           this.slowMotionTimer = 15;
+
+          // Reactive venue hit flash
+          if (this.stage && typeof this.stage.onFighterHit === 'function') {
+            this.stage.onFighterHit(impactX, impactY, props.damage >= 18);
+          }
 
           // Impact shockwave ring
           const ringColor = attacker.config.colors.glow || attacker.config.colors.accent || '#ffd700';
@@ -1784,8 +1745,15 @@ class CampusClashGame {
         this.screenShake.apply(ctx);
       }
 
-      // 1. Render SRM Stage
-      this.stage.render(ctx);
+      // Dynamic camera parallax tracking midpoint between fighters
+      let camera = { x: 0, y: 0, scale: 1 };
+      if (this.p1 && this.p2) {
+        const midX = (this.p1.x + this.p2.x) / 2;
+        camera.x = (midX - CANVAS_WIDTH / 2) * 0.35;
+      }
+
+      // 1. Render Venue 3D Background with Parallax
+      this.stage.render(ctx, camera);
 
       // 1.05 Sky Rim-Light (Stage Polish)
       ctx.save();
@@ -1825,6 +1793,11 @@ class CampusClashGame {
         this.postProcess.renderGodRays(ctx);
       }
 
+      // 1d. Floor Reflections & Contact Shadows Synced to Characters
+      if (this.stage && typeof this.stage.renderFighterSync === 'function') {
+        this.stage.renderFighterSync(ctx, [this.p1, this.p2], camera);
+      }
+
       // 2. Render Fighters (Sprite with procedural fallback)
       let p1SpriteDrawn = false;
       let p2SpriteDrawn = false;
@@ -1850,6 +1823,11 @@ class CampusClashGame {
         window.CampusVisuals.drawFX(ctx);
       }
       this.particles.render(ctx);
+
+      // 3.5. Foreground Framing Elements with Occlusion Guard
+      if (this.stage && typeof this.stage.renderForeground === 'function') {
+        this.stage.renderForeground(ctx, camera, [this.p1, this.p2]);
+      }
       ctx.restore();
 
       if (window.CampusVisuals) {

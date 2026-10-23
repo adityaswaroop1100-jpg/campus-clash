@@ -528,7 +528,7 @@
   }
 
   window.CampusVisuals = {
-    STATES, CHARACTERS, mapState, loadCharacter, preloadAll, getPortrait, drawFighter,
+    store, blit, STATES, CHARACTERS, mapState, loadCharacter, preloadAll, getPortrait, drawFighter,
     updateFX, drawFX, beginFrame, drawDim, endFrame, hitStop, shake,
     onLightAttack, onHeavyAttack, onHit, onBlock, onSpecial, onUltimate,
     fx: { spawn, sparks, paperBurst, glyphs },

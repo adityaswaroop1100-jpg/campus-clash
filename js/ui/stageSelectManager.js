@@ -209,7 +209,378 @@ export class StageSelectManager {
     const t = time * 0.001;
     ctx.clearRect(0, 0, w, h);
 
-    if (venueId === 'techpark') {
+    if (venueId === 'verticalsprawl') {
+      // 1. The Vertical Sprawl: 5-tier cyber city block with neon billboards and wet reflections
+      const sky = ctx.createLinearGradient(0, 0, 0, h);
+      sky.addColorStop(0, '#040714');
+      sky.addColorStop(0.5, '#0b1426');
+      sky.addColorStop(1, '#180820');
+      ctx.fillStyle = sky;
+      ctx.fillRect(0, 0, w, h);
+
+      // Distant Skyscrapers
+      ctx.fillStyle = '#060d1b';
+      ctx.fillRect(15, 12, 35, h - 25);
+      ctx.fillRect(55, 20, 42, h - 35);
+      ctx.fillRect(180, 15, 38, h - 30);
+      ctx.fillRect(225, 8, 45, h - 20);
+
+      // Windows
+      ctx.fillStyle = 'rgba(0, 229, 255, 0.3)';
+      for (let y = 20; y < 75; y += 8) {
+        ctx.fillRect(22, y, 3, 4);
+        ctx.fillRect(32, y, 3, 4);
+        ctx.fillRect(235, y, 3, 4);
+        ctx.fillRect(250, y, 3, 4);
+      }
+
+      // Neon Signage (Hot Magenta & Cyan)
+      ctx.strokeStyle = '#ff007f';
+      ctx.shadowColor = '#ff007f';
+      ctx.shadowBlur = 6;
+      ctx.lineWidth = 1.5;
+      ctx.strokeRect(62, 28, 28, 16);
+      ctx.fillStyle = '#ff007f';
+      ctx.font = 'bold 6px monospace';
+      ctx.textAlign = 'center';
+      ctx.fillText('NEXUS', 76, 39);
+
+      // Multi-tier Balconies / Skybridges
+      ctx.shadowBlur = 0;
+      ctx.fillStyle = '#101c33';
+      ctx.fillRect(0, 48, w, 5);
+      ctx.strokeStyle = '#00e5ff66';
+      ctx.strokeRect(0, 48, w, 5);
+
+      // Diagonal Cables
+      ctx.strokeStyle = '#22385e';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(0, 10); ctx.lineTo(120, 50);
+      ctx.moveTo(w, 15); ctx.lineTo(160, 50);
+      ctx.stroke();
+
+      // Rain Streaks
+      ctx.strokeStyle = 'rgba(160, 210, 255, 0.25)';
+      ctx.lineWidth = 0.8;
+      for (let i = 0; i < 8; i++) {
+        const rx = (i * 35 + t * 40) % w;
+        const ry = (i * 20 + t * 90) % (h - 30);
+        ctx.beginPath();
+        ctx.moveTo(rx, ry);
+        ctx.lineTo(rx - 3, ry + 12);
+        ctx.stroke();
+      }
+
+      // Wet Reflective Floor
+      const floorGrad = ctx.createLinearGradient(0, 80, 0, h);
+      floorGrad.addColorStop(0, '#0c1626');
+      floorGrad.addColorStop(1, '#03060d');
+      ctx.fillStyle = floorGrad;
+      ctx.fillRect(0, 80, w, h - 80);
+
+      // Floor Reflection Sheen
+      ctx.fillStyle = 'rgba(255, 0, 127, 0.18)';
+      ctx.fillRect(60, 81, 32, 28);
+      ctx.fillStyle = 'rgba(0, 229, 255, 0.15)';
+      ctx.fillRect(140, 81, 40, 28);
+
+      // Floor Rim Line
+      ctx.strokeStyle = '#00e5ff';
+      ctx.shadowColor = '#00e5ff';
+      ctx.shadowBlur = 6;
+      ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(0, 80); ctx.lineTo(w, 80); ctx.stroke();
+      ctx.shadowBlur = 0;
+
+    } else if (venueId === 'neonoctagon') {
+      // 2. The Neon Octagon: Underground cage, crowd tiers, overhead spotlights, octagonal dais
+      const sky = ctx.createLinearGradient(0, 0, 0, h);
+      sky.addColorStop(0, '#040914');
+      sky.addColorStop(0.5, '#09152b');
+      sky.addColorStop(1, '#050a14');
+      ctx.fillStyle = sky;
+      ctx.fillRect(0, 0, w, h);
+
+      // Stadium Arches
+      ctx.fillStyle = '#081326';
+      for (let i = 0; i < 7; i++) {
+        const ax = i * 42 + 4;
+        ctx.fillRect(ax, 15, 32, 45);
+        ctx.beginPath();
+        ctx.arc(ax + 16, 15, 16, Math.PI, 0);
+        ctx.fill();
+      }
+
+      // Overhead Spotlights
+      ctx.save();
+      ctx.globalCompositeOperation = 'screen';
+      const spotGrad = ctx.createRadialGradient(w / 2, 5, 2, w / 2, 75, 60);
+      spotGrad.addColorStop(0, 'rgba(255, 224, 130, 0.35)');
+      spotGrad.addColorStop(0.6, 'rgba(255, 215, 0, 0.08)');
+      spotGrad.addColorStop(1, 'transparent');
+      ctx.fillStyle = spotGrad;
+      ctx.beginPath();
+      ctx.moveTo(w / 2 - 15, 5);
+      ctx.lineTo(w / 2 + 15, 5);
+      ctx.lineTo(w / 2 + 70, 80);
+      ctx.lineTo(w / 2 - 70, 80);
+      ctx.closePath();
+      ctx.fill();
+      ctx.restore();
+
+      // Cheering Crowd Balcony
+      ctx.fillStyle = '#060e1e';
+      ctx.fillRect(0, 48, w, 8);
+      ctx.fillStyle = '#040914';
+      for (let c = 0; c < 20; c++) {
+        const cx = c * 14 + 6;
+        const bob = Math.sin(t * 5 + c) * 2;
+        ctx.beginPath();
+        ctx.arc(cx, 44 + bob, 3, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // Floating Hologram
+      ctx.strokeStyle = '#00e5ff';
+      ctx.shadowColor = '#00e5ff';
+      ctx.shadowBlur = 6;
+      ctx.lineWidth = 1;
+      ctx.strokeRect(w - 75, 22, 45, 20);
+      ctx.beginPath();
+      for (let j = 0; j < 8; j++) {
+        const hx = (w - 72) + j * 5.5;
+        const hy = 32 + Math.sin(t * 8 + j) * 5;
+        if (j === 0) ctx.moveTo(hx, hy); else ctx.lineTo(hx, hy);
+      }
+      ctx.stroke();
+      ctx.shadowBlur = 0;
+
+      // Dais Ground Platform
+      const floorGrad = ctx.createLinearGradient(0, 78, 0, h);
+      floorGrad.addColorStop(0, '#0c1626');
+      floorGrad.addColorStop(1, '#02050c');
+      ctx.fillStyle = floorGrad;
+      ctx.fillRect(0, 78, w, h - 78);
+
+      // Glowing Cyan Rim & Amber Understep
+      ctx.strokeStyle = '#00e5ff';
+      ctx.shadowColor = '#00e5ff';
+      ctx.shadowBlur = 8;
+      ctx.lineWidth = 2.5;
+      ctx.beginPath(); ctx.moveTo(0, 78); ctx.lineTo(w, 78); ctx.stroke();
+
+      ctx.strokeStyle = '#ff9100';
+      ctx.shadowColor = '#ff9100';
+      ctx.shadowBlur = 4;
+      ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.moveTo(0, 86); ctx.lineTo(w, 86); ctx.stroke();
+      ctx.shadowBlur = 0;
+
+      // Foreground Hanging Chain Silhouette
+      ctx.strokeStyle = '#121e33';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(12, 0); ctx.lineTo(16, 75);
+      ctx.moveTo(w - 12, 0); ctx.lineTo(w - 16, 75);
+      ctx.stroke();
+
+    } else if (venueId === 'servercore') {
+      // 3. The Server Core: Quantum void, circuit traces, breathing reactor core
+      ctx.fillStyle = '#02050d';
+      ctx.fillRect(0, 0, w, h);
+
+      // Endless Server Racks
+      ctx.fillStyle = '#060f1e';
+      ctx.fillRect(10, 8, 30, 68);
+      ctx.fillRect(w - 40, 8, 30, 68);
+      ctx.fillStyle = '#00e5ff';
+      for (let y = 14; y < 68; y += 7) {
+        ctx.fillRect(14, y, 3, 2);
+        ctx.fillRect(w - 20, y, 3, 2);
+        ctx.fillStyle = '#ff00aa';
+        ctx.fillRect(22, y, 3, 2);
+        ctx.fillStyle = '#00e5ff';
+      }
+
+      // Central Breathing Core Beam
+      const pulse = (Math.sin(t * 3.5) + 1) / 2;
+      ctx.save();
+      ctx.globalCompositeOperation = 'screen';
+      const coreGrad = ctx.createRadialGradient(w / 2, 40, 4, w / 2, 40, 45 + pulse * 15);
+      coreGrad.addColorStop(0, 'rgba(0, 255, 200, 0.6)');
+      coreGrad.addColorStop(0.5, 'rgba(0, 229, 255, 0.2)');
+      coreGrad.addColorStop(1, 'transparent');
+      ctx.fillStyle = coreGrad;
+      ctx.beginPath();
+      ctx.arc(w / 2, 40, 45 + pulse * 15, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Vertical Quantum Light Column
+      const beamGrad = ctx.createLinearGradient(w / 2 - 12, 0, w / 2 + 12, 0);
+      beamGrad.addColorStop(0, 'transparent');
+      beamGrad.addColorStop(0.5, 'rgba(0, 255, 230, 0.6)');
+      beamGrad.addColorStop(1, 'transparent');
+      ctx.fillStyle = beamGrad;
+      ctx.fillRect(w / 2 - 15, 0, 30, h);
+      ctx.restore();
+
+      // Floating Circuit Traces
+      ctx.strokeStyle = 'rgba(0, 255, 170, 0.4)';
+      ctx.lineWidth = 1.2;
+      ctx.beginPath();
+      ctx.moveTo(50, 65); ctx.lineTo(100, 65); ctx.lineTo(115, 52); ctx.lineTo(w / 2 - 25, 52);
+      ctx.moveTo(w - 50, 65); ctx.lineTo(w - 100, 65); ctx.lineTo(w - 115, 52); ctx.lineTo(w / 2 + 25, 52);
+      ctx.stroke();
+
+      // Floating Dais Floor
+      ctx.fillStyle = '#0a1628';
+      ctx.fillRect(35, 78, w - 70, 14);
+      ctx.strokeStyle = '#00ffaa';
+      ctx.shadowColor = '#00ffaa';
+      ctx.shadowBlur = 8;
+      ctx.lineWidth = 2;
+      ctx.strokeRect(35, 78, w - 70, 14);
+      ctx.shadowBlur = 0;
+
+      // Void under floor with neon glow
+      ctx.fillStyle = '#010308';
+      ctx.fillRect(0, 92, w, h - 92);
+
+    } else if (venueId === 'modulararena') {
+      // 4. The Modular Arena: Reconfigurable hex panels, stadium rings, jumbotrons
+      const sky = ctx.createLinearGradient(0, 0, 0, h);
+      sky.addColorStop(0, '#060a17');
+      sky.addColorStop(0.6, '#0f1830');
+      sky.addColorStop(1, '#1a1828');
+      ctx.fillStyle = sky;
+      ctx.fillRect(0, 0, w, h);
+
+      // Stadium Seating Rings
+      ctx.strokeStyle = '#1a2745';
+      ctx.lineWidth = 2;
+      for (let r = 0; r < 4; r++) {
+        ctx.beginPath();
+        ctx.ellipse(w / 2, 42, 110 + r * 16, 25 + r * 6, 0, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+
+      // Suspended Jumbotron Rig
+      ctx.fillStyle = '#081020';
+      ctx.strokeStyle = '#ff9100';
+      ctx.lineWidth = 1.5;
+      ctx.shadowColor = '#ff9100';
+      ctx.shadowBlur = 6;
+      ctx.fillRect(w / 2 - 32, 10, 64, 24);
+      ctx.strokeRect(w / 2 - 32, 10, 64, 24);
+      ctx.shadowBlur = 0;
+
+      // Jumbotron Display
+      ctx.fillStyle = '#00e5ff';
+      ctx.font = '900 7px monospace';
+      ctx.textAlign = 'center';
+      ctx.fillText('ARENA ACTIVE', w / 2, 24);
+
+      // Rig Suspension Cables
+      ctx.strokeStyle = '#334466';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(w / 2 - 25, 0); ctx.lineTo(w / 2 - 25, 10);
+      ctx.moveTo(w / 2 + 25, 0); ctx.lineTo(w / 2 + 25, 10);
+      ctx.stroke();
+
+      // Hydraulic Hex Floor Panels
+      const floorGrad = ctx.createLinearGradient(0, 76, 0, h);
+      floorGrad.addColorStop(0, '#101c30');
+      floorGrad.addColorStop(1, '#050a14');
+      ctx.fillStyle = floorGrad;
+      ctx.fillRect(0, 76, w, h - 76);
+
+      // Stepped Pneumatic Hex Panels
+      for (let p = 0; p < 7; p++) {
+        const px = p * 38 + 10;
+        const panelY = 76 + Math.sin(t * 2 + p * 1.2) * 3;
+        ctx.fillStyle = '#14233c';
+        ctx.fillRect(px, panelY, 32, 22);
+        ctx.strokeStyle = '#ff9100';
+        ctx.lineWidth = 1.5;
+        ctx.strokeRect(px, panelY, 32, 22);
+        // Center LED dot
+        ctx.fillStyle = '#00e5ff';
+        ctx.fillRect(px + 14, panelY + 9, 4, 4);
+      }
+
+    } else if (venueId === 'archivevault') {
+      // 5. The Archive Vault: Tri-era nexus (Gothic / Industrial / Digital)
+      const sky = ctx.createLinearGradient(0, 0, 0, h);
+      sky.addColorStop(0, '#0c0714');
+      sky.addColorStop(0.5, '#1e0c20');
+      sky.addColorStop(1, '#080812');
+      ctx.fillStyle = sky;
+      ctx.fillRect(0, 0, w, h);
+
+      // Left: Gothic Era (Stone Arches & Torch Fire)
+      ctx.fillStyle = '#161022';
+      ctx.fillRect(10, 15, 35, 60);
+      ctx.beginPath();
+      ctx.arc(27, 15, 17, Math.PI, 0);
+      ctx.fill();
+      // Torch fire glow
+      const fireGrad = ctx.createRadialGradient(28, 40, 1, 28, 40, 14);
+      fireGrad.addColorStop(0, '#ffea00');
+      fireGrad.addColorStop(0.5, '#ff5500');
+      fireGrad.addColorStop(1, 'transparent');
+      ctx.fillStyle = fireGrad;
+      ctx.beginPath(); ctx.arc(28, 40, 14, 0, Math.PI * 2); ctx.fill();
+
+      // Center: Industrial Foundry (Molten Copper Pipe & Embers)
+      ctx.strokeStyle = '#8d4a18';
+      ctx.lineWidth = 4;
+      ctx.beginPath();
+      ctx.moveTo(w / 2 - 20, 10); ctx.lineTo(w / 2 - 20, 50); ctx.lineTo(w / 2 + 20, 50);
+      ctx.stroke();
+      // Molten cascade
+      ctx.strokeStyle = '#ff7700';
+      ctx.lineWidth = 2.5;
+      ctx.shadowColor = '#ff5500';
+      ctx.shadowBlur = 8;
+      ctx.beginPath();
+      ctx.moveTo(w / 2 + 20, 50); ctx.lineTo(w / 2 + 20, 76);
+      ctx.stroke();
+      ctx.shadowBlur = 0;
+
+      // Right: Digital Matrix (Wireframe Green Cube)
+      ctx.strokeStyle = '#00ff66';
+      ctx.shadowColor = '#00ff66';
+      ctx.shadowBlur = 6;
+      ctx.lineWidth = 1.2;
+      ctx.strokeRect(w - 55, 20, 36, 36);
+      ctx.beginPath();
+      ctx.moveTo(w - 55, 20); ctx.lineTo(w - 40, 10); ctx.lineTo(w - 4, 10); ctx.lineTo(w - 19, 20);
+      ctx.moveTo(w - 4, 10); ctx.lineTo(w - 4, 46); ctx.lineTo(w - 19, 56);
+      ctx.stroke();
+      ctx.shadowBlur = 0;
+
+      // Temporal NEXUS Dais Floor
+      const floorGrad = ctx.createLinearGradient(0, 76, 0, h);
+      floorGrad.addColorStop(0, '#1a1028');
+      floorGrad.addColorStop(1, '#05030a');
+      ctx.fillStyle = floorGrad;
+      ctx.fillRect(0, 76, w, h - 76);
+
+      // Tri-color Floor Border Line
+      const triGrad = ctx.createLinearGradient(0, 0, w, 0);
+      triGrad.addColorStop(0, '#ff9100'); // Gothic amber
+      triGrad.addColorStop(0.5, '#e040fb'); // Foundry magenta
+      triGrad.addColorStop(1, '#00ff66'); // Digital matrix green
+      ctx.strokeStyle = triGrad;
+      ctx.shadowColor = '#e040fb';
+      ctx.shadowBlur = 6;
+      ctx.lineWidth = 2.5;
+      ctx.beginPath(); ctx.moveTo(0, 76); ctx.lineTo(w, 76); ctx.stroke();
+      ctx.shadowBlur = 0;
+
+    } else if (venueId === 'techpark') {
       // Tech Park Sky
       const sky = ctx.createLinearGradient(0, 0, 0, h);
       sky.addColorStop(0, '#1976d2');
