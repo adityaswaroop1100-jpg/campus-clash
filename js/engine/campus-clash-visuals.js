@@ -82,6 +82,9 @@
     const [name, role, quote, accent, accent2, palette, glyphs, stats, icon] = RAW[id];
     CHARACTERS[id] = { id, index: i + 1, name, role, quote, accent, accent2, palette, glyphs, stats, icon };
   });
+  // Non-enumerable aliases for engine config IDs (preserves 10-item iteration while allowing direct lookup)
+  Object.defineProperty(CHARACTERS, 'sportsStar', { get: () => CHARACTERS.sports, enumerable: false });
+  Object.defineProperty(CHARACTERS, 'placementWarrior', { get: () => CHARACTERS.placement, enumerable: false });
 
   /* ------------------------------------------------------------ sprites */
   const store = {}; // id -> { states, portrait, ready, promise }

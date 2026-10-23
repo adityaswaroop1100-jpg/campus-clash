@@ -636,7 +636,8 @@ class CampusClashGame {
         selected: this.roster[this.p1CharIndex]?.config?.id || 'topper',
         onPreview: (id) => {
           if (this.isCountingDown) return;
-          const idx = this.roster.findIndex(r => r.config.id === id);
+          const targetId = (id === 'sports' ? 'sportsStar' : (id === 'placement' ? 'placementWarrior' : id));
+          const idx = this.roster.findIndex(r => r.config.id === targetId || r.config.id === id);
           if (idx !== -1) {
             if (this.charSelectStep === 0) {
               this.p1CharIndex = idx;
@@ -649,7 +650,8 @@ class CampusClashGame {
         },
         onSelect: (id) => {
           if (this.isCountingDown) return;
-          const idx = this.roster.findIndex(r => r.config.id === id);
+          const targetId = (id === 'sports' ? 'sportsStar' : (id === 'placement' ? 'placementWarrior' : id));
+          const idx = this.roster.findIndex(r => r.config.id === targetId || r.config.id === id);
           if (idx !== -1) {
             if (this.charSelectStep === 0) {
               this.p1CharIndex = idx;
@@ -790,8 +792,9 @@ class CampusClashGame {
 
     // Sync CampusSelect if active
     const activeCharId = this.roster[this.charSelectStep === 1 ? this.p2CharIndex : this.p1CharIndex]?.config?.id;
-    if (activeCharId && this.campusSelectInstance && this.campusSelectInstance.current !== activeCharId) {
-      this.campusSelectInstance.select(activeCharId);
+    const selectId = (activeCharId === 'sportsStar' ? 'sports' : (activeCharId === 'placementWarrior' ? 'placement' : activeCharId));
+    if (selectId && this.campusSelectInstance && this.campusSelectInstance.current !== selectId) {
+      this.campusSelectInstance.select(selectId);
     }
 
     // Update Player 1 Profile Card

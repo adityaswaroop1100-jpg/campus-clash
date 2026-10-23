@@ -28,8 +28,16 @@
     const V = window.CampusVisuals;
     if (!V || !V.CHARACTERS) return null;
     const base = opts.base || 'assets/characters';
+    function normalizeId(id) {
+      if (!id) return 'topper';
+      if (id === 'sportsStar') return 'sports';
+      if (id === 'placementWarrior') return 'placement';
+      return id;
+    }
+
     const ids = Object.keys(V.CHARACTERS);
-    let current = opts.selected && V.CHARACTERS[opts.selected] ? opts.selected : ids[0];
+    let current = normalizeId(opts.selected);
+    if (!V.CHARACTERS[current]) current = ids[0] || 'topper';
 
     root.classList.add('cc-select');
     root.textContent = '';
@@ -74,11 +82,13 @@
       return card;
     });
 
-    function preview(id) {
+    function preview(rawId) {
+      const id = normalizeId(rawId);
       current = id;
-      const c = V.CHARACTERS[id];
+      const c = V.CHARACTERS[id] || V.CHARACTERS[rawId] || V.CHARACTERS.topper;
+      if (!c) return;
       cards.forEach((k) => k.setAttribute('aria-selected', String(k.dataset.id === id)));
-      detail.style.setProperty('--a', c.accent);
+      detail.style.setProperty('--a', c.accent || '#00e5ff');
       detail.textContent = '';
 
       const art = el('div', 'cc-detail__art');
