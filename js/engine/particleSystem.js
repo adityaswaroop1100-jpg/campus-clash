@@ -75,8 +75,8 @@ export class Particle {
     ctx.save();
     ctx.globalAlpha = alpha;
     
-    // Glow pass
-    if (this.shape !== 'text' && this.glowRadius > 0) {
+    // Glow pass (bypassed on low quality tier for maximum 60/120 FPS performance)
+    if (this.shape !== 'text' && this.glowRadius > 0 && ParticleSystem.enableGlow !== false) {
       ctx.shadowColor = this.color;
       ctx.shadowBlur = this.glowRadius * (1 - progress * 0.7);
     }
@@ -362,11 +362,19 @@ export class DamageText {
 }
 
 export class ParticleSystem {
+  static enableGlow = true;
+
   constructor(maxParticles = 300) {
     this.maxParticles = maxParticles;
+    this.qualityTier = 'high';
     this.pool = Array.from({ length: maxParticles }, () => new Particle());
     this.damageTexts = Array.from({ length: 40 }, () => new DamageText());
     this.impactRings = Array.from({ length: 20 }, () => new ImpactRing());
+  }
+
+  setQualityTier(tier) {
+    this.qualityTier = tier;
+    ParticleSystem.enableGlow = tier !== 'low';
   }
 
   spawn(x, y, vx, vy, size, color, maxLife, gravity = 0.2, shape = 'circle', text = '', glowRadius = 0) {
@@ -395,7 +403,8 @@ export class ParticleSystem {
    * @param {boolean} [isHeavy=false] - If true, adds 8 fixed-angle angular spark shards
    */
   spawnHitSparks(x, y, color = '#ffd700', count = 30, isHeavy = false) {
-    for (let i = 0; i < count; i++) {
+    const actualCount = this.qualityTier === 'low' ? Math.max(6, Math.round(count * 0.4)) : (this.qualityTier === 'medium' ? Math.round(count * 0.7) : count);
+    for (let i = 0; i < actualCount; i++) {
       const angle = Math.random() * Math.PI * 2;
       const speed = 3.0 + Math.random() * 8.5;
       const vx = Math.cos(angle) * speed;

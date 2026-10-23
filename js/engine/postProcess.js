@@ -125,20 +125,32 @@ export class PostProcessing {
 
   /**
    * Render vignette overlay (called AFTER all game rendering, BEFORE HUD)
+   * Zero-allocation pre-baked canvas blit.
    */
   renderVignette(ctx, canvasWidth, canvasHeight) {
     if (this.vignetteIntensity < 0.01) return;
-    ctx.save();
-    const grad = ctx.createRadialGradient(
-      canvasWidth / 2, canvasHeight / 2, canvasHeight * 0.25,
-      canvasWidth / 2, canvasHeight / 2, canvasWidth * 0.85
-    );
-    grad.addColorStop(0, `${this.vignetteColor}00`);
-    grad.addColorStop(0.5, `${this.vignetteColor}22`);
-    grad.addColorStop(1, `${this.vignetteColor}${Math.round(this.vignetteIntensity * 200).toString(16).padStart(2,'0')}`);
-    ctx.fillStyle = grad;
-    ctx.fillRect(0, 0, canvasWidth, canvasHeight);
-    ctx.restore();
+    if (!this._vignetteCanvas && typeof document !== 'undefined') {
+      this._vignetteCanvas = document.createElement('canvas');
+      this._vignetteCanvas.width = canvasWidth;
+      this._vignetteCanvas.height = canvasHeight;
+      const vCtx = this._vignetteCanvas.getContext('2d');
+      const grad = vCtx.createRadialGradient(
+        canvasWidth / 2, canvasHeight / 2, canvasHeight * 0.25,
+        canvasWidth / 2, canvasHeight / 2, canvasWidth * 0.85
+      );
+      grad.addColorStop(0, 'rgba(0,0,0,0)');
+      grad.addColorStop(0.5, 'rgba(0,0,0,0.25)');
+      grad.addColorStop(1, 'rgba(0,0,0,0.85)');
+      vCtx.fillStyle = grad;
+      vCtx.fillRect(0, 0, canvasWidth, canvasHeight);
+    }
+
+    if (this._vignetteCanvas) {
+      ctx.save();
+      ctx.globalAlpha = Math.min(1, this.vignetteIntensity);
+      ctx.drawImage(this._vignetteCanvas, 0, 0);
+      ctx.restore();
+    }
   }
 
   /**

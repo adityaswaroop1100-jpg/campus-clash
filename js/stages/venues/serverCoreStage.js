@@ -76,13 +76,15 @@ export class ServerCoreStage extends StageBase {
     const t = this.time;
     const breathing = (Math.sin(t * 2.5) + 1) / 2; // 0 to 1 breathing pulse
 
-    // 1. Deep Cybernetic Void Sky
-    const voidGrad = ctx.createLinearGradient(0, 0, 0, 640);
-    voidGrad.addColorStop(0, '#0a0217');
-    voidGrad.addColorStop(0.45, '#16052e');
-    voidGrad.addColorStop(0.8, '#26094a');
-    voidGrad.addColorStop(1, '#06010f');
-    ctx.fillStyle = voidGrad;
+    // 1. Deep Cybernetic Void Sky (Cached)
+    if (!this._voidGrad) {
+      this._voidGrad = ctx.createLinearGradient(0, 0, 0, 640);
+      this._voidGrad.addColorStop(0, '#0a0217');
+      this._voidGrad.addColorStop(0.45, '#16052e');
+      this._voidGrad.addColorStop(0.8, '#26094a');
+      this._voidGrad.addColorStop(1, '#06010f');
+    }
+    ctx.fillStyle = this._voidGrad;
     ctx.fillRect(0, 0, 960, 640);
 
     // 2. Far Background: Distant Monolithic Server Towers (Z = -400, Parallax 0.1)
@@ -100,13 +102,17 @@ export class ServerCoreStage extends StageBase {
     }
     ctx.restore();
 
-    // Central Distant Giant Planetoid / Ring Structure
+    // Central Distant Giant Planetoid / Ring Structure (Cached gradient)
     const planetX = 480;
-    const planetGrad = ctx.createRadialGradient(planetX, 180, 20, planetX, 180, 140);
-    planetGrad.addColorStop(0, `rgba(213, 0, 249, ${0.4 + breathing * 0.2})`);
-    planetGrad.addColorStop(0.7, 'rgba(106, 0, 125, 0.15)');
-    planetGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
-    ctx.fillStyle = planetGrad;
+    if (!this._planetGrad) {
+      this._planetGrad = ctx.createRadialGradient(planetX, 180, 20, planetX, 180, 140);
+      this._planetGrad.addColorStop(0, 'rgba(213, 0, 249, 1.0)');
+      this._planetGrad.addColorStop(0.7, 'rgba(106, 0, 125, 0.25)');
+      this._planetGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+    }
+    ctx.save();
+    ctx.globalAlpha = 0.4 + breathing * 0.2;
+    ctx.fillStyle = this._planetGrad;
     ctx.beginPath();
     ctx.arc(planetX, 180, 140, 0, Math.PI * 2);
     ctx.fill();
@@ -183,12 +189,14 @@ export class ServerCoreStage extends StageBase {
   renderFloatingFloor(ctx, camX, time, breathing) {
     const gy = this.groundY; // 535
 
-    // Platform Base Underbelly (Floating in dark void)
-    const baseGrad = ctx.createLinearGradient(0, gy, 0, 640);
-    baseGrad.addColorStop(0, '#1a0633');
-    baseGrad.addColorStop(0.35, '#0e031c');
-    baseGrad.addColorStop(1, 'rgba(2, 0, 6, 0.0)');
-    ctx.fillStyle = baseGrad;
+    // Platform Base Underbelly (Floating in dark void - Cached)
+    if (!this._baseGrad) {
+      this._baseGrad = ctx.createLinearGradient(0, gy, 0, 640);
+      this._baseGrad.addColorStop(0, '#1a0633');
+      this._baseGrad.addColorStop(0.35, '#0e031c');
+      this._baseGrad.addColorStop(1, 'rgba(2, 0, 6, 0.0)');
+    }
+    ctx.fillStyle = this._baseGrad;
     ctx.fillRect(80, gy, 800, 640 - gy);
 
     // Glowing Platform Edge Rim Line (Cyan & Magenta dual rim)

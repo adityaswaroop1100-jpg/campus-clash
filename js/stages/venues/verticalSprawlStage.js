@@ -43,13 +43,15 @@ export class VerticalSprawlStage extends StageBase {
     const camX = camera.x || 0;
     const t = this.time;
 
-    // 1. Deep Midnight Cyberpunk Sky
-    const skyGrad = ctx.createLinearGradient(0, 0, 0, 640);
-    skyGrad.addColorStop(0, '#040814');
-    skyGrad.addColorStop(0.5, '#0b162b');
-    skyGrad.addColorStop(0.85, '#132342');
-    skyGrad.addColorStop(1, '#050a14');
-    ctx.fillStyle = skyGrad;
+    // 1. Deep Midnight Cyberpunk Sky (Cached)
+    if (!this._skyGrad) {
+      this._skyGrad = ctx.createLinearGradient(0, 0, 0, 640);
+      this._skyGrad.addColorStop(0, '#040814');
+      this._skyGrad.addColorStop(0.5, '#0b162b');
+      this._skyGrad.addColorStop(0.85, '#132342');
+      this._skyGrad.addColorStop(1, '#050a14');
+    }
+    ctx.fillStyle = this._skyGrad;
     ctx.fillRect(0, 0, 960, 640);
 
     // 2. Far Background: Mega Skyscrapers & Towering Cyber Sprawl (Z = -500, Parallax 0.08)
@@ -163,32 +165,45 @@ export class VerticalSprawlStage extends StageBase {
   renderWetCourtyard(ctx, camX, time) {
     const gy = this.groundY; // 535
 
-    // Wet Stone Pavement
-    const pavementGrad = ctx.createLinearGradient(0, gy, 0, 640);
-    pavementGrad.addColorStop(0, '#0f1b33');
-    pavementGrad.addColorStop(0.35, '#0a1224');
-    pavementGrad.addColorStop(1, '#03060d');
-    ctx.fillStyle = pavementGrad;
+    // Wet Stone Pavement (Cached)
+    if (!this._pavementGrad) {
+      this._pavementGrad = ctx.createLinearGradient(0, gy, 0, 640);
+      this._pavementGrad.addColorStop(0, '#0f1b33');
+      this._pavementGrad.addColorStop(0.35, '#0a1224');
+      this._pavementGrad.addColorStop(1, '#03060d');
+    }
+    ctx.fillStyle = this._pavementGrad;
     ctx.fillRect(0, gy, 960, 640 - gy);
 
     // Wet Puddle Specular Sheens
+    if (!this._puddleLeftGrad) {
+      this._puddleLeftGrad = ctx.createRadialGradient(0, 0, 10, 0, 0, 180);
+      this._puddleLeftGrad.addColorStop(0, 'rgba(255, 0, 127, 0.28)');
+      this._puddleLeftGrad.addColorStop(0.6, 'rgba(255, 0, 127, 0.08)');
+      this._puddleLeftGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+    }
+    if (!this._puddleRightGrad) {
+      this._puddleRightGrad = ctx.createRadialGradient(0, 0, 10, 0, 0, 180);
+      this._puddleRightGrad.addColorStop(0, 'rgba(0, 229, 255, 0.28)');
+      this._puddleRightGrad.addColorStop(0.6, 'rgba(0, 229, 255, 0.08)');
+      this._puddleRightGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+    }
+
     ctx.save();
     ctx.globalCompositeOperation = 'screen';
     // Magenta Puddle Reflection (from left neon)
-    const puddleLeft = ctx.createRadialGradient(240 - camX * 0.3, gy + 35, 10, 240 - camX * 0.3, gy + 35, 180);
-    puddleLeft.addColorStop(0, 'rgba(255, 0, 127, 0.28)');
-    puddleLeft.addColorStop(0.6, 'rgba(255, 0, 127, 0.08)');
-    puddleLeft.addColorStop(1, 'rgba(0, 0, 0, 0)');
-    ctx.fillStyle = puddleLeft;
-    ctx.fillRect(60, gy, 380, 105);
+    ctx.save();
+    ctx.translate(240 - camX * 0.3, gy + 35);
+    ctx.fillStyle = this._puddleLeftGrad;
+    ctx.fillRect(-180, -35, 380, 105);
+    ctx.restore();
 
     // Cyan Puddle Reflection (from right neon)
-    const puddleRight = ctx.createRadialGradient(720 - camX * 0.3, gy + 35, 10, 720 - camX * 0.3, gy + 35, 180);
-    puddleRight.addColorStop(0, 'rgba(0, 229, 255, 0.28)');
-    puddleRight.addColorStop(0.6, 'rgba(0, 229, 255, 0.08)');
-    puddleRight.addColorStop(1, 'rgba(0, 0, 0, 0)');
-    ctx.fillStyle = puddleRight;
-    ctx.fillRect(520, gy, 380, 105);
+    ctx.save();
+    ctx.translate(720 - camX * 0.3, gy + 35);
+    ctx.fillStyle = this._puddleRightGrad;
+    ctx.fillRect(-200, -35, 380, 105);
+    ctx.restore();
     ctx.restore();
 
     // Ground Rim Highlight

@@ -80,28 +80,32 @@ export class ArchiveVaultStage extends StageBase {
     const t = this.time;
     const era = this.activeEra;
 
-    // 1. Atmosphere Gradient (Morphed by active era)
-    const skyGrad = ctx.createLinearGradient(0, 0, 0, 640);
-    if (era === 1) {
-      // Medieval Golden Sunset
-      skyGrad.addColorStop(0, '#120703');
-      skyGrad.addColorStop(0.45, '#2b1008');
-      skyGrad.addColorStop(0.85, '#5e230f');
-      skyGrad.addColorStop(1, '#180702');
-    } else if (era === 2) {
-      // Industrial Smog & Blast Furnace Glow
-      skyGrad.addColorStop(0, '#0c0704');
-      skyGrad.addColorStop(0.45, '#240d04');
-      skyGrad.addColorStop(0.85, '#692006');
-      skyGrad.addColorStop(1, '#140602');
-    } else {
-      // Digital Cyberspace Grid
-      skyGrad.addColorStop(0, '#020614');
-      skyGrad.addColorStop(0.45, '#071533');
-      skyGrad.addColorStop(0.85, '#0a2659');
-      skyGrad.addColorStop(1, '#02050f');
+    // 1. Atmosphere Gradient (Morphed by active era - Cached)
+    if (!this._skyGrads) this._skyGrads = {};
+    if (!this._skyGrads[era]) {
+      const sg = ctx.createLinearGradient(0, 0, 0, 640);
+      if (era === 1) {
+        // Medieval Golden Sunset
+        sg.addColorStop(0, '#120703');
+        sg.addColorStop(0.45, '#2b1008');
+        sg.addColorStop(0.85, '#5e230f');
+        sg.addColorStop(1, '#180702');
+      } else if (era === 2) {
+        // Industrial Smog & Blast Furnace Glow
+        sg.addColorStop(0, '#0c0704');
+        sg.addColorStop(0.45, '#240d04');
+        sg.addColorStop(0.85, '#692006');
+        sg.addColorStop(1, '#140602');
+      } else {
+        // Digital Cyberspace Grid
+        sg.addColorStop(0, '#020614');
+        sg.addColorStop(0.45, '#071533');
+        sg.addColorStop(0.85, '#0a2659');
+        sg.addColorStop(1, '#02050f');
+      }
+      this._skyGrads[era] = sg;
     }
-    ctx.fillStyle = skyGrad;
+    ctx.fillStyle = this._skyGrads[era];
     ctx.fillRect(0, 0, 960, 640);
 
     // 2. Far Background Architecture (Z = -450, Parallax 0.1)
@@ -199,25 +203,29 @@ export class ArchiveVaultStage extends StageBase {
   renderDaisFloor(ctx, camX, time, era) {
     const gy = this.groundY; // 535
 
-    // Base Dais Texture per Era
-    const floorGrad = ctx.createLinearGradient(0, gy, 0, 640);
-    if (era === 1) {
-      // Weathered Flagstone
-      floorGrad.addColorStop(0, '#2b160e');
-      floorGrad.addColorStop(0.35, '#170b07');
-      floorGrad.addColorStop(1, '#0a0402');
-    } else if (era === 2) {
-      // Heat-Treated Industrial Diamond Plate
-      floorGrad.addColorStop(0, '#2e1208');
-      floorGrad.addColorStop(0.35, '#180703');
-      floorGrad.addColorStop(1, '#0c0301');
-    } else {
-      // Cyan Wireframe Holographic Glass
-      floorGrad.addColorStop(0, '#0a1d3d');
-      floorGrad.addColorStop(0.35, '#040d1e');
-      floorGrad.addColorStop(1, '#02050c');
+    // Base Dais Texture per Era (Cached)
+    if (!this._floorGrads) this._floorGrads = {};
+    if (!this._floorGrads[era]) {
+      const fg = ctx.createLinearGradient(0, gy, 0, 640);
+      if (era === 1) {
+        // Weathered Flagstone
+        fg.addColorStop(0, '#2b160e');
+        fg.addColorStop(0.35, '#170b07');
+        fg.addColorStop(1, '#0a0402');
+      } else if (era === 2) {
+        // Heat-Treated Industrial Diamond Plate
+        fg.addColorStop(0, '#2e1208');
+        fg.addColorStop(0.35, '#180703');
+        fg.addColorStop(1, '#0c0301');
+      } else {
+        // Cyan Wireframe Holographic Glass
+        fg.addColorStop(0, '#0a1d3d');
+        fg.addColorStop(0.35, '#040d1e');
+        fg.addColorStop(1, '#02050c');
+      }
+      this._floorGrads[era] = fg;
     }
-    ctx.fillStyle = floorGrad;
+    ctx.fillStyle = this._floorGrads[era];
     ctx.fillRect(0, gy, 960, 640 - gy);
 
     // Glowing Floor Rim Line

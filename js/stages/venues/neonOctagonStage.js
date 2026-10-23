@@ -49,13 +49,15 @@ export class NeonOctagonStage extends StageBase {
     const camX = camera.x || 0;
     const t = this.time;
 
-    // 1. Deep Colosseum Atmosphere
-    const skyGrad = ctx.createLinearGradient(0, 0, 0, 640);
-    skyGrad.addColorStop(0, '#040914');
-    skyGrad.addColorStop(0.4, '#091326');
-    skyGrad.addColorStop(0.75, '#101d36');
-    skyGrad.addColorStop(1, '#050a14');
-    ctx.fillStyle = skyGrad;
+    // 1. Deep Colosseum Atmosphere (Cached)
+    if (!this._skyGrad) {
+      this._skyGrad = ctx.createLinearGradient(0, 0, 0, 640);
+      this._skyGrad.addColorStop(0, '#040914');
+      this._skyGrad.addColorStop(0.4, '#091326');
+      this._skyGrad.addColorStop(0.75, '#101d36');
+      this._skyGrad.addColorStop(1, '#050a14');
+    }
+    ctx.fillStyle = this._skyGrad;
     ctx.fillRect(0, 0, 960, 640);
 
     // 2. Far Background: Tier 3 Stadium Colosseum Arches (Z = -300, Parallax 0.12)
@@ -216,12 +218,14 @@ export class NeonOctagonStage extends StageBase {
   renderOctagonalFloor(ctx, camX, time) {
     const gy = this.groundY; // 535
 
-    // Base Floor Foundation
-    const floorGrad = ctx.createLinearGradient(0, gy, 0, 640);
-    floorGrad.addColorStop(0, '#0c1526');
-    floorGrad.addColorStop(0.3, '#080e1c');
-    floorGrad.addColorStop(1, '#02050c');
-    ctx.fillStyle = floorGrad;
+    // Base Floor Foundation (Cached)
+    if (!this._floorGrad) {
+      this._floorGrad = ctx.createLinearGradient(0, gy, 0, 640);
+      this._floorGrad.addColorStop(0, '#0c1526');
+      this._floorGrad.addColorStop(0.3, '#080e1c');
+      this._floorGrad.addColorStop(1, '#02050c');
+    }
+    ctx.fillStyle = this._floorGrad;
     ctx.fillRect(0, gy, 960, 640 - gy);
 
     // Front Edge Step of the Octagon Dais

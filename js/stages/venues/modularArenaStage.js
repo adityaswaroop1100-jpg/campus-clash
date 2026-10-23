@@ -80,13 +80,15 @@ export class ModularArenaStage extends StageBase {
     const camX = camera.x || 0;
     const t = this.time;
 
-    // 1. Stadium Interior Dome Atmosphere
-    const domeGrad = ctx.createLinearGradient(0, 0, 0, 640);
-    domeGrad.addColorStop(0, '#060c18');
-    domeGrad.addColorStop(0.4, '#10192b');
-    domeGrad.addColorStop(0.8, '#1e2c47');
-    domeGrad.addColorStop(1, '#090f1a');
-    ctx.fillStyle = domeGrad;
+    // 1. Stadium Interior Dome Atmosphere (Cached)
+    if (!this._domeGrad) {
+      this._domeGrad = ctx.createLinearGradient(0, 0, 0, 640);
+      this._domeGrad.addColorStop(0, '#060c18');
+      this._domeGrad.addColorStop(0.4, '#10192b');
+      this._domeGrad.addColorStop(0.8, '#1e2c47');
+      this._domeGrad.addColorStop(1, '#090f1a');
+    }
+    ctx.fillStyle = this._domeGrad;
     ctx.fillRect(0, 0, 960, 640);
 
     // 2. Far Background: Tiered Stadium Grandstands (Z = -400, Parallax 0.1)
@@ -197,18 +199,24 @@ export class ModularArenaStage extends StageBase {
     const zoneWidth = 160;
 
     // Render 6 Reconfigurable Modular Zones
+    if (!this._panelGrad) {
+      this._panelGrad = ctx.createLinearGradient(0, 0, 0, 140);
+      this._panelGrad.addColorStop(0, '#eaf0f7');
+      this._panelGrad.addColorStop(0.2, '#cdd8e5');
+      this._panelGrad.addColorStop(1, '#1b2536');
+    }
+
     for (let z = 0; z < 6; z++) {
       const zx = z * zoneWidth;
       const offset = this.panelOffsets[z] || 0;
       const panelY = gy - offset;
 
-      // High-Gloss White/Grey Composite Ceramic Plate
-      const panelGrad = ctx.createLinearGradient(0, panelY, 0, 640);
-      panelGrad.addColorStop(0, '#eaf0f7');
-      panelGrad.addColorStop(0.2, '#cdd8e5');
-      panelGrad.addColorStop(1, '#1b2536');
-      ctx.fillStyle = panelGrad;
-      ctx.fillRect(zx, panelY, zoneWidth - 4, 640 - panelY);
+      // High-Gloss White/Grey Composite Ceramic Plate (Cached gradient)
+      ctx.save();
+      ctx.translate(0, panelY);
+      ctx.fillStyle = this._panelGrad;
+      ctx.fillRect(zx, 0, zoneWidth - 4, 640 - panelY);
+      ctx.restore();
 
       // Hydraulic Pneumatic Side Bevel (if panel is raised)
       if (offset > 2) {
