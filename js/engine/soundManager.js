@@ -1036,9 +1036,8 @@ export class SoundManager {
    * Speaks announcer line with speech synthesis and layered audio chime
    */
   speakAnnouncer(text, chimePitch = 440) {
-    // 1. Synth Chime Stabs
-    this.playTone(chimePitch, 'sawtooth', 0.25, 0.35);
-    setTimeout(() => this.playTone(chimePitch * 1.5, 'triangle', 0.35, 0.25), 80);
+    // 1. Soft Warm Chime (Harmonic sine, non-irritating)
+    this.playTone(chimePitch, 'sine', 0.12, 0.08);
 
     // 2. Web Speech API Announcer Voice
     if (!this.isMuted && typeof window !== 'undefined' && window.speechSynthesis) {

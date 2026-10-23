@@ -1,6 +1,8 @@
 /**
- * Campus Clash — Adaptive Vertical Stem Music Sequencer
- * Dynamic 4-stem cyber breakbeat with low-HP danger escalation and KO ducking.
+ * Campus Clash — Adaptive Vertical Music Engine & Vocal Track Player
+ * Plays high-energy real vocal fight songs (MP3/OGG) when present,
+ * with seamless looping, danger mode tempo scaling, and smooth bus ducking.
+ * Procedural fallback uses gentle, warm low-pass pads with ZERO harsh beeps.
  * @module engine/audio/adaptiveMusic
  */
 
@@ -11,49 +13,145 @@ export class AdaptiveMusic {
     this.busController = busController;
 
     this.isPlaying = false;
-    this.tempo = 132;
-    this.step = 0;
-    this.timer = null;
     this.mode = 'none'; // 'title' | 'combat'
+    this.isDanger = false;
+    this.tempo = 128;
 
-    // Intensity Stems (0.0 to 1.0)
+    this.audioBuffer = null;
+    this.currentSource = null;
+    this.musicGainNode = this.ctx.createGain();
+    this.musicGainNode.connect(this.musicBus);
+
+    // Warm ambient fallback oscillator & filter (ZERO high-pitch beeps)
+    this.padOsc = null;
+    this.padGain = null;
+    this.padFilter = null;
+
+    // Stem controls for fallback
     this.stemDrumsGain = 1.0;
     this.stemBassGain = 0.9;
     this.stemArpGain = 0.0;
     this.stemLeadGain = 0.0;
-    this.isDanger = false;
 
-    // Scale notes: Cyber D-Minor Pentatonic (D, F, G, A, C)
-    this.baseFrequencies = [146.83, 174.61, 196.00, 220.00, 261.63, 293.66];
+    // Preload custom vocal combat theme if placed in assets/audio/music/
+    this.loadVocalTheme();
+  }
+
+  async loadVocalTheme() {
+    const candidatePaths = [
+      'assets/audio/music/campus_clash_theme.mp3',
+      'assets/audio/music/battle_theme.mp3',
+      'assets/audio/music/campus_clash_vocal_theme.mp3'
+    ];
+    for (const path of candidatePaths) {
+      try {
+        const response = await fetch(path);
+        if (response.ok) {
+          const arrayBuffer = await response.arrayBuffer();
+          this.audioBuffer = await this.ctx.decodeAudioData(arrayBuffer);
+          console.log(`[CampusClash Music] Successfully loaded vocal theme: ${path}`);
+          if (this.isPlaying) {
+            this.playCurrentMode();
+          }
+          break;
+        }
+      } catch (e) {
+        // Fallback cleanly if file not yet added
+      }
+    }
   }
 
   startTitleMusic() {
     this.stop();
     this.mode = 'title';
-    this.tempo = 115;
     this.isPlaying = true;
-    this.step = 0;
-    this.runSequencer();
+    this.playCurrentMode();
   }
 
   startCombatMusic() {
     this.stop();
     this.mode = 'combat';
-    this.tempo = 132;
     this.isDanger = false;
     this.isPlaying = true;
-    this.step = 0;
-    this.stemArpGain = 0.0;
-    this.stemLeadGain = 0.0;
-    this.runSequencer();
+    this.playCurrentMode();
+  }
+
+  playCurrentMode() {
+    if (!this.isPlaying || !this.ctx) return;
+
+    if (this.audioBuffer) {
+      this.playBuffer(this.audioBuffer);
+    } else {
+      this.startWarmAmbience();
+    }
+  }
+
+  playBuffer(buffer) {
+    if (this.currentSource) {
+      try { this.currentSource.stop(); this.currentSource.disconnect(); } catch (e) {}
+    }
+    this.currentSource = this.ctx.createBufferSource();
+    this.currentSource.buffer = buffer;
+    this.currentSource.loop = true;
+    this.currentSource.playbackRate.value = this.isDanger ? 1.05 : 1.0;
+    this.currentSource.connect(this.musicGainNode);
+    this.currentSource.start(0);
+  }
+
+  /**
+   * Warm, rich, non-irritating background soundscape.
+   * Completely eliminates the 4500Hz square-wave hi-hat and sharp synth beeps.
+   */
+  startWarmAmbience() {
+    this.stopWarmAmbience();
+    try {
+      const now = this.ctx.currentTime;
+      this.padFilter = this.ctx.createBiquadFilter();
+      this.padFilter.type = 'lowpass';
+      this.padFilter.frequency.setValueAtTime(220, now); // Cuts all treble beeps completely
+
+      this.padGain = this.ctx.createGain();
+      this.padGain.gain.setValueAtTime(0.001, now);
+      this.padGain.gain.exponentialRampToValueAtTime(0.22, now + 1.2);
+
+      this.padOsc = this.ctx.createOscillator();
+      this.padOsc.type = 'sine'; // Pure smooth sine tone, no harsh harmonics
+      this.padOsc.frequency.setValueAtTime(65.41, now); // C2 warm sub-bass
+
+      this.padOsc.connect(this.padFilter);
+      this.padFilter.connect(this.padGain);
+      this.padGain.connect(this.musicBus);
+
+      this.padOsc.start(now);
+    } catch (e) {}
+  }
+
+  stopWarmAmbience() {
+    if (this.padGain && this.ctx) {
+      try {
+        const now = this.ctx.currentTime;
+        this.padGain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+      } catch (e) {}
+    }
+    if (this.padOsc) {
+      try {
+        this.padOsc.stop(this.ctx.currentTime + 0.35);
+        this.padOsc.disconnect();
+      } catch (e) {}
+      this.padOsc = null;
+    }
   }
 
   stop() {
     this.isPlaying = false;
-    if (this.timer) {
-      clearTimeout(this.timer);
-      this.timer = null;
+    if (this.currentSource) {
+      try {
+        this.currentSource.stop();
+        this.currentSource.disconnect();
+      } catch (e) {}
+      this.currentSource = null;
     }
+    this.stopWarmAmbience();
   }
 
   /**
@@ -64,145 +162,44 @@ export class AdaptiveMusic {
 
     const minHp = Math.min(p1Health, p2Health);
     if (minHp < 25 && !this.isDanger) {
-      // Danger Mode Acceleration
       this.isDanger = true;
-      this.tempo = 148;
-      this.stemArpGain = 1.0;
-      this.stemLeadGain = 1.0;
-    } else if (activeCombo >= 4 || minHp < 50) {
-      // Intense Phase
-      this.stemArpGain = 0.85;
-      this.stemLeadGain = 0.0;
-    } else if (!this.isDanger) {
-      // Neutral Phase
-      this.stemArpGain = 0.0;
-      this.stemLeadGain = 0.0;
+      if (this.currentSource && this.currentSource.playbackRate) {
+        this.currentSource.playbackRate.setValueAtTime(1.05, this.ctx.currentTime);
+      }
+      if (this.padFilter) {
+        this.padFilter.frequency.setValueAtTime(340, this.ctx.currentTime);
+      }
+    } else if (minHp >= 25 && this.isDanger) {
+      this.isDanger = false;
+      if (this.currentSource && this.currentSource.playbackRate) {
+        this.currentSource.playbackRate.setValueAtTime(1.0, this.ctx.currentTime);
+      }
+      if (this.padFilter) {
+        this.padFilter.frequency.setValueAtTime(220, this.ctx.currentTime);
+      }
     }
-  }
-
-  runSequencer() {
-    if (!this.isPlaying) return;
-
-    const stepDurationMs = (60 / this.tempo) * 250; // 16th notes
-    const now = this.ctx.currentTime;
-
-    if (this.mode === 'combat') {
-      this.playCombatStep(this.step, now);
-    } else if (this.mode === 'title') {
-      this.playTitleStep(this.step, now);
-    }
-
-    this.step = (this.step + 1) % 16;
-    this.timer = setTimeout(() => this.runSequencer(), stepDurationMs);
-  }
-
-  playCombatStep(step, time) {
-    // Stem 1: Kick & Snare Drums
-    if (step === 0 || step === 8 || step === 10) {
-      this.playKick(time, 0.45 * this.stemDrumsGain);
-    }
-    if (step === 4 || step === 12) {
-      this.playSnare(time, 0.35 * this.stemDrumsGain);
-    }
-    if (step % 2 === 0) {
-      this.playHiHat(time, 0.15 * this.stemDrumsGain);
-    }
-
-    // Stem 2: Bassline
-    if (step % 4 === 0 || step === 6 || step === 14) {
-      const freq = this.baseFrequencies[step % this.baseFrequencies.length] * 0.5;
-      this.playSynthNote(freq, 'sawtooth', 0.16, 0.28 * this.stemBassGain, time);
-    }
-
-    // Stem 3: Arpeggio Layer (fades in on intense / danger)
-    if (this.stemArpGain > 0.05 && step % 2 === 1) {
-      const noteIdx = (step * 2) % this.baseFrequencies.length;
-      const freq = this.baseFrequencies[noteIdx] * 2.0;
-      this.playSynthNote(freq, 'triangle', 0.08, 0.20 * this.stemArpGain, time);
-    }
-
-    // Stem 4: Lead Overdrive (fades in on danger)
-    if (this.stemLeadGain > 0.05 && (step === 2 || step === 10)) {
-      const freq = this.baseFrequencies[3] * 1.5;
-      this.playSynthNote(freq, 'square', 0.24, 0.16 * this.stemLeadGain, time);
-    }
-  }
-
-  playTitleStep(step, time) {
-    if (step === 0 || step === 8) {
-      this.playKick(time, 0.35);
-    }
-    if (step === 4 || step === 12) {
-      this.playSnare(time, 0.22);
-    }
-    if (step % 4 === 0) {
-      const freq = this.baseFrequencies[step % 4];
-      this.playSynthNote(freq, 'sine', 0.25, 0.25, time);
-    }
-  }
-
-  playKick(time, gainVal) {
-    const osc = this.ctx.createOscillator();
-    const gain = this.ctx.createGain();
-    osc.frequency.setValueAtTime(140, time);
-    osc.frequency.exponentialRampToValueAtTime(35, time + 0.12);
-    gain.gain.setValueAtTime(gainVal, time);
-    gain.gain.exponentialRampToValueAtTime(0.001, time + 0.14);
-    osc.connect(gain);
-    gain.connect(this.musicBus);
-    osc.start(time);
-    osc.stop(time + 0.15);
-  }
-
-  playSnare(time, gainVal) {
-    const osc = this.ctx.createOscillator();
-    const gain = this.ctx.createGain();
-    osc.type = 'triangle';
-    osc.frequency.setValueAtTime(220, time);
-    osc.frequency.exponentialRampToValueAtTime(80, time + 0.08);
-    gain.gain.setValueAtTime(gainVal, time);
-    gain.gain.exponentialRampToValueAtTime(0.001, time + 0.10);
-    osc.connect(gain);
-    gain.connect(this.musicBus);
-    osc.start(time);
-    osc.stop(time + 0.11);
-  }
-
-  playHiHat(time, gainVal) {
-    const osc = this.ctx.createOscillator();
-    const gain = this.ctx.createGain();
-    osc.type = 'square';
-    osc.frequency.setValueAtTime(4500, time);
-    gain.gain.setValueAtTime(gainVal, time);
-    gain.gain.exponentialRampToValueAtTime(0.001, time + 0.04);
-    osc.connect(gain);
-    gain.connect(this.musicBus);
-    osc.start(time);
-    osc.stop(time + 0.045);
-  }
-
-  playSynthNote(freq, type, duration, gainVal, time) {
-    const osc = this.ctx.createOscillator();
-    const gain = this.ctx.createGain();
-    osc.type = type;
-    osc.frequency.setValueAtTime(freq, time);
-    gain.gain.setValueAtTime(gainVal, time);
-    gain.gain.exponentialRampToValueAtTime(0.001, time + duration);
-    osc.connect(gain);
-    gain.connect(this.musicBus);
-    osc.start(time);
-    osc.stop(time + duration + 0.01);
   }
 
   /**
-   * Plays triumphant victory resolving fanfare
+   * Plays triumphant victory resolving fanfare with gentle sine harmonics
    */
   playVictoryFanfare() {
     this.stop();
     const now = this.ctx.currentTime;
     const notes = [293.66, 369.99, 440.00, 587.33]; // D-Major arpeggio
     notes.forEach((f, idx) => {
-      this.playSynthNote(f, 'triangle', 0.45, 0.35, now + idx * 0.12);
+      try {
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(f, now + idx * 0.12);
+        gain.gain.setValueAtTime(0.20, now + idx * 0.12);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.12 + 0.4);
+        osc.connect(gain);
+        gain.connect(this.musicBus);
+        osc.start(now + idx * 0.12);
+        osc.stop(now + idx * 0.12 + 0.45);
+      } catch (e) {}
     });
   }
 }

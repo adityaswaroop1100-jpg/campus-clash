@@ -27,13 +27,13 @@ export class AnnouncerSystem {
     const osc2 = this.ctx.createOscillator();
     const gain = this.ctx.createGain();
 
-    osc1.type = 'triangle';
+    osc1.type = 'sine';
     osc1.frequency.setValueAtTime(VOICES_CONFIG.announcer.chimeFreq || 520, now);
     osc2.type = 'sine';
     osc2.frequency.setValueAtTime((VOICES_CONFIG.announcer.chimeFreq || 520) * 1.5, now);
 
-    gain.gain.setValueAtTime(0.35, now);
-    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.38);
+    gain.gain.setValueAtTime(0.08, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.28);
 
     osc1.connect(gain);
     osc2.connect(gain);
