@@ -1,10 +1,14 @@
 /**
  * Campus Clash — Procedural Web Audio API Sound Manager
+ * Bridges legacy calls with the new esports-grade AudioManager & 7-Bus Limiter architecture.
  * @module engine/soundManager
  */
 
+import { AudioManager } from './audio/audioManager.js';
+
 export class SoundManager {
   constructor() {
+    this.audioManager = new AudioManager();
     this.ctx = null;
     this.isMuted = false;
     this.masterVolume = 0.8;
@@ -37,6 +41,10 @@ export class SoundManager {
    * Initializes audio context and gain routing on first user interaction
    */
   init() {
+    if (this.audioManager) {
+      this.audioManager.init();
+      this.ctx = this.audioManager.ctx;
+    }
     if (!this.ctx) {
       const AudioCtx = window.AudioContext || window.webkitAudioContext;
       if (AudioCtx) {
@@ -59,6 +67,11 @@ export class SoundManager {
   }
 
   updateGainNodes() {
+    if (this.audioManager && this.audioManager.busController) {
+      this.audioManager.busController.setMasterVolume(this.masterVolume);
+      this.audioManager.busController.setBusVolume('sfx', this.sfxVolume);
+      this.audioManager.busController.setBusVolume('music', this.musicVolume);
+    }
     if (!this.ctx || !this.masterGain) return;
     const now = this.ctx.currentTime;
     const effectiveMaster = this.isMuted ? 0 : this.masterVolume;
@@ -126,24 +139,40 @@ export class SoundManager {
     } catch (e) {}
   }
 
-  playLightHit() {
+  playLightHit(x = 480) {
     this.init();
-    this.playTone(280, 'triangle', 0.08, 0.2);
+    if (this.audioManager) {
+      this.audioManager.playHit('light', 0, x);
+    } else {
+      this.playTone(280, 'triangle', 0.08, 0.2);
+    }
   }
 
-  playHeavyHit() {
+  playHeavyHit(x = 480) {
     this.init();
-    this.playTone(130, 'sawtooth', 0.22, 0.35);
+    if (this.audioManager) {
+      this.audioManager.playHit('heavy', 0, x);
+    } else {
+      this.playTone(130, 'sawtooth', 0.22, 0.35);
+    }
   }
 
-  playBlock() {
+  playBlock(x = 480) {
     this.init();
-    this.playTone(520, 'square', 0.09, 0.18);
+    if (this.audioManager) {
+      this.audioManager.playHit('block', 0, x);
+    } else {
+      this.playTone(520, 'square', 0.09, 0.18);
+    }
   }
 
   playDodge() {
     this.init();
-    this.playTone(380, 'sine', 0.12, 0.12);
+    if (this.audioManager) {
+      this.audioManager.playDash();
+    } else {
+      this.playTone(380, 'sine', 0.12, 0.12);
+    }
   }
 
   playPerfect() {
@@ -165,8 +194,12 @@ export class SoundManager {
 
   playMetalClang() {
     this.init();
-    this.playTone(980, 'sine', 0.18, 0.28);
-    setTimeout(() => this.playTone(490, 'triangle', 0.22, 0.22), 30);
+    if (this.audioManager) {
+      this.audioManager.playHit('parry', 0);
+    } else {
+      this.playTone(980, 'sine', 0.18, 0.28);
+      setTimeout(() => this.playTone(490, 'triangle', 0.22, 0.22), 30);
+    }
   }
 
   playWhack() {
@@ -761,10 +794,13 @@ export class SoundManager {
   // =========================================================================
 
   /**
-   * Starts high-energy procedural synthwave combat music
+   * Starts high-energy adaptive combat music with vertical stem stacking
    */
   startCombatMusic() {
     this.init();
+    if (this.audioManager) {
+      this.audioManager.startCombatMusic();
+    }
     if (this.musicPlaying && this.musicType === 'combat') return;
     this.stopMusic();
 
@@ -782,6 +818,9 @@ export class SoundManager {
    */
   startTitleMusic() {
     this.init();
+    if (this.audioManager) {
+      this.audioManager.startTitleMusic();
+    }
     if (this.musicPlaying && this.musicType === 'title') return;
     this.stopMusic();
 
@@ -794,9 +833,12 @@ export class SoundManager {
   }
 
   /**
-   * Stops background music cleanly
+   * Stops background music and ambient streams cleanly
    */
   stopMusic() {
+    if (this.audioManager) {
+      this.audioManager.stopMusic();
+    }
     this.musicPlaying = false;
     this.musicType = 'none';
     if (this.musicTimer) {
@@ -811,8 +853,30 @@ export class SoundManager {
   setMusicDanger(isDanger) {
     if (this.isDangerMusic === isDanger) return;
     this.isDangerMusic = isDanger;
+    if (this.audioManager && this.audioManager.music) {
+      this.audioManager.music.isDanger = isDanger;
+      if (isDanger) this.audioManager.music.tempo = 148;
+    }
     if (this.musicPlaying && this.musicType === 'combat') {
       this.musicBpm = isDanger ? 148 : 132;
+    }
+  }
+
+  setVenue(venueId, roundNumber = 1) {
+    if (this.audioManager) {
+      this.audioManager.setVenue(venueId, roundNumber);
+    }
+  }
+
+  triggerHazardWarning() {
+    if (this.audioManager) {
+      this.audioManager.triggerHazardWarning();
+    }
+  }
+
+  updateMusicIntensity(p1Hp, p2Hp, combo) {
+    if (this.audioManager) {
+      this.audioManager.updateMusicIntensity(p1Hp, p2Hp, combo);
     }
   }
 
@@ -983,27 +1047,49 @@ export class SoundManager {
   }
 
   announceRound(roundNumber) {
-    const text = roundNumber === 3 ? "FINAL ROUND" : `ROUND ${roundNumber}`;
-    this.speakAnnouncer(text, 523.25);
+    this.init();
+    if (this.audioManager) {
+      const key = roundNumber === 3 ? 'roundFinal' : ('round' + roundNumber);
+      this.audioManager.announce(key);
+    } else {
+      const text = roundNumber === 3 ? "FINAL ROUND" : `ROUND ${roundNumber}`;
+      this.speakAnnouncer(text, 523.25);
+    }
   }
 
   announceFight() {
-    this.playFightGong();
-    this.speakAnnouncer("FIGHT!", 659.25);
+    this.init();
+    if (this.audioManager) {
+      this.audioManager.playFightGong();
+      this.audioManager.announce('fight');
+    } else {
+      this.playFightGong();
+      this.speakAnnouncer("FIGHT!", 659.25);
+    }
   }
 
   announceKO() {
-    // Massive seismic drop
-    this.playTitleThump();
-    this.speakAnnouncer("K. O.!", 320);
+    this.init();
+    if (this.audioManager) {
+      this.audioManager.onDecisiveKO();
+    } else {
+      this.playTitleThump();
+      this.speakAnnouncer("K. O.!", 320);
+    }
   }
 
   announceWinner(characterName, isPlayer1 = true) {
-    const winnerLabel = isPlayer1 ? "PLAYER ONE WINS" : "PLAYER TWO WINS";
-    this.speakAnnouncer(`${winnerLabel}!`, 783.99);
-    setTimeout(() => {
-      this.playFightFanfare();
-    }, 450);
+    this.init();
+    if (this.audioManager) {
+      this.audioManager.announce(isPlayer1 ? 'p1Wins' : 'p2Wins');
+      this.audioManager.onMatchVictory();
+    } else {
+      const winnerLabel = isPlayer1 ? "PLAYER ONE WINS" : "PLAYER TWO WINS";
+      this.speakAnnouncer(`${winnerLabel}!`, 783.99);
+      setTimeout(() => {
+        this.playFightFanfare();
+      }, 450);
+    }
   }
 }
 

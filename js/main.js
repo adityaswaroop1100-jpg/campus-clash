@@ -1107,6 +1107,9 @@ class CampusClashGame {
     // Start procedural combat music and voice announcer
     this.sound.startCombatMusic();
     this.sound.announceRound(roundNum);
+    if (this.sound && typeof this.sound.setVenue === 'function' && this.stage) {
+      this.sound.setVenue(this.stage.id, roundNum);
+    }
 
     // Notify stage of round transition (e.g. Archive Vault era switch or Modular Arena reconfiguration)
     if (this.stage && typeof this.stage.onRoundTransition === 'function') {
@@ -1361,6 +1364,10 @@ class CampusClashGame {
       if (this.p1 && this.p2) {
         const isDanger = (this.p1.health / this.p1.maxHealth < 0.28) || (this.p2.health / this.p2.maxHealth < 0.28);
         this.sound.setMusicDanger(isDanger);
+        const maxCombo = Math.max(this.combos?.P1?.hits || 0, this.combos?.P2?.hits || 0);
+        if (typeof this.sound.updateMusicIntensity === 'function') {
+          this.sound.updateMusicIntensity(this.p1.health, this.p2.health, maxCombo);
+        }
       }
       // Round Timer (60 frames = 1 second)
       this.matchTimerFrames++;
@@ -1590,7 +1597,7 @@ class CampusClashGame {
         this.matchStats[attackerId].hits++;
 
         if (blocked) {
-          this.sound.playBlock();
+          this.sound.playBlock(impactX);
           this.particles.spawnBlockSparks(impactX, impactY);
           this.screenShake.shake(3, 8);
           if (this.stage && typeof this.stage.onFighterHit === 'function') {
@@ -1623,6 +1630,12 @@ class CampusClashGame {
           }
 
           const isHeavyHit = props.damage >= 14 || (attacker.currentMove && attacker.currentMove.type === 'ultimate');
+
+          // 3-Layer physical hit stack with stereo spatialization & combo riser
+          if (this.sound && this.sound.audioManager) {
+            const hitType = isCounter ? 'counter' : (isHeavyHit ? 'heavy' : 'light');
+            this.sound.audioManager.playHit(hitType, comboHits, impactX);
+          }
 
           // Character-specific signature procedural audio & visual sparks
           this.sound.playCharacterHitSound(attacker.config.id, attacker.currentMove, isHeavyHit, false);
