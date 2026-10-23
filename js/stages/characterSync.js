@@ -101,13 +101,16 @@ export class CharacterSyncLayer {
 
       ctx.restore();
 
-      // Soft ground water puddle sheen overlay
+      // Soft ground water puddle sheen overlay (cached to eliminate per-frame gradient allocation)
       ctx.save();
       ctx.translate(fighter.x, groundY);
-      const puddleGrad = ctx.createLinearGradient(0, 0, 0, 80);
-      puddleGrad.addColorStop(0, `rgba(255, 255, 255, ${0.12 * finalAlpha})`);
-      puddleGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
-      ctx.fillStyle = puddleGrad;
+      if (!CharacterSyncLayer._puddleGrad) {
+        CharacterSyncLayer._puddleGrad = ctx.createLinearGradient(0, 0, 0, 80);
+        CharacterSyncLayer._puddleGrad.addColorStop(0, 'rgba(255, 255, 255, 0.12)');
+        CharacterSyncLayer._puddleGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+      }
+      ctx.globalAlpha = finalAlpha;
+      ctx.fillStyle = CharacterSyncLayer._puddleGrad;
       ctx.fillRect(-60, 0, 120, 70);
       ctx.restore();
     }

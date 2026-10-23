@@ -135,6 +135,11 @@ class CampusClashGame {
     this.nexusModifiers = new NexusModifierSystem();
     this.postProcess = new PostProcessing();
     
+    // Performance pre-allocated scratch caches (Zero-allocation game loop)
+    this.camera = { x: 0, y: 0, scale: 1 };
+    this.activeFighters = [];
+    this.cachedSkyRimGrad = null;
+
     // The Global Arena Pack (5 Venues with Real 3D Depth & Character Sync)
     this.arenas = [
       {
@@ -1761,23 +1766,25 @@ class CampusClashGame {
         this.screenShake.apply(ctx);
       }
 
-      // Dynamic camera parallax tracking midpoint between fighters
-      let camera = { x: 0, y: 0, scale: 1 };
+      // Dynamic camera parallax tracking midpoint between fighters (zero per-frame allocations)
       if (this.p1 && this.p2) {
-        const midX = (this.p1.x + this.p2.x) / 2;
-        camera.x = (midX - CANVAS_WIDTH / 2) * 0.35;
+        this.camera.x = ((this.p1.x + this.p2.x) * 0.5 - CANVAS_WIDTH * 0.5) * 0.35;
+        this.activeFighters[0] = this.p1;
+        this.activeFighters[1] = this.p2;
       }
 
       // 1. Render Venue 3D Background with Parallax
-      this.stage.render(ctx, camera);
+      this.stage.render(ctx, this.camera);
 
-      // 1.05 Sky Rim-Light (Stage Polish)
+      // 1.05 Sky Rim-Light (Zero GC allocation cached gradient)
+      if (!this.cachedSkyRimGrad) {
+        this.cachedSkyRimGrad = ctx.createLinearGradient(0, 0, 0, 240);
+        this.cachedSkyRimGrad.addColorStop(0, 'rgba(41, 211, 255, 0.14)');
+        this.cachedSkyRimGrad.addColorStop(0.4, 'rgba(255, 154, 46, 0.05)');
+        this.cachedSkyRimGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+      }
       ctx.save();
-      const skyRimGrad = ctx.createLinearGradient(0, 0, 0, 240);
-      skyRimGrad.addColorStop(0, 'rgba(41, 211, 255, 0.14)');
-      skyRimGrad.addColorStop(0.4, 'rgba(255, 154, 46, 0.05)');
-      skyRimGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
-      ctx.fillStyle = skyRimGrad;
+      ctx.fillStyle = this.cachedSkyRimGrad;
       ctx.fillRect(0, 0, CANVAS_WIDTH, 240);
       ctx.restore();
 
@@ -1811,7 +1818,7 @@ class CampusClashGame {
 
       // 1d. Floor Reflections & Contact Shadows Synced to Characters
       if (this.stage && typeof this.stage.renderFighterSync === 'function') {
-        this.stage.renderFighterSync(ctx, [this.p1, this.p2], camera);
+        this.stage.renderFighterSync(ctx, this.activeFighters, this.camera);
       }
 
       // 2. Render Fighters (Sprite with procedural fallback)
@@ -1842,7 +1849,7 @@ class CampusClashGame {
 
       // 3.5. Foreground Framing Elements with Occlusion Guard
       if (this.stage && typeof this.stage.renderForeground === 'function') {
-        this.stage.renderForeground(ctx, camera, [this.p1, this.p2]);
+        this.stage.renderForeground(ctx, this.camera, this.activeFighters);
       }
       ctx.restore();
 
@@ -1850,10 +1857,11 @@ class CampusClashGame {
         window.CampusVisuals.endFrame(ctx, CANVAS_WIDTH, CANVAS_HEIGHT);
       }
 
-      // Screen Flash on heavy hits
+      // Tactical Esports Screen Flash (Preserves fighter silhouette readability on heavy hits)
       if (this.screenFlashFrames > 0) {
         ctx.save();
-        ctx.fillStyle = `rgba(255, 255, 255, ${this.screenFlashFrames * 0.18})`;
+        const flashIntensity = Math.min(0.25, this.screenFlashFrames * 0.06);
+        ctx.fillStyle = `rgba(255, 255, 255, ${flashIntensity})`;
         ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
         ctx.restore();
       }

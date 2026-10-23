@@ -64,8 +64,14 @@
       const art = el('div', 'cc-card__art');
       const img = new Image();
       img.alt = '';
+      img.onerror = () => {
+        if (!img.src.endsWith('idle.png')) {
+          img.src = `${base}/${id}/idle.png`;
+        } else {
+          img.remove();
+        }
+      };
       img.src = `${base}/${id}/portrait.png`;
-      img.onerror = () => img.remove();
       art.append(img);
 
       const label = el('div', 'cc-card__label');
@@ -94,8 +100,14 @@
       const art = el('div', 'cc-detail__art');
       const img = new Image();
       img.alt = `${c.name}, ${c.role}`;
+      img.onerror = () => {
+        if (!img.src.endsWith('idle.png')) {
+          img.src = `${base}/${id}/idle.png`;
+        } else {
+          img.remove();
+        }
+      };
       img.src = `${base}/${id}/portrait.png`;
-      img.onerror = () => img.remove();
       art.append(img);
 
       const info = el('div');

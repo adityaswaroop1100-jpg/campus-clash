@@ -149,12 +149,19 @@
         if (r.ok) manifest = (await r.json())[id] || {};
       } catch (e) { /* file:// or missing manifest — fine */ }
       await Promise.all(STATES.map(async (s) => {
-        const img = await loadImage(`${base}/${id}/${s}.png`);
+        let img = await loadImage(`${base}/${id}/${s}.png`);
         if (!img) {
-          console.warn(`[CampusVisuals] Missing sprite for character "${id}", state "${s}": ${base}/${id}/${s}.png`);
+          // Automatic state alias fallback for storage optimization (air->jump, dash->run)
+          if (s === 'air') {
+            img = (entry.states.jump && entry.states.jump.img) || await loadImage(`${base}/${id}/jump.png`);
+          } else if (s === 'dash') {
+            img = (entry.states.run && entry.states.run.img) || await loadImage(`${base}/${id}/run.png`);
+          }
+        }
+        if (!img) {
           return;
         }
-        const m = manifest[s] || {};
+        const m = manifest[s] || (s === 'air' ? manifest.jump : (s === 'dash' ? manifest.run : {})) || {};
         const frames = m.frames || 1;
         entry.states[s] = {
           img, frames, fw: img.width / frames, fh: img.height,
@@ -162,7 +169,7 @@
           loop: m.loop !== undefined ? m.loop : DEFAULT_ANIM[s].loop,
         };
       }));
-      entry.portrait = await loadImage(`${base}/${id}/portrait.png`);
+      entry.portrait = await loadImage(`${base}/${id}/portrait.png`) || (entry.states.idle && entry.states.idle.img);
       if (!entry.portrait) {
         console.warn(`[CampusVisuals] Missing portrait for character "${id}": ${base}/${id}/portrait.png`);
       }
@@ -180,7 +187,8 @@
   const getPortrait = (id) => {
     if (id === 'placementWarrior') id = 'placement';
     if (id === 'sportsStar') id = 'sports';
-    return (store[id] && store[id].portrait) || null;
+    const e = store[id];
+    return e ? (e.portrait || (e.states && e.states.idle && e.states.idle.img)) : null;
   };
 
   // Silhouette tint (for ghost trails + hit flash). Cached per image+colour.
