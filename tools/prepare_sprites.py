@@ -1,4 +1,3 @@
-"""
 import argparse, json, shutil, sys
 from pathlib import Path
 
@@ -154,4 +153,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-</USER_REQUEST>
