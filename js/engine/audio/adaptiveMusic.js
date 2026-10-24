@@ -1,8 +1,7 @@
 /**
- * Campus Clash — Adaptive Vertical Music Engine & Vocal Track Player
- * Plays high-energy real vocal fight songs (MP3/OGG) when present,
- * with seamless looping, danger mode tempo scaling, and smooth bus ducking.
- * Procedural fallback uses gentle, warm low-pass pads with ZERO harsh beeps.
+ * Campus Clash — Adaptive Vertical Music Engine
+ * Procedural low-pass soundscape with smooth bus ducking and low-HP danger escalation.
+ * Completely free of harsh treble beeps and square-wave oscillations.
  * @module engine/audio/adaptiveMusic
  */
 
@@ -17,12 +16,7 @@ export class AdaptiveMusic {
     this.isDanger = false;
     this.tempo = 128;
 
-    this.audioBuffer = null;
-    this.currentSource = null;
-    this.musicGainNode = this.ctx.createGain();
-    this.musicGainNode.connect(this.musicBus);
-
-    // Warm ambient fallback oscillator & filter (ZERO high-pitch beeps)
+    // Warm ambient procedural oscillator & filter (ZERO high-pitch beeps)
     this.padOsc = null;
     this.padGain = null;
     this.padFilter = null;
@@ -32,33 +26,6 @@ export class AdaptiveMusic {
     this.stemBassGain = 0.9;
     this.stemArpGain = 0.0;
     this.stemLeadGain = 0.0;
-
-    // Preload custom vocal combat theme if placed in assets/audio/music/
-    this.loadVocalTheme();
-  }
-
-  async loadVocalTheme() {
-    const candidatePaths = [
-      'assets/audio/music/campus_clash_theme.mp3',
-      'assets/audio/music/battle_theme.mp3',
-      'assets/audio/music/campus_clash_vocal_theme.mp3'
-    ];
-    for (const path of candidatePaths) {
-      try {
-        const response = await fetch(path);
-        if (response.ok) {
-          const arrayBuffer = await response.arrayBuffer();
-          this.audioBuffer = await this.ctx.decodeAudioData(arrayBuffer);
-          console.log(`[CampusClash Music] Successfully loaded vocal theme: ${path}`);
-          if (this.isPlaying) {
-            this.playCurrentMode();
-          }
-          break;
-        }
-      } catch (e) {
-        // Fallback cleanly if file not yet added
-      }
-    }
   }
 
   startTitleMusic() {
@@ -78,24 +45,7 @@ export class AdaptiveMusic {
 
   playCurrentMode() {
     if (!this.isPlaying || !this.ctx) return;
-
-    if (this.audioBuffer) {
-      this.playBuffer(this.audioBuffer);
-    } else {
-      this.startWarmAmbience();
-    }
-  }
-
-  playBuffer(buffer) {
-    if (this.currentSource) {
-      try { this.currentSource.stop(); this.currentSource.disconnect(); } catch (e) {}
-    }
-    this.currentSource = this.ctx.createBufferSource();
-    this.currentSource.buffer = buffer;
-    this.currentSource.loop = true;
-    this.currentSource.playbackRate.value = this.isDanger ? 1.05 : 1.0;
-    this.currentSource.connect(this.musicGainNode);
-    this.currentSource.start(0);
+    this.startWarmAmbience();
   }
 
   /**
@@ -144,13 +94,6 @@ export class AdaptiveMusic {
 
   stop() {
     this.isPlaying = false;
-    if (this.currentSource) {
-      try {
-        this.currentSource.stop();
-        this.currentSource.disconnect();
-      } catch (e) {}
-      this.currentSource = null;
-    }
     this.stopWarmAmbience();
   }
 
@@ -163,17 +106,11 @@ export class AdaptiveMusic {
     const minHp = Math.min(p1Health, p2Health);
     if (minHp < 25 && !this.isDanger) {
       this.isDanger = true;
-      if (this.currentSource && this.currentSource.playbackRate) {
-        this.currentSource.playbackRate.setValueAtTime(1.05, this.ctx.currentTime);
-      }
       if (this.padFilter) {
         this.padFilter.frequency.setValueAtTime(340, this.ctx.currentTime);
       }
     } else if (minHp >= 25 && this.isDanger) {
       this.isDanger = false;
-      if (this.currentSource && this.currentSource.playbackRate) {
-        this.currentSource.playbackRate.setValueAtTime(1.0, this.ctx.currentTime);
-      }
       if (this.padFilter) {
         this.padFilter.frequency.setValueAtTime(220, this.ctx.currentTime);
       }
