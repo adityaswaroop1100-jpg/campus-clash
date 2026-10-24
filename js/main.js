@@ -2208,146 +2208,202 @@ class CampusClashGame {
 
   // =========================================================================
   // =========================================================================
-  // MATCH HUD & OVERLAY RENDERING
+  // =========================================================================
+  // MATCH HUD & OVERLAY RENDERING (COLLEGIATE TECH COMBAT AESTHETIC)
   // =========================================================================
   renderHUD(ctx) {
-    const barW = 310;
-    const barH = 20;
+    ctx.save();
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
+
+    const barW = 320;
+    const barH = 22;
     const topY = 26;
 
-    const p1Name = `P1: ${this.p1.config.displayName.toUpperCase()}`;
-    const p2Label = this.selectedMode === GAME_MODES.PVC ? 'CPU [EXPERT]: ' : (this.selectedMode === GAME_MODES.TRAINING ? 'DUMMY: ' : 'P2: ');
-    const p2Name = `${p2Label}${this.p2.config.displayName.toUpperCase()}`;
+    // Dynamically query active arena lighting for cohesive arena visual sync
+    const arenaCfg = this.stage?.config?.lighting;
+    const arenaRimColor = arenaCfg?.rimLight?.color || '#00e5ff';
+    const arenaKeyColor = arenaCfg?.keyLight?.color || '#ffd700';
+    const currArena = this.arenas[this.currentArenaIndex] || this.arenas[0];
+
+    // --- Top Collegiate Bridge Canopy ---
+    ctx.save();
+    // Structural rail
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(30, 20);
+    ctx.lineTo(CANVAS_WIDTH - 30, 20);
+    ctx.stroke();
+
+    // Arena-synced circuit energy trace
+    const canopyGrad = ctx.createLinearGradient(120, 20, CANVAS_WIDTH - 120, 20);
+    canopyGrad.addColorStop(0, 'rgba(0, 0, 0, 0)');
+    canopyGrad.addColorStop(0.3, arenaRimColor);
+    canopyGrad.addColorStop(0.5, arenaKeyColor);
+    canopyGrad.addColorStop(0.7, arenaRimColor);
+    canopyGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+    ctx.strokeStyle = canopyGrad;
+    ctx.globalAlpha = 0.5;
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(140, 20);
+    ctx.lineTo(CANVAS_WIDTH - 140, 20);
+    ctx.stroke();
+    ctx.restore();
+
+    const p1Label = 'P1 // CADET';
+    const p2Label = this.selectedMode === GAME_MODES.PVC
+      ? 'CPU // EXPERT'
+      : (this.selectedMode === GAME_MODES.TRAINING ? 'DUMMY // TARGET' : 'P2 // CHALLENGER');
+
+    const p1X = 64;
+    const p2X = CANVAS_WIDTH - 64 - barW;
 
     // --- P1 HUD (Left) ---
-    this.renderHealthBar(ctx, 44, topY, barW, barH, this.p1, p1Name, false);
-    this.renderStaminaBar(ctx, 44, topY + barH + 4, barW, 7, this.p1, false);
-    this.renderUltimateMeter(ctx, 44, topY + barH + 15, barW * 0.75, 9, this.p1);
+    this.renderHealthBar(ctx, p1X, topY, barW, barH, this.p1, p1Label, false, arenaRimColor, arenaKeyColor);
+    this.renderStaminaBar(ctx, p1X, topY + barH + 4, barW, 6, this.p1, false);
+    this.renderUltimateMeter(ctx, p1X, topY + barH + 13, barW * 0.78, 10, this.p1, false);
 
     // --- P2 HUD (Right) ---
-    this.renderHealthBar(ctx, CANVAS_WIDTH - 44 - barW, topY, barW, barH, this.p2, p2Name, true);
-    this.renderStaminaBar(ctx, CANVAS_WIDTH - 44 - barW, topY + barH + 4, barW, 7, this.p2, true);
-    this.renderUltimateMeter(ctx, CANVAS_WIDTH - 44 - barW * 0.75, topY + barH + 15, barW * 0.75, 9, this.p2);
+    this.renderHealthBar(ctx, p2X, topY, barW, barH, this.p2, p2Label, true, arenaRimColor, arenaKeyColor);
+    this.renderStaminaBar(ctx, p2X, topY + barH + 4, barW, 6, this.p2, true);
+    this.renderUltimateMeter(ctx, CANVAS_WIDTH - 64 - barW * 0.78, topY + barH + 13, barW * 0.78, 10, this.p2, true);
 
-    // --- Round Win Dots (Best-of-3) --- (Hide in Training mode)
+    // --- Round Win Laurels (Best-of-3) --- (Hide in Training mode)
     if (this.selectedMode !== GAME_MODES.TRAINING) {
-      const drawRoundDot = (dotX, dotY, isWon) => {
+      const drawRoundStar = (starX, starY, isWon) => {
         ctx.save();
-        ctx.translate(dotX, dotY);
+        ctx.translate(starX, starY);
         ctx.beginPath();
-        // 8-pointed star
-        for (let i = 0; i < 16; i++) {
-          const radius = i % 2 === 0 ? 8 : 4;
-          const angle = (Math.PI / 8) * i;
-          if (i === 0) ctx.moveTo(radius * Math.cos(angle), radius * Math.sin(angle));
-          else ctx.lineTo(radius * Math.cos(angle), radius * Math.sin(angle));
+        for (let i = 0; i < 5; i++) {
+          const rOuter = 7;
+          const rInner = 3.2;
+          const rot = -Math.PI / 2;
+          const a1 = rot + (i * 2 * Math.PI) / 5;
+          const a2 = rot + ((i + 0.5) * 2 * Math.PI) / 5;
+          if (i === 0) ctx.moveTo(Math.cos(a1) * rOuter, Math.sin(a1) * rOuter);
+          else ctx.lineTo(Math.cos(a1) * rOuter, Math.sin(a1) * rOuter);
+          ctx.lineTo(Math.cos(a2) * rInner, Math.sin(a2) * rInner);
         }
         ctx.closePath();
-        ctx.fillStyle = isWon ? '#ffd602' : '#0c1424';
         if (isWon) {
-          ctx.shadowColor = '#fe6b00';
-          ctx.shadowBlur = 8;
+          ctx.fillStyle = '#ffd700';
+          ctx.shadowColor = '#ff9800';
+          ctx.shadowBlur = 10;
+          ctx.fill();
+          ctx.strokeStyle = '#fff275';
+          ctx.lineWidth = 1;
+          ctx.stroke();
+        } else {
+          ctx.fillStyle = '#060d1c';
+          ctx.fill();
+          ctx.strokeStyle = '#1e3050';
+          ctx.lineWidth = 1;
+          ctx.stroke();
         }
-        ctx.fill();
-        ctx.strokeStyle = '#ffd602';
-        ctx.lineWidth = 1;
-        ctx.stroke();
         ctx.restore();
       };
 
-      // P1 Round Dots
-      drawRoundDot(382, topY + barH / 2, this.p1RoundWins >= 1);
-      drawRoundDot(406, topY + barH / 2, this.p1RoundWins >= 2);
+      // P1 Round Stars (near center chronometer)
+      drawRoundStar(398, topY + 11, this.p1RoundWins >= 1);
+      drawRoundStar(418, topY + 11, this.p1RoundWins >= 2);
       ctx.save();
-      ctx.font = 'bold 8px monospace';
-      ctx.fillStyle = '#90a4ae';
+      ctx.font = '700 8px "Rajdhani", sans-serif';
+      ctx.fillStyle = '#8ba3c7';
       ctx.textAlign = 'center';
-      ctx.fillText('WINS', 394, topY - 3);
+      ctx.fillText('WINS', 408, topY - 2);
 
-      // P2 Round Dots
-      drawRoundDot(554, topY + barH / 2, this.p2RoundWins >= 1);
-      drawRoundDot(578, topY + barH / 2, this.p2RoundWins >= 2);
-      ctx.fillText('WINS', 566, topY - 3);
+      // P2 Round Stars
+      drawRoundStar(542, topY + 11, this.p2RoundWins >= 1);
+      drawRoundStar(562, topY + 11, this.p2RoundWins >= 2);
+      ctx.fillText('WINS', 552, topY - 2);
       ctx.restore();
     }
 
-    // --- Center Timer Box / Training Badge ---
-    const timerW = this.selectedMode === GAME_MODES.TRAINING ? 160 : 76;
+    // --- Center Chronometer & Arena Badge ---
+    const timerW = this.selectedMode === GAME_MODES.TRAINING ? 164 : 80;
     const timerH = 50;
     const timerX = CANVAS_WIDTH / 2;
     const timerY = topY - 8 + timerH / 2;
 
     ctx.save();
-    // Hex/Diamond shape
     ctx.translate(timerX, timerY);
+
+    // Beveled octagonal tech chassis
+    const hw = timerW / 2;
+    const hh = timerH / 2;
+    const cut = 10;
     ctx.beginPath();
-    ctx.moveTo(0, -timerH/2);
-    ctx.lineTo(timerW/2, -timerH/2 + 10);
-    ctx.lineTo(timerW/2, timerH/2 - 10);
-    ctx.lineTo(0, timerH/2);
-    ctx.lineTo(-timerW/2, timerH/2 - 10);
-    ctx.lineTo(-timerW/2, -timerH/2 + 10);
+    ctx.moveTo(-hw + cut, -hh);
+    ctx.lineTo(hw - cut, -hh);
+    ctx.lineTo(hw, -hh + cut);
+    ctx.lineTo(hw, hh - cut);
+    ctx.lineTo(hw - cut, hh);
+    ctx.lineTo(-hw + cut, hh);
+    ctx.lineTo(-hw, hh - cut);
+    ctx.lineTo(-hw, -hh + cut);
     ctx.closePath();
 
-    ctx.fillStyle = '#060d1c';
+    ctx.fillStyle = '#050a18';
     ctx.fill();
-    ctx.strokeStyle = (this.selectedMode !== GAME_MODES.TRAINING && this.matchTimer <= 10) ? '#ff1744' : '#ffd602';
+
+    const isTimerDanger = this.selectedMode !== GAME_MODES.TRAINING && this.matchTimer <= 10;
+    ctx.strokeStyle = isTimerDanger ? '#ff1744' : arenaKeyColor;
     ctx.lineWidth = 2;
-    ctx.shadowColor = (this.selectedMode !== GAME_MODES.TRAINING && this.matchTimer <= 10) ? '#ff1744' : '#fe6b00';
-    ctx.shadowBlur = 8;
+    ctx.shadowColor = isTimerDanger ? '#ff1744' : arenaKeyColor;
+    ctx.shadowBlur = isTimerDanger ? (14 + Math.sin(performance.now() * 0.015) * 6) : 8;
     ctx.stroke();
-    
-    // Reset shadow and transform for text
+
     ctx.shadowBlur = 0;
     ctx.translate(-timerX, -timerY);
 
     if (this.selectedMode === GAME_MODES.TRAINING) {
-      ctx.font = '900 11px monospace';
+      ctx.font = '700 11px "Orbitron", sans-serif';
       ctx.fillStyle = '#00f0ff';
       ctx.textAlign = 'center';
       ctx.fillText('🥋 TRAINING LAB', CANVAS_WIDTH / 2, topY + 8);
 
-      ctx.font = 'bold 12px monospace';
-      ctx.fillStyle = '#ffd602';
+      ctx.font = '700 11px "Rajdhani", sans-serif';
+      ctx.fillStyle = '#ffd700';
       ctx.fillText(`DUMMY: ${this.trainingDummyController.state.toUpperCase()}`, CANVAS_WIDTH / 2, topY + 28);
     } else {
-      ctx.font = 'bold 9px monospace';
-      ctx.fillStyle = '#ffd602';
+      ctx.font = '700 8px "Rajdhani", sans-serif';
+      ctx.fillStyle = isTimerDanger ? '#ff5252' : '#a0b8db';
       ctx.textAlign = 'center';
       ctx.fillText(`ROUND ${this.currentRound}/3`, CANVAS_WIDTH / 2, topY + 3);
 
-      ctx.font = '900 26px monospace';
-      ctx.fillStyle = this.matchTimer <= 10 ? '#ff1744' : '#ffffff';
-      if (this.matchTimer <= 10) {
+      ctx.font = '900 26px "Orbitron", sans-serif';
+      ctx.fillStyle = isTimerDanger ? '#ff1744' : '#ffffff';
+      if (isTimerDanger) {
         ctx.shadowColor = '#ff1744';
         ctx.shadowBlur = 12;
       }
       ctx.textBaseline = 'middle';
-      ctx.fillText(this.matchTimer.toString().padStart(2, '0'), CANVAS_WIDTH / 2, topY + 23);
+      ctx.fillText(this.matchTimer.toString().padStart(2, '0'), CANVAS_WIDTH / 2, topY + 22);
     }
     ctx.restore();
 
-    // Arena Name Badge under Timer (with solid backing plate to prevent overlap)
-    const currArena = this.arenas[this.currentArenaIndex];
+    // Arena Name Badge under Timer
     ctx.save();
-    ctx.font = 'bold 9px monospace';
-    const bannerText = `${currArena.emoji} ${currArena.name.toUpperCase()}`;
+    ctx.font = '700 9px "Rajdhani", sans-serif';
+    const bannerText = `${currArena.emoji} ${currArena.shortName || currArena.name.toUpperCase()}`;
     const textW = ctx.measureText(bannerText).width;
     const plateW = Math.max(160, textW + 28);
-    const plateH = 18;
+    const plateH = 17;
     const plateX = CANVAS_WIDTH / 2 - plateW / 2;
     const plateY = topY + 44;
 
-    ctx.fillStyle = 'rgba(5, 10, 28, 0.94)';
-    ctx.strokeStyle = '#1c3a6e';
-    ctx.lineWidth = 1.2;
+    ctx.fillStyle = 'rgba(5, 10, 24, 0.94)';
+    ctx.strokeStyle = arenaRimColor;
+    ctx.lineWidth = 1;
     ctx.beginPath();
     ctx.roundRect(plateX, plateY, plateW, plateH, 4);
     ctx.fill();
     ctx.stroke();
 
-    ctx.fillStyle = '#ffd602';
-    ctx.shadowColor = 'rgba(255, 214, 2, 0.6)';
+    ctx.fillStyle = '#ffd700';
+    ctx.shadowColor = arenaRimColor;
     ctx.shadowBlur = 4;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
@@ -2356,10 +2412,10 @@ class CampusClashGame {
 
     // --- Combo Counters ---
     if (this.combos.P1.hits > 1) {
-      this.renderComboDisplay(ctx, 48, topY + 86, this.combos.P1);
+      this.renderComboDisplay(ctx, 64, topY + 86, this.combos.P1);
     }
     if (this.combos.P2.hits > 1) {
-      this.renderComboDisplay(ctx, CANVAS_WIDTH - 220, topY + 86, this.combos.P2);
+      this.renderComboDisplay(ctx, CANVAS_WIDTH - 240, topY + 86, this.combos.P2);
     }
 
     // --- Divider Line ---
@@ -2370,43 +2426,45 @@ class CampusClashGame {
 
     // --- Controls Guide Strip ---
     ctx.save();
-    ctx.fillStyle = 'rgba(6, 10, 20, 0.92)';
+    ctx.fillStyle = 'rgba(5, 9, 20, 0.95)';
     ctx.fillRect(0, CANVAS_HEIGHT - 28, CANVAS_WIDTH, 28);
-    ctx.font = '11px monospace';
-    ctx.fillStyle = '#f8fafc';
+    ctx.font = '700 11px "Rajdhani", sans-serif';
+    ctx.fillStyle = '#e2e8f0';
     ctx.textAlign = 'center';
 
     if (this.selectedMode === GAME_MODES.TRAINING) {
-      ctx.fillText('TRAINING CONTROLS: [1] Stand  [2] Block  [3] Attack  [4] Dodge  |  [R] Reset Match  |  [ESC] Exit', CANVAS_WIDTH / 2, CANVAS_HEIGHT - 10);
+      ctx.fillText('TRAINING LAB: [1] Stand  [2] Block  [3] Attack  [4] Dodge  |  [R] Reset Match  |  [ESC] Exit', CANVAS_WIDTH / 2, CANVAS_HEIGHT - 10);
     } else if (this.selectedMode === GAME_MODES.PVP) {
-      ctx.fillText('P1: WASD+J(Atk)/K(Hvy)/L(Block)/Space(Dodge)  |  P2: ARROWS+1/2/3/0 or I/O/P/Shift  |  H: Debug  |  ESC: Menu', CANVAS_WIDTH / 2, CANVAS_HEIGHT - 10);
+      ctx.fillText('P1: WASD+J(Atk)/K(Hvy)/L(Shield)/Space(Dodge)  |  P2: ARROWS+1/2/3/0 or I/O/P/Shift  |  H: Debug  |  ESC: Menu', CANVAS_WIDTH / 2, CANVAS_HEIGHT - 10);
     } else {
-      ctx.fillText('P1: WASD=Move | J=Light | K=Heavy | L=Hex Shield (Parry) | Space=Dodge | J+K=Ultimate | ESC: Menu', CANVAS_WIDTH / 2, CANVAS_HEIGHT - 10);
+      ctx.fillText('P1: WASD=Move | J=Light Atk | K=Heavy Atk | L=Hex Shield (Parry) | Space=Dodge | J+K=Ultimate | ESC: Menu', CANVAS_WIDTH / 2, CANVAS_HEIGHT - 10);
     }
     ctx.restore();
+
+    ctx.restore(); // restore top HUD save
   }
 
   renderStaminaBar(ctx, x, y, w, h, fighter, isRightAligned) {
     if (!fighter.stamina) return;
 
     ctx.save();
-    // Background Frame
-    ctx.fillStyle = '#0a101d';
+    const st = fighter.stamina;
+    const pct = Math.min(1, Math.max(0, st.current / st.max));
+    const fillW = Math.round(w * pct);
+
+    // Background housing
+    ctx.fillStyle = '#060c18';
     ctx.fillRect(x, y, w, h);
-    ctx.strokeStyle = '#1e293b';
+    ctx.strokeStyle = '#152540';
     ctx.lineWidth = 1;
     ctx.strokeRect(x, y, w, h);
 
-    const st = fighter.stamina;
-    const pct = Math.min(1, Math.max(0, st.current / st.max));
-    const fillW = Math.round((w - 2) * pct);
-
-    // Color logic: >50 green, 20-50 yellow, <20 red pulse
-    let barColor = '#00e676';
+    // Color logic
+    let barColor = '#00e5ff';
     if (st.isBroken) {
       barColor = '#ff1744';
       ctx.shadowColor = '#ff1744';
-      ctx.shadowBlur = 6 + Math.sin(Date.now() * 0.02) * 4;
+      ctx.shadowBlur = 8 + Math.sin(performance.now() * 0.02) * 5;
     } else if (pct < 0.20) {
       barColor = '#ff5252';
       ctx.shadowColor = '#ff5252';
@@ -2417,19 +2475,19 @@ class CampusClashGame {
 
     ctx.fillStyle = barColor;
     if (isRightAligned) {
-      ctx.fillRect(x + w - 1 - fillW, y + 1, fillW, h - 2);
+      ctx.fillRect(x + w - fillW, y, fillW, h);
     } else {
-      ctx.fillRect(x + 1, y + 1, fillW, h - 2);
+      ctx.fillRect(x, y, fillW, h);
     }
 
     // Status warning text if low/broken
     if (st.isBroken) {
-      ctx.font = '900 8px monospace';
+      ctx.font = '900 8px "Orbitron", sans-serif';
       ctx.fillStyle = '#ff1744';
       ctx.textAlign = isRightAligned ? 'right' : 'left';
       ctx.fillText('⚠️ STAMINA BREAK!', isRightAligned ? x + w : x, y + h + 8);
     } else if (pct < 0.20) {
-      ctx.font = 'bold 8px monospace';
+      ctx.font = '700 8px "Rajdhani", sans-serif';
       ctx.fillStyle = '#ff9100';
       ctx.textAlign = isRightAligned ? 'right' : 'left';
       ctx.fillText('⚠️ LOW STAMINA', isRightAligned ? x + w : x, y + h + 8);
@@ -2437,7 +2495,7 @@ class CampusClashGame {
     ctx.restore();
   }
 
-  renderHealthBar(ctx, x, y, w, h, fighter, label, isRightAligned) {
+  renderHealthBar(ctx, x, y, w, h, fighter, roleLabel, isRightAligned, arenaRimColor, arenaKeyColor) {
     const charEmojiMap = {
       topper: '🎓',
       backbencher: '🔥',
@@ -2455,69 +2513,101 @@ class CampusClashGame {
     const accentColor = fighter.config.colors.accent || (fighter.config.id === 'topper' ? '#ffd602' : '#29d3ff');
 
     ctx.save();
-    
-    // Character Portrait (Hex-framed badge)
-    const portraitX = isRightAligned ? x + w + 24 : x - 24;
-    const portraitR = 21;
-    
-    // Outer hex ring
+
+    // --- 1. Character Portrait (Hexagonal Cyber-Collegiate Badge) ---
+    const portraitX = isRightAligned ? x + w + 30 : x - 30;
+    const portraitY = y + h / 2 + 5;
+    const portraitR = 23;
+
     ctx.save();
-    ctx.translate(portraitX, y + h / 2);
+    ctx.translate(portraitX, portraitY);
+
+    // Outer rotating tech ring
+    ctx.beginPath();
+    ctx.arc(0, 0, portraitR + 4, 0, Math.PI * 2);
+    ctx.strokeStyle = isLowHP ? '#ff1744' : (arenaRimColor || accentColor);
+    ctx.lineWidth = 1.2;
+    ctx.setLineDash([6, 4]);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Hexagonal clipping frame
     ctx.beginPath();
     for (let i = 0; i < 6; i++) {
-      const angle = (Math.PI / 3) * i;
+      const angle = (Math.PI / 3) * i - Math.PI / 6;
       const hx = Math.cos(angle) * portraitR;
       const hy = Math.sin(angle) * portraitR;
       if (i === 0) ctx.moveTo(hx, hy);
       else ctx.lineTo(hx, hy);
     }
     ctx.closePath();
-    
+
     ctx.fillStyle = '#050a1c';
     ctx.fill();
 
-    // Render Character Portrait Sprite or Fallback Emoji
+    ctx.save();
+    ctx.clip();
     const pImg = window.CampusVisuals ? window.CampusVisuals.getPortrait(fighter.config.id) : null;
     if (pImg && pImg.complete && pImg.naturalWidth > 0) {
-      ctx.save();
-      ctx.clip();
       ctx.drawImage(pImg, -portraitR, -portraitR, portraitR * 2, portraitR * 2);
-      ctx.restore();
     } else {
-      ctx.font = '16px sans-serif';
+      ctx.font = '18px sans-serif';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       ctx.fillText(charEmojiMap[fighter.config.id] || '🥊', 0, 1);
     }
+    ctx.restore();
 
+    // Hex outer border
     ctx.lineWidth = 2.5;
     ctx.strokeStyle = isLowHP ? '#ff1744' : accentColor;
     ctx.shadowColor = isLowHP ? '#ff1744' : accentColor;
-    ctx.shadowBlur = isLowHP ? (16 + Math.sin(Date.now() * 0.01) * 8) : 10;
+    ctx.shadowBlur = isLowHP ? (16 + Math.sin(performance.now() * 0.015) * 8) : 8;
     ctx.stroke();
-    ctx.restore();
 
-    // Name label
-    ctx.font = 'bold 13px sans-serif';
-    ctx.fillStyle = '#ffd23f';
+    ctx.restore(); // restore portrait translate
+
+    // --- 2. Fighter Name & Academic Department Tag ---
+    ctx.save();
+    ctx.textAlign = isRightAligned ? 'right' : 'left';
+
+    // Role & Name line
+    const nameY = y - 7;
+    ctx.font = '900 13px "Orbitron", sans-serif';
+    ctx.fillStyle = '#ffffff';
     ctx.shadowColor = accentColor;
     ctx.shadowBlur = 4;
-    ctx.textAlign = isRightAligned ? 'right' : 'left';
-    ctx.fillText(label, isRightAligned ? x + w : x, y - 6);
-    ctx.shadowBlur = 0;
+    const nameStr = `${fighter.config.displayName.toUpperCase()}`;
+    const tagX = isRightAligned ? x + w : x;
+    ctx.fillText(nameStr, tagX, nameY);
 
-    // Numerical HP display
-    ctx.font = 'bold 12px monospace';
-    ctx.fillStyle = '#ffffff';
+    // Academic Dept / Tagline
+    ctx.font = '700 10px "Rajdhani", sans-serif';
+    ctx.fillStyle = accentColor;
+    ctx.shadowBlur = 0;
+    const deptStr = `[ ${roleLabel} • ${fighter.config.tagline || 'COLLEGIATE WARRIOR'} ]`;
+    const nameW = ctx.measureText(nameStr).width;
+
+    if (isRightAligned) {
+      ctx.fillText(deptStr, x + w - nameW - 12, nameY);
+    } else {
+      ctx.fillText(deptStr, x + nameW + 12, nameY);
+    }
+
+    // --- 3. Numerical HP Display ---
+    ctx.font = '700 11px "Orbitron", sans-serif';
+    ctx.fillStyle = isLowHP ? '#ff5252' : '#ffffff';
     ctx.textAlign = isRightAligned ? 'left' : 'right';
     const curHp = Math.ceil(Math.max(0, fighter.health));
-    ctx.fillText(`${curHp} / ${fighter.maxHealth} HP`, isRightAligned ? x : x + w, y - 6);
+    const hpPct = Math.round(Math.max(0, fighter.health / fighter.maxHealth) * 100);
+    ctx.fillText(`${curHp} / ${fighter.maxHealth} HP [${hpPct}%]`, isRightAligned ? x : x + w, nameY);
+    ctx.restore();
 
-    // Chamfered HP Bar Path
+    // --- 4. Chamfered Carbon-Alloy Housing ---
     const chamfer = 10;
     const barPath = new Path2D();
     if (isRightAligned) {
-      // Chamfer on top-left (matches .cc-hp--p2)
+      // Chamfer on top-left
       barPath.moveTo(x + chamfer, y);
       barPath.lineTo(x + w, y);
       barPath.lineTo(x + w, y + h);
@@ -2525,7 +2615,7 @@ class CampusClashGame {
       barPath.lineTo(x, y + chamfer);
       barPath.closePath();
     } else {
-      // Chamfer on bottom-right (matches .cc-hp)
+      // Chamfer on bottom-right
       barPath.moveTo(x, y);
       barPath.lineTo(x + w, y);
       barPath.lineTo(x + w - chamfer, y + h);
@@ -2533,41 +2623,54 @@ class CampusClashGame {
       barPath.closePath();
     }
 
-    // 1. Dark background bar with border
-    ctx.fillStyle = '#07122b';
+    // Deep carbon background
+    ctx.fillStyle = '#060d1a';
     ctx.fill(barPath);
-    ctx.strokeStyle = '#0d2a5c';
-    ctx.lineWidth = 2;
-    ctx.stroke(barPath);
 
-    // Clip inner content to chamfered bar path
+    // Clip to bar path for internal contents
     ctx.save();
     ctx.clip(barPath);
 
-    // 2. White damage lag bar (rgba(255, 255, 255, 0.85))
+    // Subtle diagonal tech hash pattern on empty background
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.04)';
+    ctx.lineWidth = 1;
+    for (let hx = x - 20; hx < x + w + 20; hx += 8) {
+      ctx.beginPath();
+      ctx.moveTo(hx, y);
+      ctx.lineTo(hx + 10, y + h);
+      ctx.stroke();
+    }
+
+    // --- 5. White / Cream Damage Ghost Lag Bar ---
     const lagPct = Math.min(1, Math.max(0, (fighter.displayedHealth !== undefined ? fighter.displayedHealth : fighter.health) / fighter.maxHealth));
     const lagFillW = Math.round(w * lagPct);
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
+    ctx.fillStyle = 'rgba(255, 235, 175, 0.82)';
     if (isRightAligned) {
       ctx.fillRect(x + w - lagFillW, y, lagFillW, h);
     } else {
       ctx.fillRect(x, y, lagFillW, h);
     }
 
-    // 3. Actual health fill as gradient
+    // --- 6. Active Health Fill with Dynamic Energy Gradient ---
     const pct = Math.min(1, Math.max(0, fighter.health / fighter.maxHealth));
     const fillW = Math.round(w * pct);
     const fillGrad = ctx.createLinearGradient(x, y, x + w, y);
+
     if (pct > 0.5) {
-      fillGrad.addColorStop(0, '#6bff5c');
-      fillGrad.addColorStop(0.5, '#b6ff4d');
-      fillGrad.addColorStop(1, '#2fb83a');
+      // High HP: Collegiate Emerald-Cyan
+      fillGrad.addColorStop(0, '#00f0ff');
+      fillGrad.addColorStop(0.4, '#10b981');
+      fillGrad.addColorStop(1, '#059669');
     } else if (pct > 0.25) {
+      // Medium HP: Tactical Amber Overdrive
       fillGrad.addColorStop(0, '#ffd23f');
-      fillGrad.addColorStop(1, '#ff9a2e');
+      fillGrad.addColorStop(0.5, '#f59e0b');
+      fillGrad.addColorStop(1, '#d97706');
     } else {
+      // Low HP: Core Meltdown Red
       fillGrad.addColorStop(0, '#ff4b3a');
-      fillGrad.addColorStop(1, '#d50000');
+      fillGrad.addColorStop(0.5, '#dc2626');
+      fillGrad.addColorStop(1, '#991b1b');
     }
 
     ctx.fillStyle = fillGrad;
@@ -2577,62 +2680,112 @@ class CampusClashGame {
       ctx.fillRect(x, y, fillW, h);
     }
 
-    // 4. Subtle inner glow on bar fill
-    ctx.shadowColor = pct > 0.5 ? '#6bff5c' : (pct > 0.25 ? '#ffd23f' : '#ff4b3a');
-    ctx.shadowBlur = 8;
-
-    // 5. Repeating segment dividers at 25%, 50%, 75%
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.22)';
-    for (let i = 1; i <= 3; i++) {
-      const segX = x + (w * (i * 0.25));
-      ctx.fillRect(segX, y, 2, h);
+    // --- 7. Tactical 10% Graduation Notches ---
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.35)';
+    for (let i = 1; i <= 9; i++) {
+      const segX = x + (w * (i * 0.10));
+      ctx.fillRect(segX, y, i === 5 ? 2 : 1, h);
     }
 
-    // 6. Specular highlight strip on top third
-    const highlightGrad = ctx.createLinearGradient(x, y, x, y + h / 3);
-    highlightGrad.addColorStop(0, 'rgba(255, 255, 255, 0.35)');
+    // --- 8. Specular Glass Highlight Strip ---
+    const highlightGrad = ctx.createLinearGradient(x, y, x, y + h * 0.45);
+    highlightGrad.addColorStop(0, 'rgba(255, 255, 255, 0.45)');
     highlightGrad.addColorStop(1, 'rgba(255, 255, 255, 0.0)');
     ctx.fillStyle = highlightGrad;
-    ctx.fillRect(x, y, w, h / 3);
+    ctx.fillRect(x, y, w, h * 0.45);
 
     ctx.restore(); // restore clip
+
+    // --- 9. Metallic Housing Stroke with Corner Brackets ---
+    ctx.strokeStyle = '#1e3a6a';
+    ctx.lineWidth = 1.5;
+    ctx.stroke(barPath);
+
+    // Tactical arena-accented brackets
+    ctx.save();
+    ctx.strokeStyle = arenaRimColor || '#00e5ff';
+    ctx.lineWidth = 2;
+    if (isRightAligned) {
+      // Top-right and bottom-left brackets
+      ctx.beginPath();
+      ctx.moveTo(x + w - 12, y);
+      ctx.lineTo(x + w, y);
+      ctx.lineTo(x + w, y + 8);
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.moveTo(x + 12, y + h);
+      ctx.lineTo(x, y + h);
+      ctx.lineTo(x, y + h - 8);
+      ctx.stroke();
+    } else {
+      // Top-left and bottom-right brackets
+      ctx.beginPath();
+      ctx.moveTo(x + 12, y);
+      ctx.lineTo(x, y);
+      ctx.lineTo(x, y + 8);
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.moveTo(x + w - 12, y + h);
+      ctx.lineTo(x + w, y + h);
+      ctx.lineTo(x + w, y + h - 8);
+      ctx.stroke();
+    }
+    ctx.restore();
+
     ctx.restore(); // restore initial save
   }
 
-  renderUltimateMeter(ctx, x, y, w, h, fighter) {
+  renderUltimateMeter(ctx, x, y, w, h, fighter, isRightAligned) {
     ctx.save();
-    
-    ctx.font = 'bold 8px monospace';
-    ctx.fillStyle = '#90a4ae';
-    ctx.textAlign = 'left';
-    ctx.textBaseline = 'middle';
-    ctx.fillText('METER', x, y + h / 2);
-    
-    const dotStartX = x + 30;
-    const dotSpacing = (w - 30) / 10;
+
     const pct = Math.min(1, fighter.ultimateMeter / fighter.maxUltimate);
-    const filledDots = Math.floor(pct * 10);
+    const filledSegments = Math.floor(pct * 10);
+    const isFull = filledSegments === 10;
     const accentColor = fighter.config.colors.accent || '#00e5ff';
 
-    const isFull = filledDots === 10;
+    // Label
+    ctx.font = '700 8px "Orbitron", sans-serif';
+    ctx.fillStyle = isFull ? '#ffd700' : '#8fa4c4';
+    ctx.textAlign = isRightAligned ? 'right' : 'left';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('OVERDRIVE', isRightAligned ? x + w : x, y + h / 2);
 
-    for (let i = 0; i < 10; i++) {
-      const dotX = dotStartX + (i + 0.5) * dotSpacing;
-      const dotY = y + h / 2;
-      
+    const segStartX = isRightAligned ? x : x + 62;
+    const segTotalW = w - 62;
+    const segCount = 10;
+    const gap = 3;
+    const segW = (segTotalW - (segCount - 1) * gap) / segCount;
+
+    for (let i = 0; i < segCount; i++) {
+      const idx = isRightAligned ? (segCount - 1 - i) : i;
+      const segX = segStartX + i * (segW + gap);
+      const isFilled = idx < filledSegments;
+
+      // Angled parallelogram segment
       ctx.beginPath();
-      ctx.arc(dotX, dotY, h/2 - 1, 0, Math.PI * 2);
-      
-      if (i < filledDots) {
-        ctx.fillStyle = accentColor;
-        ctx.shadowColor = isFull ? '#fe6b00' : accentColor;
-        ctx.shadowBlur = isFull ? 10 + Math.sin(Date.now() * 0.01) * 6 : 6;
-        if (isFull) ctx.fillStyle = '#ffd602';
+      const slant = 3;
+      ctx.moveTo(segX + slant, y);
+      ctx.lineTo(segX + segW + slant, y);
+      ctx.lineTo(segX + segW, y + h);
+      ctx.lineTo(segX, y + h);
+      ctx.closePath();
+
+      if (isFilled) {
+        ctx.fillStyle = isFull ? '#ffd700' : accentColor;
+        if (isFull) {
+          ctx.shadowColor = '#fe6b00';
+          ctx.shadowBlur = 8 + Math.sin(performance.now() * 0.015) * 4;
+        } else {
+          ctx.shadowColor = accentColor;
+          ctx.shadowBlur = 4;
+        }
         ctx.fill();
       } else {
         ctx.fillStyle = '#060c18';
         ctx.fill();
-        ctx.strokeStyle = '#1e293b';
+        ctx.strokeStyle = '#182b48';
         ctx.lineWidth = 1;
         ctx.stroke();
       }
@@ -2640,12 +2793,12 @@ class CampusClashGame {
     }
 
     if (isFull) {
-      ctx.font = '900 10px monospace';
-      ctx.fillStyle = '#ffd602';
-      ctx.shadowColor = '#fe6b00';
-      ctx.shadowBlur = 8;
-      ctx.textAlign = 'center';
-      ctx.fillText('⚡ ULTIMATE READY ⚡', dotStartX + (w - 30) / 2, y + h + 10);
+      ctx.font = '900 9px "Orbitron", sans-serif';
+      ctx.fillStyle = '#ffd700';
+      ctx.shadowColor = '#ff6b00';
+      ctx.shadowBlur = 10;
+      ctx.textAlign = isRightAligned ? 'right' : 'left';
+      ctx.fillText('⚡ OVERDRIVE READY [J+K] ⚡', isRightAligned ? x + w : x, y + h + 11);
     }
     ctx.restore();
   }
@@ -2667,7 +2820,7 @@ class CampusClashGame {
     ctx.translate(shakeOffset, shakeOffset);
 
     // Label above
-    ctx.font = 'bold 16px "Arial Black", sans-serif';
+    ctx.font = '900 15px "Orbitron", sans-serif';
     ctx.fillStyle = tier.color;
     ctx.shadowColor = tier.color;
     ctx.shadowBlur = 8;
@@ -2676,18 +2829,18 @@ class CampusClashGame {
     ctx.fillText(label, x, y - 10);
 
     // Hit count
-    ctx.font = '900 42px "Arial Black", sans-serif';
+    ctx.font = '900 38px "Orbitron", sans-serif';
     ctx.strokeStyle = '#000000';
     ctx.lineWidth = 3;
-    ctx.strokeText(`×${combo.hits}`, x, y + 30);
+    ctx.strokeText(`×${combo.hits}`, x, y + 28);
     ctx.fillStyle = tier.color;
-    ctx.fillText(`×${combo.hits}`, x, y + 30);
+    ctx.fillText(`×${combo.hits}`, x, y + 28);
     
     // Damage amount
-    ctx.font = 'bold 14px monospace';
+    ctx.font = '700 13px "Rajdhani", monospace';
     ctx.fillStyle = '#ffffff';
     ctx.shadowBlur = 0;
-    ctx.fillText(`${combo.damage} DMG`, x, y + 50);
+    ctx.fillText(`${combo.damage} DMG`, x, y + 46);
 
     ctx.restore();
   }
@@ -2752,27 +2905,25 @@ class CampusClashGame {
     ctx.restore();
   }
 
-
-
   renderPhaseAnnouncements(ctx) {
     if (this.roundPhase === ROUND_STATES.START) {
       ctx.save();
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       if (this.phaseTimer > 40) {
-        ctx.font = '900 64px "Arial Black", Impact, sans-serif';
+        ctx.font = '900 58px "Orbitron", sans-serif';
         ctx.fillStyle = '#ffffff';
         ctx.shadowColor = '#00e5ff';
         ctx.shadowBlur = 25;
         ctx.fillText(`ROUND ${this.currentRound}`, CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2 - 30);
 
-        ctx.font = 'bold 18px monospace';
+        ctx.font = '700 16px "Rajdhani", sans-serif';
         ctx.fillStyle = '#ffd700';
         ctx.shadowBlur = 0;
         ctx.fillText('FIRST TO 2 ROUND WINS', CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2 + 25);
       } else {
         const pulse = Math.sin(this.phaseTimer * 0.25) * 8;
-        ctx.font = '900 80px "Arial Black", Impact, sans-serif';
+        ctx.font = '900 76px "Orbitron", sans-serif';
         ctx.fillStyle = '#ffd700';
         ctx.shadowColor = '#ff6b35';
         ctx.shadowBlur = 35;
@@ -2783,7 +2934,7 @@ class CampusClashGame {
       ctx.save();
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      ctx.font = '900 92px "Arial Black", Impact, sans-serif';
+      ctx.font = '900 84px "Orbitron", sans-serif';
       ctx.fillStyle = '#ff1744';
       ctx.shadowColor = '#ffd700';
       ctx.shadowBlur = 40;
@@ -2807,9 +2958,9 @@ class CampusClashGame {
       const bannerW = 680;
       const bannerH = 190;
 
-      ctx.fillStyle = 'rgba(8, 16, 32, 0.94)';
+      ctx.fillStyle = 'rgba(6, 12, 26, 0.96)';
       ctx.strokeStyle = winnerColor;
-      ctx.lineWidth = 3;
+      ctx.lineWidth = 2.5;
       ctx.shadowColor = winnerColor;
       ctx.shadowBlur = 24;
       drawRoundRect(ctx, bannerX, bannerY, bannerW, bannerH, 16);
@@ -2820,7 +2971,7 @@ class CampusClashGame {
       ctx.textBaseline = 'middle';
 
       // Headline
-      ctx.font = '900 38px "Arial Black", Impact, sans-serif';
+      ctx.font = '900 32px "Orbitron", sans-serif';
       ctx.fillStyle = '#ffd700';
       ctx.shadowColor = winnerColor;
       ctx.shadowBlur = 20;
@@ -2830,21 +2981,21 @@ class CampusClashGame {
       ctx.fillText(headline, CANVAS_WIDTH / 2, bannerY + 45);
 
       // Fighter Sub-badge
-      ctx.font = 'bold 18px sans-serif';
+      ctx.font = '700 18px "Rajdhani", sans-serif';
       ctx.fillStyle = winnerColor;
       ctx.shadowBlur = 0;
       ctx.fillText(`${winnerName} (${fighterName}) TAKES ROUND ${this.currentRound}`, CANVAS_WIDTH / 2, bannerY + 88);
 
       // Round Pips
-      ctx.font = '900 20px monospace';
+      ctx.font = '700 18px "Orbitron", monospace';
       ctx.fillStyle = '#ffffff';
       const p1Stars = '★'.repeat(this.p1RoundWins) + '☆'.repeat(Math.max(0, 2 - this.p1RoundWins));
       const p2Stars = '★'.repeat(this.p2RoundWins) + '☆'.repeat(Math.max(0, 2 - this.p2RoundWins));
-      const p2Label = isPVC ? 'CPU' : 'P2';
-      ctx.fillText(`SCORE:  P1 [ ${p1Stars} ]   vs   [ ${p2Stars} ] ${p2Label}`, CANVAS_WIDTH / 2, bannerY + 128);
+      const p2Tag = isPVC ? 'CPU' : 'P2';
+      ctx.fillText(`SCORE:  P1 [ ${p1Stars} ]   vs   [ ${p2Stars} ] ${p2Tag}`, CANVAS_WIDTH / 2, bannerY + 128);
 
       // Next Round Notice
-      ctx.font = 'italic 13px monospace';
+      ctx.font = 'italic 13px "Rajdhani", sans-serif';
       ctx.fillStyle = '#90a4ae';
       ctx.fillText(`Next round starting in ${(this.phaseTimer / 60).toFixed(1)}s...`, CANVAS_WIDTH / 2, bannerY + 162);
       ctx.restore();
@@ -2860,165 +3011,300 @@ class CampusClashGame {
     const p2Label = isPVC ? 'COMPUTER' : 'PLAYER 2';
 
     ctx.save();
-    // 1. Deep cinematic backdrop with gradient
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
+
+    // 1. Deep cinematic collegiate matrix backdrop
     const bgGrad = ctx.createRadialGradient(w / 2, h / 2, 80, w / 2, h / 2, 540);
-    bgGrad.addColorStop(0, 'rgba(10, 24, 48, 0.96)');
-    bgGrad.addColorStop(1, 'rgba(3, 7, 18, 0.98)');
+    bgGrad.addColorStop(0, 'rgba(8, 18, 38, 0.97)');
+    bgGrad.addColorStop(1, 'rgba(2, 5, 14, 0.99)');
     ctx.fillStyle = bgGrad;
     ctx.fillRect(0, 0, w, h);
 
-    // 2. Main Victory Banner Header
+    // Subtle tactical scanlines
+    ctx.strokeStyle = 'rgba(0, 229, 255, 0.03)';
+    ctx.lineWidth = 1;
+    for (let y = 0; y < h; y += 8) {
+      ctx.beginPath();
+      ctx.moveTo(0, y);
+      ctx.lineTo(w, y);
+      ctx.stroke();
+    }
+
+    // 2. Academic Combat Assessment Evaluation Logic
+    let combatGrade = 'A';
+    let combatCGPA = '8.9 / 10.0';
+    let gradeColor = '#00e676';
+    let deanRemark = 'Solid neutral game and thesis defense executed with academic distinction.';
+
+    if (isPVC) {
+      if (p1Won) {
+        if (this.p1.health > this.p1.maxHealth * 0.6 || this.matchStats.P1.maxCombo >= 5) {
+          combatGrade = 'S+';
+          combatCGPA = '9.95 / 10.0';
+          gradeColor = '#ffd700';
+          deanRemark = 'Dean's Combat Laurels. Flawless syllabus mastery, algorithmic precision, and devastating combo thesis.';
+        } else {
+          combatGrade = 'A+';
+          combatCGPA = '9.40 / 10.0';
+          gradeColor = '#00e5ff';
+          deanRemark = 'First-Class Distinction. Commendable pressure regulation and placement-ready neutral control.';
+        }
+      } else {
+        combatGrade = 'SUPPL.';
+        combatCGPA = '4.80 / 10.0';
+        gradeColor = '#ff1744';
+        deanRemark = 'Supplementary Exam Required. Defensive thesis collapsed under AI opponent pressure. Remedial lab advised.';
+      }
+    } else {
+      combatGrade = p1Won ? 'S+' : 'A+';
+      combatCGPA = '9.80 / 10.0';
+      gradeColor = '#ffd700';
+      deanRemark = 'Exemplary 1v1 collegiate brawl. Both combatants awarded Advanced Sparring Honors.';
+    }
+
+    // 3. Header Ribbon & Dean's Assessment Header
     ctx.textAlign = 'center';
     let bannerTitle = 'MATCH DRAW — HONORS EVEN!';
-    let bannerSub = 'A grueling clash with no clear victor.';
+    let bannerSub = 'A grueling clash with no clear victor. Rematch recommended by the Board.';
     let bannerColor = '#ffd700';
 
     if (isPVC) {
       if (p1Won) {
-        bannerTitle = '🎉 VICTORY! YOU DEFEATED THE COMPUTER! 🏆';
-        bannerSub = `Outstanding combat! You dominated with ${this.p1.config.displayName.toUpperCase()}!`;
+        bannerTitle = '🎓 SUMMA CUM LAUDE — VICTORY! 🏆';
+        bannerSub = `Official Combat Assessment: ${this.p1.config.displayName.toUpperCase()} dominates the arena with First-Class Honors!`;
         bannerColor = '#00e676';
       } else {
-        bannerTitle = '💀 DEFEAT! THE COMPUTER CLAIMS THE VICTORY 🤖';
-        bannerSub = `The AI bot prevailed with ${this.p2.config.displayName.toUpperCase()}. Practice and hit Rematch!`;
+        bannerTitle = '⚠️ ACADEMIC PROBATION — DEFEAT BY AI! 🤖';
+        bannerSub = `The AI prevailed with ${this.p2.config.displayName.toUpperCase()}. Study opponent telemetry and retest!`;
         bannerColor = '#ff1744';
       }
     } else {
       if (p1Won) {
-        bannerTitle = '👑 PLAYER 1 WINS THE CLASH! 🥇';
-        bannerSub = `${this.p1.config.displayName.toUpperCase()} TAKES THE SRM TROPHY!`;
+        bannerTitle = '👑 PLAYER 1 CONQUERS THE SRM ARENA! 🥇';
+        bannerSub = `${this.p1.config.displayName.toUpperCase()} TAKES THE SRM BRAWL TROPHY & DEAN'S HONORS!`;
         bannerColor = '#00e5ff';
       } else if (p2Won) {
-        bannerTitle = '👑 PLAYER 2 WINS THE CLASH! 🥇';
-        bannerSub = `${this.p2.config.displayName.toUpperCase()} TAKES THE SRM TROPHY!`;
+        bannerTitle = '👑 PLAYER 2 CONQUERS THE SRM ARENA! 🥇';
+        bannerSub = `${this.p2.config.displayName.toUpperCase()} TAKES THE SRM BRAWL TROPHY & DEAN'S HONORS!`;
         bannerColor = '#ff6b35';
       }
     }
 
-    // Top Category Ribbon
-    ctx.font = '900 13px monospace';
+    // Academic Board Category Stamp
+    ctx.font = '700 11px "Rajdhani", sans-serif';
     ctx.fillStyle = bannerColor;
     ctx.shadowColor = bannerColor;
-    ctx.shadowBlur = 10;
-    ctx.fillText(isPVC ? 'SRM CAMPUS CLASH — SOLO BATTLE RESULTS' : 'SRM CAMPUS CLASH — 1v1 BRAWL RESULTS', w / 2, 34);
+    ctx.shadowBlur = 8;
+    ctx.fillText('🏛️ SRM INSTITUTE OF COMBAT SCIENCES // SEMESTER CLASH EVALUATION TRANSCRIPT', w / 2, 28);
 
-    // Big Headline
-    ctx.font = '900 34px "Arial Black", Impact, sans-serif';
+    // Big Headline in Orbitron
+    ctx.font = '900 28px "Orbitron", sans-serif';
     ctx.fillStyle = '#ffffff';
     ctx.shadowColor = bannerColor;
-    ctx.shadowBlur = 25;
-    ctx.fillText(bannerTitle, w / 2, 70);
+    ctx.shadowBlur = 20;
+    ctx.fillText(bannerTitle, w / 2, 60);
 
-    // Subtitle
-    ctx.font = 'bold 15px sans-serif';
+    // Subtitle in Rajdhani
+    ctx.font = '700 14px "Rajdhani", sans-serif';
     ctx.fillStyle = '#ffd700';
     ctx.shadowBlur = 0;
-    ctx.fillText(bannerSub, w / 2, 98);
+    ctx.fillText(bannerSub, w / 2, 84);
 
-    // 3. Dual Fighter Showcase Cards (P1 vs P2/CPU)
-    const cardY = 114;
-    const cardH = 205;
+    // 4. Dual Fighter Showcase Dossier Cards (P1 vs P2/CPU)
+    const cardY = 98;
+    const cardH = 210;
 
-    // LEFT CARD: PLAYER 1
+    // --- LEFT CARD: PLAYER 1 ---
     const p1CardX = 50;
     const p1CardW = 410;
-    ctx.fillStyle = p1Won ? 'rgba(0, 230, 118, 0.12)' : 'rgba(16, 24, 40, 0.85)';
-    ctx.strokeStyle = p1Won ? '#00e676' : '#263238';
-    ctx.lineWidth = p1Won ? 3 : 1.5;
+    ctx.fillStyle = p1Won ? 'rgba(0, 230, 118, 0.10)' : 'rgba(10, 20, 36, 0.90)';
+    ctx.strokeStyle = p1Won ? '#00e676' : '#22344d';
+    ctx.lineWidth = p1Won ? 2.5 : 1.2;
     ctx.shadowColor = p1Won ? '#00e676' : 'transparent';
-    ctx.shadowBlur = p1Won ? 18 : 0;
-    drawRoundRect(ctx, p1CardX, cardY, p1CardW, cardH, 14);
+    ctx.shadowBlur = p1Won ? 16 : 0;
+    drawRoundRect(ctx, p1CardX, cardY, p1CardW, cardH, 12);
     ctx.fill();
     ctx.stroke();
 
-    // P1 Winner / Loser Badge
+    // P1 Winner / Loser Academic Badge
     ctx.shadowBlur = 0;
-    ctx.fillStyle = p1Won ? '#00e676' : '#37474f';
-    drawRoundRect(ctx, p1CardX + 16, cardY + 14, 130, 26, 6);
+    ctx.fillStyle = p1Won ? '#00e676' : '#334155';
+    drawRoundRect(ctx, p1CardX + 16, cardY + 12, 140, 24, 4);
     ctx.fill();
-    ctx.font = '900 13px monospace';
+    ctx.font = '900 11px "Orbitron", sans-serif';
     ctx.fillStyle = '#ffffff';
     ctx.textAlign = 'center';
-    ctx.fillText(p1Won ? '👑 WINNER' : '🥈 RUNNER-UP', p1CardX + 81, cardY + 31);
+    ctx.fillText(p1Won ? '👑 FIRST RANK (WINNER)' : '🥈 RUNNER-UP', p1CardX + 86, cardY + 28);
 
-    // P1 Fighter Name & Title
-    ctx.textAlign = 'left';
-    ctx.font = '900 22px "Arial Black", sans-serif';
-    ctx.fillStyle = '#ffffff';
-    ctx.fillText(`PLAYER 1: ${this.p1.config.displayName}`, p1CardX + 16, cardY + 68);
-    ctx.font = 'bold 13px monospace';
-    ctx.fillStyle = this.p1.config.colors.accent || '#ffd700';
-    ctx.fillText(`"${this.p1.config.tagline || 'Fighter'}"`, p1CardX + 16, cardY + 88);
-
-    // P1 Dialogue Quote Bubble
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.45)';
-    drawRoundRect(ctx, p1CardX + 16, cardY + 98, p1CardW - 32, 48, 8);
+    // P1 Hex Portrait
+    const p1PortraitX = p1CardX + 40;
+    const p1PortraitY = cardY + 70;
+    const p1PR = 22;
+    ctx.save();
+    ctx.translate(p1PortraitX, p1PortraitY);
+    ctx.beginPath();
+    for (let i = 0; i < 6; i++) {
+      const angle = (Math.PI / 3) * i - Math.PI / 6;
+      const hx = Math.cos(angle) * p1PR;
+      const hy = Math.sin(angle) * p1PR;
+      if (i === 0) ctx.moveTo(hx, hy);
+      else ctx.lineTo(hx, hy);
+    }
+    ctx.closePath();
+    ctx.fillStyle = '#050a18';
     ctx.fill();
-    ctx.font = 'italic 13px sans-serif';
-    ctx.fillStyle = '#e0e0e0';
-    const p1Quote = p1Won
-      ? (this.p1.config?.dialogue?.win || 'Victory is ours!')
-      : (this.p1.config?.dialogue?.lose || this.p1.config?.dialogue?.taunt || 'Good fight. Rematch soon!');
-    ctx.fillText(`"${p1Quote}"`, p1CardX + 26, cardY + 127);
+    ctx.clip();
+    const p1Img = window.CampusVisuals ? window.CampusVisuals.getPortrait(this.p1.config.id) : null;
+    if (p1Img && p1Img.complete && p1Img.naturalWidth > 0) {
+      ctx.drawImage(p1Img, -p1PR, -p1PR, p1PR * 2, p1PR * 2);
+    } else {
+      ctx.font = '18px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('🎓', 0, 1);
+    }
+    ctx.restore();
 
-    // P1 Rounds Score
-    ctx.font = 'bold 14px monospace';
+    // P1 Fighter Name & Academic Department
+    ctx.textAlign = 'left';
+    ctx.font = '900 18px "Orbitron", sans-serif';
+    ctx.fillStyle = '#ffffff';
+    ctx.fillText(`PLAYER 1: ${this.p1.config.displayName}`, p1CardX + 74, cardY + 62);
+    ctx.font = '700 12px "Rajdhani", sans-serif';
+    ctx.fillStyle = this.p1.config.colors.accent || '#ffd700';
+    ctx.fillText(`[ ${this.p1.config.tagline || 'COLLEGIATE WARRIOR'} ]`, p1CardX + 74, cardY + 80);
+
+    // P1 Dialogue Speech Bubble with pointer tail pointing to portrait
+    const p1BubbleX = p1CardX + 16;
+    const p1BubbleY = cardY + 104;
+    const p1BubbleW = p1CardW - 32;
+    const p1BubbleH = 54;
+    ctx.fillStyle = 'rgba(4, 9, 20, 0.75)';
+    ctx.strokeStyle = p1Won ? 'rgba(0, 230, 118, 0.4)' : 'rgba(70, 95, 130, 0.4)';
+    ctx.lineWidth = 1;
+    drawRoundRect(ctx, p1BubbleX, p1BubbleY, p1BubbleW, p1BubbleH, 8);
+    ctx.fill();
+    ctx.stroke();
+
+    // Bubble pointer triangle pointing at portrait
+    ctx.beginPath();
+    ctx.moveTo(p1CardX + 36, p1BubbleY);
+    ctx.lineTo(p1CardX + 42, p1BubbleY - 6);
+    ctx.lineTo(p1CardX + 48, p1BubbleY);
+    ctx.fillStyle = 'rgba(4, 9, 20, 0.75)';
+    ctx.fill();
+
+    ctx.font = 'italic 13px "Rajdhani", sans-serif';
+    ctx.fillStyle = '#e2e8f0';
+    const p1Quote = p1Won
+      ? (this.p1.config?.dialogue?.win || 'Victory is backed by systematic discipline.')
+      : (this.p1.config?.dialogue?.lose || this.p1.config?.dialogue?.taunt || 'Good fight. Will revise syllabus and return.');
+    ctx.fillText(`"${p1Quote}"`, p1BubbleX + 12, p1BubbleY + 31);
+
+    // P1 Rounds Score with Gold Laurels
+    ctx.font = '700 13px "Orbitron", sans-serif';
     ctx.fillStyle = '#ffd700';
     const p1StarsDisplay = '★'.repeat(this.p1RoundWins) + '☆'.repeat(Math.max(0, 2 - this.p1RoundWins));
-    ctx.fillText(`ROUNDS WON: [ ${p1StarsDisplay} ]  (${this.p1RoundWins}/2)`, p1CardX + 16, cardY + 180);
+    ctx.fillText(`ROUNDS WON: [ ${p1StarsDisplay} ]  (${this.p1RoundWins}/2)`, p1CardX + 16, cardY + 188);
 
-    // RIGHT CARD: PLAYER 2 / COMPUTER
+    // --- RIGHT CARD: PLAYER 2 / COMPUTER ---
     const p2CardX = 500;
     const p2CardW = 410;
-    ctx.fillStyle = p2Won ? 'rgba(255, 107, 53, 0.15)' : 'rgba(16, 24, 40, 0.85)';
-    ctx.strokeStyle = p2Won ? '#ff6b35' : '#263238';
-    ctx.lineWidth = p2Won ? 3 : 1.5;
+    ctx.fillStyle = p2Won ? 'rgba(255, 107, 53, 0.12)' : 'rgba(10, 20, 36, 0.90)';
+    ctx.strokeStyle = p2Won ? '#ff6b35' : '#22344d';
+    ctx.lineWidth = p2Won ? 2.5 : 1.2;
     ctx.shadowColor = p2Won ? '#ff6b35' : 'transparent';
-    ctx.shadowBlur = p2Won ? 18 : 0;
-    drawRoundRect(ctx, p2CardX, cardY, p2CardW, cardH, 14);
+    ctx.shadowBlur = p2Won ? 16 : 0;
+    drawRoundRect(ctx, p2CardX, cardY, p2CardW, cardH, 12);
     ctx.fill();
     ctx.stroke();
 
-    // P2 Winner / Loser Badge
+    // P2 Winner / Loser Academic Badge
     ctx.shadowBlur = 0;
-    ctx.fillStyle = p2Won ? (isPVC ? '#ff1744' : '#ff6b35') : '#37474f';
-    drawRoundRect(ctx, p2CardX + 16, cardY + 14, 130, 26, 6);
+    ctx.fillStyle = p2Won ? (isPVC ? '#ff1744' : '#ff6b35') : '#334155';
+    drawRoundRect(ctx, p2CardX + 16, cardY + 12, 140, 24, 4);
     ctx.fill();
-    ctx.font = '900 13px monospace';
+    ctx.font = '900 11px "Orbitron", sans-serif';
     ctx.fillStyle = '#ffffff';
     ctx.textAlign = 'center';
-    ctx.fillText(p2Won ? '👑 WINNER' : '🥈 RUNNER-UP', p2CardX + 81, cardY + 31);
+    ctx.fillText(p2Won ? '👑 FIRST RANK (WINNER)' : '🥈 RUNNER-UP', p2CardX + 86, cardY + 28);
 
-    // P2 Fighter Name & Title
-    ctx.textAlign = 'left';
-    ctx.font = '900 22px "Arial Black", sans-serif';
-    ctx.fillStyle = '#ffffff';
-    ctx.fillText(`${p2Label}: ${this.p2.config.displayName}`, p2CardX + 16, cardY + 68);
-    ctx.font = 'bold 13px monospace';
-    ctx.fillStyle = this.p2.config?.colors?.accent || '#ffd700';
-    ctx.fillText(`"${this.p2.config?.tagline || 'Fighter'}"`, p2CardX + 16, cardY + 88);
-
-    // P2 Dialogue Quote Bubble
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.45)';
-    drawRoundRect(ctx, p2CardX + 16, cardY + 98, p2CardW - 32, 48, 8);
+    // P2 Hex Portrait
+    const p2PortraitX = p2CardX + 40;
+    const p2PortraitY = cardY + 70;
+    const p2PR = 22;
+    ctx.save();
+    ctx.translate(p2PortraitX, p2PortraitY);
+    ctx.beginPath();
+    for (let i = 0; i < 6; i++) {
+      const angle = (Math.PI / 3) * i - Math.PI / 6;
+      const hx = Math.cos(angle) * p2PR;
+      const hy = Math.sin(angle) * p2PR;
+      if (i === 0) ctx.moveTo(hx, hy);
+      else ctx.lineTo(hx, hy);
+    }
+    ctx.closePath();
+    ctx.fillStyle = '#050a18';
     ctx.fill();
-    ctx.font = 'italic 13px sans-serif';
-    ctx.fillStyle = '#e0e0e0';
+    ctx.clip();
+    const p2Img = window.CampusVisuals ? window.CampusVisuals.getPortrait(this.p2.config.id) : null;
+    if (p2Img && p2Img.complete && p2Img.naturalWidth > 0) {
+      ctx.drawImage(p2Img, -p2PR, -p2PR, p2PR * 2, p2PR * 2);
+    } else {
+      ctx.font = '18px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('🥊', 0, 1);
+    }
+    ctx.restore();
+
+    // P2 Fighter Name & Department
+    ctx.textAlign = 'left';
+    ctx.font = '900 18px "Orbitron", sans-serif';
+    ctx.fillStyle = '#ffffff';
+    ctx.fillText(`${p2Label}: ${this.p2.config.displayName}`, p2CardX + 74, cardY + 62);
+    ctx.font = '700 12px "Rajdhani", sans-serif';
+    ctx.fillStyle = this.p2.config?.colors?.accent || '#ffd700';
+    ctx.fillText(`[ ${this.p2.config?.tagline || 'COLLEGIATE WARRIOR'} ]`, p2CardX + 74, cardY + 80);
+
+    // P2 Dialogue Speech Bubble with pointer tail pointing to portrait
+    const p2BubbleX = p2CardX + 16;
+    const p2BubbleY = cardY + 104;
+    const p2BubbleW = p2CardW - 32;
+    const p2BubbleH = 54;
+    ctx.fillStyle = 'rgba(4, 9, 20, 0.75)';
+    ctx.strokeStyle = p2Won ? 'rgba(255, 107, 53, 0.4)' : 'rgba(70, 95, 130, 0.4)';
+    ctx.lineWidth = 1;
+    drawRoundRect(ctx, p2BubbleX, p2BubbleY, p2BubbleW, p2BubbleH, 8);
+    ctx.fill();
+    ctx.stroke();
+
+    // Bubble pointer triangle
+    ctx.beginPath();
+    ctx.moveTo(p2CardX + 36, p2BubbleY);
+    ctx.lineTo(p2CardX + 42, p2BubbleY - 6);
+    ctx.lineTo(p2CardX + 48, p2BubbleY);
+    ctx.fillStyle = 'rgba(4, 9, 20, 0.75)';
+    ctx.fill();
+
+    ctx.font = 'italic 13px "Rajdhani", sans-serif';
+    ctx.fillStyle = '#e2e8f0';
     const p2Quote = p2Won
-      ? (this.p2.config?.dialogue?.win || 'Victory is ours!')
-      : (this.p2.config?.dialogue?.lose || this.p2.config?.dialogue?.taunt || 'Good fight. Rematch soon!');
-    ctx.fillText(`"${p2Quote}"`, p2CardX + 26, cardY + 127);
+      ? (this.p2.config?.dialogue?.win || 'All calculations led to this victory!')
+      : (this.p2.config?.dialogue?.lose || this.p2.config?.dialogue?.taunt || 'A formidable syllabus. Rematch soon.');
+    ctx.fillText(`"${p2Quote}"`, p2BubbleX + 12, p2BubbleY + 31);
 
     // P2 Rounds Score
-    ctx.font = 'bold 14px monospace';
+    ctx.font = '700 13px "Orbitron", sans-serif';
     ctx.fillStyle = '#ffd700';
     const p2StarsDisplay = '★'.repeat(this.p2RoundWins) + '☆'.repeat(Math.max(0, 2 - this.p2RoundWins));
-    ctx.fillText(`ROUNDS WON: [ ${p2StarsDisplay} ]  (${this.p2RoundWins}/2)`, p2CardX + 16, cardY + 180);
+    ctx.fillText(`ROUNDS WON: [ ${p2StarsDisplay} ]  (${this.p2RoundWins}/2)`, p2CardX + 16, cardY + 188);
 
-    // Center VS Score Pill
+    // --- Center Chronometer VS Pill ---
     const vsX = 435;
-    const vsY = 192;
-    ctx.fillStyle = '#0a192f';
+    const vsY = 178;
+    ctx.fillStyle = '#060d1a';
     ctx.strokeStyle = '#00e5ff';
     ctx.lineWidth = 2;
     ctx.shadowColor = '#00e5ff';
@@ -3028,37 +3314,51 @@ class CampusClashGame {
     ctx.stroke();
     ctx.shadowBlur = 0;
     ctx.textAlign = 'center';
-    ctx.font = '900 20px monospace';
+    ctx.font = '900 20px "Orbitron", sans-serif';
     ctx.fillStyle = '#ffd700';
     ctx.fillText(`${this.p1RoundWins} - ${this.p2RoundWins}`, vsX + 45, vsY + 31);
 
-    // 4. Detailed Statistics Comparison Table Card
+    // 5. Official Academic Combat Performance Breakdown Card
     const statsCardX = 50;
-    const statsCardY = 330;
+    const statsCardY = 320;
     const statsCardW = 860;
-    const statsCardH = 200;
+    const statsCardH = 212;
 
-    ctx.fillStyle = 'rgba(12, 20, 36, 0.92)';
-    ctx.strokeStyle = '#263238';
+    ctx.fillStyle = 'rgba(8, 16, 32, 0.94)';
+    ctx.strokeStyle = '#1e3050';
     ctx.lineWidth = 1.5;
     drawRoundRect(ctx, statsCardX, statsCardY, statsCardW, statsCardH, 12);
     ctx.fill();
     ctx.stroke();
 
-    // Table Header
-    ctx.font = '900 13px monospace';
+    // Table Header with Academic Grade Pill
+    ctx.font = '900 12px "Orbitron", sans-serif';
     ctx.fillStyle = '#ffd700';
     ctx.textAlign = 'left';
-    ctx.fillText('MATCH PERFORMANCE BREAKDOWN', statsCardX + 25, statsCardY + 30);
-    ctx.textAlign = 'center';
-    ctx.fillText(`PLAYER 1 (${this.p1.config.displayName.toUpperCase()})`, statsCardX + 470, statsCardY + 30);
-    ctx.fillText(`${p2Label} (${this.p2.config.displayName.toUpperCase()})`, statsCardX + 720, statsCardY + 30);
+    ctx.fillText('📊 ACADEMIC COMBAT PERFORMANCE TELEMETRY', statsCardX + 24, statsCardY + 26);
 
-    // Horizontal Rule
-    ctx.strokeStyle = '#37474f';
+    // Dean's Grade Badge in Header
+    ctx.save();
+    ctx.textAlign = 'right';
+    ctx.font = '900 11px "Orbitron", sans-serif';
+    ctx.fillStyle = gradeColor;
+    ctx.shadowColor = gradeColor;
+    ctx.shadowBlur = 6;
+    ctx.fillText(`[ COMBAT GRADE: ${combatGrade} | CGPA: ${combatCGPA} ]`, statsCardX + statsCardW - 24, statsCardY + 26);
+    ctx.restore();
+
+    // Fighter column titles
+    ctx.textAlign = 'center';
+    ctx.font = '700 11px "Rajdhani", sans-serif';
+    ctx.fillStyle = '#94a3b8';
+    ctx.fillText(`PLAYER 1: ${this.p1.config.displayName.toUpperCase()}`, statsCardX + 470, statsCardY + 44);
+    ctx.fillText(`${p2Label}: ${this.p2.config.displayName.toUpperCase()}`, statsCardX + 720, statsCardY + 44);
+
+    // Divider Line
+    ctx.strokeStyle = '#1e293b';
     ctx.beginPath();
-    ctx.moveTo(statsCardX + 20, statsCardY + 42);
-    ctx.lineTo(statsCardX + statsCardW - 20, statsCardY + 42);
+    ctx.moveTo(statsCardX + 20, statsCardY + 52);
+    ctx.lineTo(statsCardX + statsCardW - 20, statsCardY + 52);
     ctx.stroke();
 
     const statsRows = [
@@ -3066,13 +3366,17 @@ class CampusClashGame {
         label: 'Rounds Won',
         p1: `${this.p1RoundWins} / 2`,
         p2: `${this.p2RoundWins} / 2`,
+        p1Val: this.p1RoundWins,
+        p2Val: this.p2RoundWins,
         p1Best: this.p1RoundWins > this.p2RoundWins,
         p2Best: this.p2RoundWins > this.p1RoundWins
       },
       {
-        label: 'Total Damage Dealt',
+        label: 'Damage Output',
         p1: `${this.matchStats.P1.totalDamage} HP`,
         p2: `${this.matchStats.P2.totalDamage} HP`,
+        p1Val: this.matchStats.P1.totalDamage,
+        p2Val: this.matchStats.P2.totalDamage,
         p1Best: this.matchStats.P1.totalDamage > this.matchStats.P2.totalDamage,
         p2Best: this.matchStats.P2.totalDamage > this.matchStats.P1.totalDamage
       },
@@ -3080,27 +3384,31 @@ class CampusClashGame {
         label: 'Max Combo Streak',
         p1: `${this.matchStats.P1.maxCombo} HITS`,
         p2: `${this.matchStats.P2.maxCombo} HITS`,
+        p1Val: this.matchStats.P1.maxCombo,
+        p2Val: this.matchStats.P2.maxCombo,
         p1Best: this.matchStats.P1.maxCombo > this.matchStats.P2.maxCombo,
         p2Best: this.matchStats.P2.maxCombo > this.matchStats.P1.maxCombo
       },
       {
-        label: 'Total Attacks Landed',
+        label: 'Attacks Landed',
         p1: `${this.matchStats.P1.hits} HITS`,
         p2: `${this.matchStats.P2.hits} HITS`,
+        p1Val: this.matchStats.P1.hits,
+        p2Val: this.matchStats.P2.hits,
         p1Best: this.matchStats.P1.hits > this.matchStats.P2.hits,
         p2Best: this.matchStats.P2.hits > this.matchStats.P1.hits
       }
     ];
 
     statsRows.forEach((r, idx) => {
-      const rowY = statsCardY + 74 + idx * 36;
-      ctx.font = '14px sans-serif';
-      ctx.fillStyle = '#90a4ae';
+      const rowY = statsCardY + 76 + idx * 28;
+      ctx.font = '700 13px "Rajdhani", sans-serif';
+      ctx.fillStyle = '#94a3b8';
       ctx.textAlign = 'left';
-      ctx.fillText(r.label, statsCardX + 25, rowY);
+      ctx.fillText(r.label, statsCardX + 24, rowY);
 
       // P1 Value
-      ctx.font = 'bold 15px monospace';
+      ctx.font = '700 13px "Orbitron", sans-serif';
       ctx.fillStyle = r.p1Best ? '#00e676' : '#ffffff';
       ctx.textAlign = 'center';
       ctx.fillText(r.p1 + (r.p1Best ? ' 👑' : ''), statsCardX + 470, rowY);
@@ -3110,61 +3418,76 @@ class CampusClashGame {
       ctx.fillText(r.p2 + (r.p2Best ? ' 👑' : ''), statsCardX + 720, rowY);
     });
 
-    // 5. Action Buttons (Rematch, Change Fighters, Main Menu)
-    const btnY = 548;
-    const btnH = 48;
+    // Dean's Tactical Debrief Chip along bottom of stats card
+    const debriefY = statsCardY + statsCardH - 26;
+    ctx.fillStyle = 'rgba(0, 229, 255, 0.08)';
+    ctx.strokeStyle = 'rgba(0, 229, 255, 0.2)';
+    ctx.lineWidth = 1;
+    drawRoundRect(ctx, statsCardX + 16, debriefY - 14, statsCardW - 32, 28, 6);
+    ctx.fill();
+    ctx.stroke();
 
-    // Button 1: Rematch
+    ctx.font = '700 12px "Rajdhani", sans-serif';
+    ctx.fillStyle = '#38bdf8';
+    ctx.textAlign = 'left';
+    ctx.fillText(`DEAN'S ASSESSMENT: "${deanRemark}"`, statsCardX + 26, debriefY + 4);
+
+    // 6. Action Buttons (Rematch, Change Fighters, Main Menu)
+    const btnY = 546;
+    const btnH = 46;
+
+    // Button 1: Rematch (x: 100 to 330)
     const b1X = 100, b1W = 230;
-    ctx.fillStyle = 'rgba(0, 230, 118, 0.22)';
+    ctx.fillStyle = 'rgba(0, 230, 118, 0.18)';
     ctx.strokeStyle = '#00e676';
     ctx.lineWidth = 2;
     ctx.shadowColor = '#00e676';
-    ctx.shadowBlur = 12;
-    drawRoundRect(ctx, b1X, btnY, b1W, btnH, 10);
+    ctx.shadowBlur = 10;
+    drawRoundRect(ctx, b1X, btnY, b1W, btnH, 8);
     ctx.fill();
     ctx.stroke();
     ctx.shadowBlur = 0;
-    ctx.font = '900 15px monospace';
+    ctx.font = '900 13px "Orbitron", sans-serif';
     ctx.fillStyle = '#00e676';
     ctx.textAlign = 'center';
-    ctx.fillText('🔁 REMATCH (R / ENTER)', b1X + b1W / 2, btnY + 29);
+    ctx.fillText('🔁 REMATCH (R / ENTER)', b1X + b1W / 2, btnY + 28);
 
-    // Button 2: Change Fighters
+    // Button 2: Change Fighters (x: 365 to 595)
     const b2X = 365, b2W = 230;
-    ctx.fillStyle = 'rgba(255, 215, 0, 0.22)';
+    ctx.fillStyle = 'rgba(255, 215, 0, 0.18)';
     ctx.strokeStyle = '#ffd700';
     ctx.lineWidth = 2;
     ctx.shadowColor = '#ffd700';
-    ctx.shadowBlur = 12;
-    drawRoundRect(ctx, b2X, btnY, b2W, btnH, 10);
+    ctx.shadowBlur = 10;
+    drawRoundRect(ctx, b2X, btnY, b2W, btnH, 8);
     ctx.fill();
     ctx.stroke();
     ctx.shadowBlur = 0;
-    ctx.font = '900 15px monospace';
+    ctx.font = '900 13px "Orbitron", sans-serif';
     ctx.fillStyle = '#ffd700';
     ctx.textAlign = 'center';
-    ctx.fillText('👥 FIGHTERS (M)', b2X + b2W / 2, btnY + 29);
+    ctx.fillText('👥 FIGHTERS (M)', b2X + b2W / 2, btnY + 28);
 
-    // Button 3: Main Menu
+    // Button 3: Main Menu (x: 630 to 860)
     const b3X = 630, b3W = 230;
     ctx.fillStyle = 'rgba(0, 229, 255, 0.18)';
     ctx.strokeStyle = '#00e5ff';
     ctx.lineWidth = 2;
     ctx.shadowColor = '#00e5ff';
     ctx.shadowBlur = 10;
-    drawRoundRect(ctx, b3X, btnY, b3W, btnH, 10);
+    drawRoundRect(ctx, b3X, btnY, b3W, btnH, 8);
     ctx.fill();
     ctx.stroke();
     ctx.shadowBlur = 0;
-    ctx.font = '900 15px monospace';
+    ctx.font = '900 13px "Orbitron", sans-serif';
     ctx.fillStyle = '#00e5ff';
     ctx.textAlign = 'center';
-    ctx.fillText('🏠 MAIN MENU (ESC)', b3X + b3W / 2, btnY + 29);
+    ctx.fillText('🏠 MAIN MENU (ESC)', b3X + b3W / 2, btnY + 28);
 
     ctx.restore();
   }
-}
+
+}}
 
 // Bulletproof bootstrap function that handles all document ready states
 function bootCampusClash() {

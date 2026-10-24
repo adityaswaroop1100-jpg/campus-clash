@@ -87,75 +87,241 @@ export class NexusPod {
     if (!this.active) return;
     ctx.save();
 
-    const hoverY = this.y + (this.isLanded ? Math.sin(this.animCycle) * 6 : 0);
-    const pulse = 1.0 + Math.sin(this.animCycle * 2) * 0.15;
-    const currentRadius = this.radius * pulse;
+    const hoverY = this.y + (this.isLanded ? Math.sin(this.animCycle) * 7 : 0);
+    const pulse = 1.0 + Math.sin(this.animCycle * 2.5) * 0.12;
+    const coreR = this.radius * pulse;
+    const col = this.type.color || '#00e5ff';
+    const glowCol = this.type.glowColor || '#00b4d8';
+    const t = this.animCycle;
 
-    // 1. Vertical Hologram Beacon Beam
-    if (!this.isLanded || this.life > 100) {
-      const beamGrad = ctx.createLinearGradient(this.x, 0, this.x, hoverY);
-      beamGrad.addColorStop(0, `${this.type.color}00`);
-      beamGrad.addColorStop(0.7, `${this.type.color}22`);
-      beamGrad.addColorStop(1, `${this.type.color}66`);
-      ctx.fillStyle = beamGrad;
-      ctx.fillRect(this.x - 12, 0, 24, hoverY);
-    }
-
-    // 2. Ground Projection Ring
-    if (this.isLanded) {
+    // 1. Aerodynamic Descending Ion Contrail (while falling)
+    if (!this.isLanded) {
       ctx.save();
-      ctx.translate(this.x, this.targetY + 12);
-      ctx.scale(1, 0.35);
-      ctx.strokeStyle = this.type.color;
-      ctx.lineWidth = 3;
-      ctx.shadowColor = this.type.color;
-      ctx.shadowBlur = 14;
+      const trailGrad = ctx.createLinearGradient(this.x, Math.max(0, this.y - 140), this.x, hoverY);
+      trailGrad.addColorStop(0, 'rgba(255, 255, 255, 0)');
+      trailGrad.addColorStop(0.5, `${col}33`);
+      trailGrad.addColorStop(1, `${col}bb`);
+      ctx.fillStyle = trailGrad;
       ctx.beginPath();
-      ctx.arc(0, 0, currentRadius * 1.5, 0, Math.PI * 2);
-      ctx.stroke();
+      ctx.moveTo(this.x - 8, Math.max(0, this.y - 140));
+      ctx.lineTo(this.x + 8, Math.max(0, this.y - 140));
+      ctx.lineTo(this.x + 16, hoverY);
+      ctx.lineTo(this.x - 16, hoverY);
+      ctx.closePath();
+      ctx.fill();
+
+      // Ion thrust exhaust particles
+      ctx.fillStyle = '#ffffff';
+      for (let i = 0; i < 4; i++) {
+        const py = hoverY - 20 - i * 22;
+        const px = this.x + Math.sin(t * 8 + i) * 8;
+        ctx.beginPath();
+        ctx.arc(px, py, 2.5, 0, Math.PI * 2);
+        ctx.fill();
+      }
       ctx.restore();
     }
 
-    // 3. Central Hologram Orb
+    // 2. High-Tech Volumetric Laser Pillar & Holographic Scan Column
+    if (this.isLanded || this.life > 100) {
+      ctx.save();
+      ctx.globalCompositeOperation = 'screen';
+      
+      // Atmospheric wide soft glow
+      const wideGrad = ctx.createLinearGradient(this.x - 45, 0, this.x + 45, 0);
+      wideGrad.addColorStop(0, 'rgba(0,0,0,0)');
+      wideGrad.addColorStop(0.5, `${col}22`);
+      wideGrad.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = wideGrad;
+      ctx.fillRect(this.x - 45, 0, 90, hoverY);
+
+      // Core focused laser beam
+      const coreGrad = ctx.createLinearGradient(this.x - 8, 0, this.x + 8, 0);
+      coreGrad.addColorStop(0, `${col}44`);
+      coreGrad.addColorStop(0.5, '#ffffffcc');
+      coreGrad.addColorStop(1, `${col}44`);
+      ctx.fillStyle = coreGrad;
+      ctx.fillRect(this.x - 8, 0, 16, hoverY);
+
+      // Downward flowing data stream packets inside laser column
+      const streamY = ((t * 80) % hoverY);
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(this.x - 4, streamY, 8, 22);
+      const streamY2 = (((t * 80) + hoverY * 0.5) % hoverY);
+      ctx.fillStyle = col;
+      ctx.fillRect(this.x - 3, streamY2, 6, 16);
+
+      // Rising upward digital micro-sparks
+      for (let s = 0; s < 5; s++) {
+        const sy = (hoverY - ((t * 45 + s * 70) % hoverY));
+        const sx = this.x + Math.sin(t * 3 + s * 1.7) * 14;
+        ctx.fillStyle = s % 2 === 0 ? '#ffffff' : col;
+        ctx.fillRect(sx - 1.5, sy, 3, 3);
+      }
+      ctx.restore();
+    }
+
+    // 3. Ground Landing Projection Dais (when landed)
+    if (this.isLanded) {
+      ctx.save();
+      ctx.translate(this.x, this.targetY + 16);
+      ctx.scale(1, 0.38);
+
+      // Outer radar sweep ring
+      ctx.strokeStyle = `${col}77`;
+      ctx.lineWidth = 2.5;
+      ctx.shadowColor = col;
+      ctx.shadowBlur = 12;
+      ctx.beginPath();
+      ctx.arc(0, 0, coreR * 2.2, 0, Math.PI * 2);
+      ctx.stroke();
+
+      // Pulsing inner ring
+      ctx.strokeStyle = col;
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.arc(0, 0, coreR * 1.4, 0, Math.PI * 2);
+      ctx.stroke();
+
+      // 4 Cardinal holographic ticks
+      for (let a = 0; a < 4; a++) {
+        const ang = (a * Math.PI / 2) + t * 0.8;
+        ctx.beginPath();
+        ctx.moveTo(Math.cos(ang) * (coreR * 1.8), Math.sin(ang) * (coreR * 1.8));
+        ctx.lineTo(Math.cos(ang) * (coreR * 2.5), Math.sin(ang) * (coreR * 2.5));
+        ctx.stroke();
+      }
+      ctx.restore();
+    }
+
+    // 4. Central Hologram Quantum Tech Pod
     ctx.translate(this.x, hoverY);
 
-    const radGrad = ctx.createRadialGradient(0, 0, 2, 0, 0, currentRadius);
-    radGrad.addColorStop(0, '#FFFFFF');
-    radGrad.addColorStop(0.4, this.type.color);
-    radGrad.addColorStop(0.8, this.type.glowColor);
-    radGrad.addColorStop(1, `${this.type.color}00`);
+    // 4a. Outer 3D Gyroscopic Gimbal Ring (slow horizontal rotation)
+    ctx.save();
+    ctx.rotate(t * 0.8);
+    ctx.scale(1, 0.42);
+    ctx.strokeStyle = `${col}bb`;
+    ctx.lineWidth = 2.5;
+    ctx.shadowColor = col;
+    ctx.shadowBlur = 12;
+    ctx.beginPath();
+    ctx.arc(0, 0, coreR * 1.6, 0, Math.PI * 2);
+    ctx.stroke();
+
+    // Orbital Node Beads
+    for (let b = 0; b < 4; b++) {
+      const bAng = (b * Math.PI / 2) + t * 1.2;
+      const bx = Math.cos(bAng) * coreR * 1.6;
+      const by = Math.sin(bAng) * coreR * 1.6;
+      ctx.fillStyle = '#ffffff';
+      ctx.shadowColor = '#ffffff';
+      ctx.shadowBlur = 8;
+      ctx.beginPath();
+      ctx.arc(bx, by, 3.5, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.restore();
+
+    // 4b. Inner Reverse-Spin Gyroscopic Gimbal Ring
+    ctx.save();
+    ctx.rotate(-t * 1.4);
+    ctx.scale(0.48, 1);
+    ctx.strokeStyle = `${glowCol}cc`;
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.arc(0, 0, coreR * 1.35, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.restore();
+
+    // 4c. Central Faceted Quantum Crystalline Core
+    ctx.save();
+    const radGrad = ctx.createRadialGradient(0, 0, 2, 0, 0, coreR);
+    radGrad.addColorStop(0, '#ffffff');
+    radGrad.addColorStop(0.35, col);
+    radGrad.addColorStop(0.75, glowCol);
+    radGrad.addColorStop(1, `${col}00`);
 
     ctx.fillStyle = radGrad;
-    ctx.shadowColor = this.type.color;
-    ctx.shadowBlur = 20;
+    ctx.shadowColor = col;
+    ctx.shadowBlur = 24;
     ctx.beginPath();
-    ctx.arc(0, 0, currentRadius, 0, Math.PI * 2);
+    ctx.arc(0, 0, coreR, 0, Math.PI * 2);
     ctx.fill();
 
-    // 4. Rotating Tech Orbit Ring
-    ctx.rotate(this.animCycle);
-    ctx.strokeStyle = '#FFFFFF';
-    ctx.lineWidth = 2;
-    ctx.setLineDash([6, 4]);
+    // Octagonal faceted crystal shell
+    ctx.strokeStyle = '#ffffff';
+    ctx.lineWidth = 1.8;
     ctx.beginPath();
-    ctx.arc(0, 0, currentRadius * 1.25, 0, Math.PI * 2);
+    for (let i = 0; i < 8; i++) {
+      const ang = (i / 8) * Math.PI * 2 + t * 0.5;
+      const px = Math.cos(ang) * (coreR * 0.75);
+      const py = Math.sin(ang) * (coreR * 0.75);
+      if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+    }
+    ctx.closePath();
     ctx.stroke();
-    ctx.setLineDash([]);
 
-    // 5. Tech Icon Emoji
-    ctx.rotate(-this.animCycle);
-    ctx.font = 'bold 18px "Arial Black", sans-serif';
+    // 4d. Tech Icon in Core Center
+    ctx.font = 'bold 20px "Arial Black", sans-serif';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillText(this.type.icon, 0, 0);
+    ctx.fillText(this.type.icon, 0, 1);
+    ctx.restore();
 
-    // 6. Floating Label Tag
-    ctx.font = '900 10px "Arial Black", sans-serif';
-    ctx.fillStyle = '#FFFFFF';
-    ctx.shadowColor = '#000000';
-    ctx.shadowBlur = 6;
-    ctx.fillText(this.type.name, 0, -currentRadius - 10);
+    // 5. Floating Holographic Tech HUD Plaque
+    ctx.save();
+    const hudY = -coreR - 22;
+    const tagText = `[ ${this.type.icon} ${this.type.name} ]`;
 
+    ctx.font = '900 11px Orbitron, monospace';
+    const tagW = ctx.measureText(tagText).width;
+    const plateW = Math.max(140, tagW + 20);
+    const plateH = 28;
+
+    // Glass backing plate
+    ctx.fillStyle = 'rgba(6, 14, 32, 0.90)';
+    ctx.strokeStyle = col;
+    ctx.lineWidth = 1.5;
+    ctx.shadowColor = col;
+    ctx.shadowBlur = 10;
+    ctx.beginPath();
+    // Chamfered plate
+    ctx.moveTo(-plateW / 2 + 6, hudY - plateH / 2);
+    ctx.lineTo(plateW / 2 - 6, hudY - plateH / 2);
+    ctx.lineTo(plateW / 2, hudY - plateH / 2 + 6);
+    ctx.lineTo(plateW / 2, hudY + plateH / 2 - 6);
+    ctx.lineTo(plateW / 2 - 6, hudY + plateH / 2);
+    ctx.lineTo(-plateW / 2 + 6, hudY + plateH / 2);
+    ctx.lineTo(-plateW / 2, hudY + plateH / 2 - 6);
+    ctx.lineTo(-plateW / 2, hudY - plateH / 2 + 6);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+
+    // Title Tag
+    ctx.fillStyle = '#ffffff';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.shadowBlur = 0;
+    ctx.fillText(tagText, 0, hudY - 4);
+
+    // Domain Subtitle chip
+    ctx.font = 'bold 9px Rajdhani, monospace';
+    ctx.fillStyle = col;
+    ctx.fillText(this.type.description.toUpperCase(), 0, hudY + 7);
+
+    // Remaining lifespan indicator ring around pod if landed
+    if (this.isLanded && this.life < 500) {
+      const lifePct = Math.max(0, this.life / 600);
+      ctx.strokeStyle = lifePct > 0.3 ? col : '#ff1744';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(0, 0, coreR * 1.85, -Math.PI / 2, -Math.PI / 2 + lifePct * Math.PI * 2);
+      ctx.stroke();
+    }
+
+    ctx.restore();
     ctx.restore();
   }
 }

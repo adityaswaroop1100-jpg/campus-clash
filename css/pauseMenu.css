@@ -207,22 +207,24 @@
   color: #00e5ff;
 }
 
-/* Floating in-match Pause button on HUD */
+/* Floating in-match Pause button on HUD (positioned below meters with zero health-bar collision) */
 #hud-btn-pause {
   position: absolute;
-  top: 14px;
-  right: 18px;
-  background: rgba(3, 10, 24, 0.82);
-  border: 1px solid rgba(0, 229, 255, 0.45);
+  top: 74px;
+  right: 28px;
+  background: rgba(4, 12, 28, 0.90);
+  border: 1px solid rgba(0, 229, 255, 0.55);
   color: #00e5ff;
   font-family: 'Orbitron', monospace;
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 700;
-  padding: 5px 11px;
-  border-radius: 4px;
+  letter-spacing: 0.5px;
+  padding: 4px 10px;
+  border-radius: 5px;
   cursor: pointer;
   z-index: 100;
-  box-shadow: 0 0 10px rgba(0, 229, 255, 0.25);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 0 12px rgba(0, 229, 255, 0.3);
   transition: all 0.2s ease;
   display: flex;
   align-items: center;
