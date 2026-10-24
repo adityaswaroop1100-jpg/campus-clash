@@ -41,6 +41,7 @@ export const SPORTS_STAR_CONFIG = {
   whiffRecovery: 6,
   moves: {
     light: {
+      category: 'light',
       name: 'Quick Jab',
       type: 'fist',
       trajectory: 'bat_swing',
@@ -65,6 +66,7 @@ export const SPORTS_STAR_CONFIG = {
       sound: 'lightHit'
     },
     heavy: {
+      category: 'heavy',
       name: 'Cricket Bat Swing',
       type: 'bat',
       trajectory: 'bat_swing',
@@ -89,6 +91,7 @@ export const SPORTS_STAR_CONFIG = {
       sound: 'cricketShot'
     },
     ultimate: {
+      category: 'ultimate',
       name: 'Sports Fever',
       type: 'sports_fever',
       trajectory: 'bat_swing',

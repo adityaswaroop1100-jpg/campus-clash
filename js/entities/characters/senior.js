@@ -41,6 +41,7 @@ export const SENIOR_CONFIG = {
   whiffRecovery: 4,
   moves: {
     light: {
+     category: 'light',
       name: 'Chai Splash',
       type: 'chai',
       trajectory: 'whip_crack',
@@ -65,6 +66,7 @@ export const SENIOR_CONFIG = {
       sound: 'chaiSplash'
     },
     heavy: {
+     category: 'heavy',
       name: 'Folder Slap',
       type: 'folder',
       trajectory: 'whip_crack',
@@ -89,6 +91,7 @@ export const SENIOR_CONFIG = {
       sound: 'heavyHit'
     },
     ultimate: {
+     category: 'ultimate',
       name: 'Intimidation',
       type: 'intimidation',
       trajectory: 'whip_crack',

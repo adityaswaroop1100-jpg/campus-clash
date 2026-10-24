@@ -90,9 +90,25 @@ export class Fighter {
     if (!this.stateMachine) return this._customState || 'idle';
     const s = this.stateMachine.getState();
     if (s === FIGHTER_STATES.ATTACKING && this.currentMove) {
-      if (this.currentMove.type === 'ultimate' || this.currentMove.type === 'viva' || this.currentMove.type === 'exam_mode') return 'ultimate';
-      if (this.currentMove.type === 'heavy' || this.currentMove.type === 'textbook' || this.currentMove.name === 'Textbook Slam') return 'heavy';
-      if (this.currentMove.type === 'special') return 'special';
+      if (this.currentMove.category === 'ultimate' ||
+          this.currentMoveCategory === 'ultimate' ||
+          this.currentMove === this.config.moves?.ultimate ||
+          this.currentMove.name === this.config.moves?.ultimate?.name ||
+          this.currentMove.type === 'ultimate' ||
+          this.currentMove.type === 'viva' ||
+          this.currentMove.type === 'exam_mode') return 'ultimate';
+      if (this.currentMove.category === 'heavy' ||
+          this.currentMoveCategory === 'heavy' ||
+          this.currentMove === this.config.moves?.heavy ||
+          this.currentMove.name === this.config.moves?.heavy?.name ||
+          this.currentMove.type === 'heavy' ||
+          this.currentMove.type === 'textbook' ||
+          this.currentMove.name === 'Textbook Slam') return 'heavy';
+      if (this.currentMove.category === 'special' ||
+          this.currentMoveCategory === 'special' ||
+          this.currentMove === this.config.moves?.special ||
+          this.currentMove.name === this.config.moves?.special?.name ||
+          this.currentMove.type === 'special') return 'special';
       return 'light';
     }
     if (s === FIGHTER_STATES.BLOCKING) return 'block';
@@ -353,8 +369,21 @@ export class Fighter {
     this.ultimateMeter = Math.min(this.maxUltimate, this.ultimateMeter + 15);
   }
 
-  startAttack(moveConfig) {
+  startAttack(moveConfig, category = null) {
+    if (!category) {
+      if (moveConfig?.category === 'ultimate' || moveConfig === this.config.moves?.ultimate || moveConfig?.name === this.config.moves?.ultimate?.name) {
+        category = 'ultimate';
+      } else if (moveConfig?.category === 'heavy' || moveConfig === this.config.moves?.heavy || moveConfig?.name === this.config.moves?.heavy?.name) {
+        category = 'heavy';
+      } else if (moveConfig?.category === 'special' || moveConfig === this.config.moves?.special || moveConfig?.name === this.config.moves?.special?.name) {
+        category = 'special';
+      } else {
+        category = 'light';
+      }
+    }
     const move = new MoveData(moveConfig);
+    move.category = category;
+    this.currentMoveCategory = category;
     this.stateMachine.changeState(FIGHTER_STATES.ATTACKING, { move });
     this.hasHitThisMove = false;
     this.whiffPenaltyFrames = 0;
@@ -375,11 +404,11 @@ export class Fighter {
     this.weaponTrail.clear();
 
     if (window.CampusVisuals) {
-      if (moveConfig.type === 'ultimate' || moveConfig.type === 'viva' || moveConfig.type === 'exam_mode') {
+      if (category === 'ultimate' || moveConfig.type === 'ultimate' || moveConfig.type === 'viva' || moveConfig.type === 'exam_mode') {
         window.CampusVisuals.onUltimate(this);
-      } else if (moveConfig.type === 'heavy' || moveConfig.name === 'Textbook Slam' || (moveConfig.damage && moveConfig.damage >= 14)) {
+      } else if (category === 'heavy' || moveConfig.type === 'heavy' || moveConfig.name === 'Textbook Slam' || (moveConfig.damage && moveConfig.damage >= 14)) {
         window.CampusVisuals.onHeavyAttack(this);
-      } else if (moveConfig.type === 'special') {
+      } else if (category === 'special' || moveConfig.type === 'special') {
         window.CampusVisuals.onSpecial(this);
       } else {
         window.CampusVisuals.onLightAttack(this);
@@ -2480,8 +2509,31 @@ export class Fighter {
         ctx.fillStyle = '#0d47a1';
         ctx.font = 'bold 7px sans-serif';
         ctx.fillText('9.8 CGPA', 36 + ext * 24, -32);
+      } else if (this.currentMove.name === 'Resume Slam' || this.currentMove.category === 'ultimate' || this.currentMove.type === 'resume_slam') {
+        // Ultimate: Day 1 Marquee Offer Letter Slam
+        const ext = Math.sin((this.moveFrame / this.currentMove.getTotalFrames()) * Math.PI);
+        ctx.save();
+        ctx.translate(20, -36);
+        ctx.rotate(-0.5 + ext * 1.6);
+        // Golden glowing marquee offer card
+        ctx.fillStyle = '#ffffff';
+        ctx.strokeStyle = '#ffd700';
+        ctx.lineWidth = 2.5;
+        ctx.shadowColor = '#00e5ff';
+        ctx.shadowBlur = 12;
+        ctx.fillRect(10, -28, 52, 34);
+        ctx.strokeRect(10, -28, 52, 34);
+        // Stamp
+        ctx.fillStyle = '#c62828';
+        ctx.beginPath();
+        ctx.arc(46, -11, 7, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#1b2a4a';
+        ctx.font = 'bold 6px sans-serif';
+        ctx.fillText('OFFER', 14, -18);
+        ctx.restore();
       } else {
-        // Tie Toss Whip
+        // Tie Toss
         const ext = Math.sin((this.moveFrame / this.currentMove.getTotalFrames()) * Math.PI);
         ctx.strokeStyle = '#b71c1c';
         ctx.lineWidth = 4;

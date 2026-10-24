@@ -40,6 +40,7 @@ export const BACKBENCHER_CONFIG = {
   whiffRecovery: 8,
   moves: {
     light: {
+      category: 'light',
       name: 'Paper Plane',
       type: 'paper_plane',
       trajectory: 'wild_swing',
@@ -63,6 +64,7 @@ export const BACKBENCHER_CONFIG = {
       blockable: true
     },
     heavy: {
+      category: 'heavy',
       name: 'Backpack Swing',
       type: 'backpack',
       trajectory: 'wild_swing',
@@ -86,6 +88,7 @@ export const BACKBENCHER_CONFIG = {
       blockable: true
     },
     ultimate: {
+      category: 'ultimate',
       name: 'Paper Storm',
       type: 'paper_storm',
       trajectory: 'wild_swing',

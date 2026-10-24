@@ -41,6 +41,7 @@ export const HOSTELER_CONFIG = {
   whiffRecovery: 10,
   moves: {
     light: {
+      category: 'light',
       name: 'Tiffin Slam',
       type: 'tiffin',
       trajectory: 'overhead_slam',
@@ -65,6 +66,7 @@ export const HOSTELER_CONFIG = {
       sound: 'metalClang'
     },
     heavy: {
+      category: 'heavy',
       name: 'Mess Tray Swing',
       type: 'tray',
       trajectory: 'overhead_slam',
@@ -89,6 +91,7 @@ export const HOSTELER_CONFIG = {
       sound: 'whack'
     },
     ultimate: {
+      category: 'ultimate',
       name: 'Mess Food Special',
       type: 'mess_special',
       trajectory: 'overhead_slam',

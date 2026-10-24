@@ -40,6 +40,7 @@ export const GAVEL_CONFIG = {
   whiffRecovery: 12,
   moves: {
     light: {
+      category: 'light',
       name: 'Gavel Swipe',
       type: 'gavel',
       trajectory: 'gavel_drop',
@@ -63,6 +64,7 @@ export const GAVEL_CONFIG = {
       blockable: true
     },
     heavy: {
+      category: 'heavy',
       name: 'Contempt of Court',
       type: 'gavel_slam',
       trajectory: 'gavel_drop',
@@ -86,6 +88,7 @@ export const GAVEL_CONFIG = {
       blockable: true
     },
     ultimate: {
+      category: 'ultimate',
       name: 'Court Adjourned',
       type: 'court_judgment',
       trajectory: 'gavel_drop',

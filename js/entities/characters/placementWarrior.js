@@ -41,6 +41,7 @@ export const PLACEMENT_WARRIOR_CONFIG = {
   whiffRecovery: 1,
   moves: {
     light: {
+     category: 'light',
       name: 'Resume Slap',
       type: 'resume',
       trajectory: 'diagonal_slash',
@@ -65,6 +66,7 @@ export const PLACEMENT_WARRIOR_CONFIG = {
       sound: 'lightHit'
     },
     heavy: {
+     category: 'heavy',
       name: 'Tie Toss',
       type: 'tie',
       trajectory: 'diagonal_slash',
@@ -84,12 +86,13 @@ export const PLACEMENT_WARRIOR_CONFIG = {
       hitstun: 18,
       knockback: { x: 10, y: -3 },
       hitbox: { x: 45, y: -78, w: 70, h: 36 },
-      particles: 'whip_crack',
+      particles: 'blue_sparkles',
       blockable: true,
       range: 80,
-      sound: 'whipCrack'
+      sound: 'heavyHit'
     },
     ultimate: {
+     category: 'ultimate',
       name: 'Resume Slam',
       type: 'resume_slam',
       trajectory: 'diagonal_slash',

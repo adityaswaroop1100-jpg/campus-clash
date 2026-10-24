@@ -41,6 +41,7 @@ export const TOPPER_CONFIG = {
   whiffRecovery: 2,
   moves: {
     light: {
+      category: 'light',
       name: 'Document Thrust',
       type: 'document',
       trajectory: 'thrust',
@@ -64,6 +65,7 @@ export const TOPPER_CONFIG = {
       blockable: true
     },
     heavy: {
+      category: 'heavy',
       name: 'Textbook Slam',
       type: 'textbook',
       trajectory: 'thrust',
@@ -87,6 +89,7 @@ export const TOPPER_CONFIG = {
       blockable: true
     },
     ultimate: {
+      category: 'ultimate',
       name: 'Exam Mode',
       type: 'exam_mode',
       trajectory: 'thrust',

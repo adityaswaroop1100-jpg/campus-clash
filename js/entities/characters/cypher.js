@@ -40,6 +40,7 @@ export const CYPHER_CONFIG = {
   whiffRecovery: 3,
   moves: {
     light: {
+      category: 'light',
       name: 'Code Slice',
       type: 'keyboard_claw',
       trajectory: 'typing_stabs',
@@ -63,6 +64,7 @@ export const CYPHER_CONFIG = {
       blockable: true
     },
     heavy: {
+      category: 'heavy',
       name: 'Enter Key Slam',
       type: 'keyboard_slam',
       trajectory: 'typing_stabs',
@@ -86,6 +88,7 @@ export const CYPHER_CONFIG = {
       blockable: true
     },
     ultimate: {
+      category: 'ultimate',
       name: 'System Override',
       type: 'firewall_pillar',
       trajectory: 'typing_stabs',

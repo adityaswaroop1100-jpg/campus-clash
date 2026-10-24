@@ -40,6 +40,7 @@ export const PALETTE_CONFIG = {
   whiffRecovery: 5,
   moves: {
     light: {
+      category: 'light',
       name: 'Brush Stroke',
       type: 'paintbrush',
       trajectory: 'sweeping_brush',
@@ -63,6 +64,7 @@ export const PALETTE_CONFIG = {
       blockable: true
     },
     heavy: {
+      category: 'heavy',
       name: 'Canvas Slash',
       type: 'ruler_slash',
       trajectory: 'sweeping_brush',
@@ -86,6 +88,7 @@ export const PALETTE_CONFIG = {
       blockable: true
     },
     ultimate: {
+      category: 'ultimate',
       name: 'Living Art Gallery',
       type: 'rainbow_vortex',
       trajectory: 'sweeping_brush',

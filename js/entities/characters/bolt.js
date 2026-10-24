@@ -40,6 +40,7 @@ export const BOLT_CONFIG = {
   whiffRecovery: 0,
   moves: {
     light: {
+      category: 'light',
       name: 'Piston Jab',
       type: 'dumbbell_punch',
       trajectory: 'straight_punch',
@@ -63,6 +64,7 @@ export const BOLT_CONFIG = {
       blockable: true
     },
     heavy: {
+      category: 'heavy',
       name: 'Lariat Spin',
       type: 'dumbbell_spin',
       trajectory: 'straight_punch',
@@ -86,6 +88,7 @@ export const BOLT_CONFIG = {
       blockable: true
     },
     ultimate: {
+      category: 'ultimate',
       name: '100-Meter Meteor',
       type: 'lightning_dash',
       trajectory: 'straight_punch',
