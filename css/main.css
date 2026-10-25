@@ -401,3 +401,124 @@ input, textarea, select {
   clip: rect(0, 0, 0, 0);
   border: 0;
 }
+
+/* =========================================================================
+   GLOBAL QUICK MUTE FLOATING PILL & HUD AUDIO TOAST
+   ========================================================================= */
+
+.global-mute-pill {
+  position: fixed;
+  top: 14px;
+  right: 18px;
+  z-index: 100000;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 14px;
+  background: rgba(10, 16, 30, 0.90);
+  border: 1px solid rgba(0, 240, 255, 0.5);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7), 0 0 12px rgba(0, 240, 255, 0.25);
+  border-radius: 9999px;
+  color: #00f0ff;
+  font-family: 'Rajdhani', -apple-system, sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  user-select: none;
+}
+
+.global-mute-pill:hover {
+  background: rgba(0, 240, 255, 0.16);
+  border-color: #00f0ff;
+  box-shadow: 0 4px 24px rgba(0, 240, 255, 0.4), 0 0 16px rgba(0, 240, 255, 0.45);
+  transform: translateY(-1px) scale(1.03);
+}
+
+.global-mute-pill:active {
+  transform: translateY(1px) scale(0.98);
+}
+
+.global-mute-pill.muted {
+  border-color: rgba(255, 71, 87, 0.65);
+  color: #ff4757;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7), 0 0 12px rgba(255, 71, 87, 0.3);
+}
+
+.global-mute-pill.muted:hover {
+  background: rgba(255, 71, 87, 0.15);
+  border-color: #ff4757;
+  box-shadow: 0 4px 24px rgba(255, 71, 87, 0.45);
+}
+
+.global-mute-pill .mute-icon {
+  font-size: 14px;
+  display: inline-block;
+  line-height: 1;
+}
+
+.global-mute-pill .mute-kbd {
+  display: inline-block;
+  padding: 1px 6px;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0;
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+}
+
+.global-mute-pill.muted .mute-kbd {
+  border-color: rgba(255, 71, 87, 0.3);
+  color: #ffb8b8;
+}
+
+/* Audio Toast Notification */
+.global-audio-toast {
+  position: fixed;
+  top: 58px;
+  right: 18px;
+  z-index: 100001;
+  padding: 8px 16px;
+  background: rgba(10, 16, 30, 0.94);
+  border: 1px solid #00f0ff;
+  border-radius: 8px;
+  color: #ffffff;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.75), 0 0 16px rgba(0, 240, 255, 0.4);
+  pointer-events: none;
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1), transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.global-audio-toast.hidden {
+  opacity: 0;
+  transform: translateY(-6px);
+  pointer-events: none;
+}
+
+@media (max-width: 600px) {
+  .global-mute-pill {
+    top: 10px;
+    right: 10px;
+    padding: 6px 11px;
+    font-size: 11px;
+  }
+  .global-mute-pill .mute-kbd {
+    display: none;
+  }
+  .global-audio-toast {
+    top: 50px;
+    right: 10px;
+    font-size: 12px;
+    padding: 6px 12px;
+  }
+}

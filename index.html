@@ -50,8 +50,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Orbitron:wght@600;700;800;900&family=Press+Start+2P&family=Rajdhani:wght@600;700;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
 
-  <!-- External Stylesheets (v=21 cache bust) -->
-  <link rel="stylesheet" href="css/main.css?v=21">
+  <!-- External Stylesheets (v=22 cache bust) -->
+  <link rel="stylesheet" href="css/main.css?v=22">
   <link rel="stylesheet" href="css/landing.css?v=21">
   <link rel="stylesheet" href="css/characterSelect.css?v=21">
   <link rel="stylesheet" href="css/stageSelect.css?v=21">
@@ -71,6 +71,16 @@
   <!-- Main Viewport Container -->
   <main id="app-container" role="main">
     <h1 class="sr-only">Campus Clash — 2D Arcade Fighting Game</h1>
+
+    <!-- Global Quick Mute Floating Pill (Always visible across all screens) -->
+    <button type="button" id="global-mute-pill" class="global-mute-pill" aria-label="Toggle Sound / Music (M)" title="Toggle Sound / Music (M)">
+      <span class="mute-icon" id="global-mute-icon">🔊</span>
+      <span class="mute-text" id="global-mute-text">SOUND ON</span>
+      <span class="mute-kbd">M</span>
+    </button>
+
+    <!-- Global Audio Toast Notification -->
+    <div id="global-audio-toast" class="global-audio-toast hidden" aria-live="polite"></div>
 
     <!-- Ambient Stadium Cyber Rig Backdrop (Eliminates Empty Box Margin) -->
     <div class="rig-ambient-backdrop" aria-hidden="true">

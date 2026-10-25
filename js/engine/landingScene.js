@@ -173,10 +173,9 @@ export class LandingScene {
     if (rigSound) {
       rigSound.addEventListener('click', () => {
         this.sound.init();
-        this.sound.isMuted = !this.sound.isMuted;
-        const soundText = document.getElementById('rig-sound-icon');
-        if (soundText) {
-          soundText.textContent = this.sound.isMuted ? '🔇 MUTED' : '🔊 SOUND';
+        const isMuted = this.sound.toggleMute();
+        if (this.game && this.game.showAudioToast) {
+          this.game.showAudioToast(isMuted ? '🔇 AUDIO MUTED' : '🔊 AUDIO UNMUTED');
         }
       });
     }

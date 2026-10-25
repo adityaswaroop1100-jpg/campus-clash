@@ -84,11 +84,13 @@ export class EntryPortalManager {
 
     if (this.soundBtn) {
       this.soundBtn.addEventListener('click', () => {
-        this.isMuted = !this.isMuted;
-        this.soundBtn.textContent = this.isMuted ? '🔇' : '🔊';
         if (this.game && this.game.sound) {
-          if (this.isMuted) this.game.sound.mute();
-          else this.game.sound.unmute();
+          this.game.sound.init();
+          const isMuted = this.game.sound.toggleMute();
+          this.isMuted = isMuted;
+          if (this.game.showAudioToast) {
+            this.game.showAudioToast(isMuted ? '🔇 AUDIO MUTED' : '🔊 AUDIO UNMUTED');
+          }
         }
       });
     }

@@ -62,8 +62,10 @@ The game unites **relatable college student archetypes** with emerging cyber tec
 | **Block / Shield** | `I` | `Numpad 4` or `P` |
 | **Dodge Roll** | `U` | `Numpad 5` or `I` |
 | **Ultimate Move** | `Spacebar` | `Numpad 0` or `Enter` |
+| **Quick Mute Audio** | `M` (Any screen / any time) | `M` (Any screen / any time) |
+| **Toggle Fullscreen** | `F` | `F` |
 
-*Touch Controls: On mobile and touch displays, virtual arcade d-pad and action buttons automatically appear during combat.*
+*Touch Controls: On mobile and touch displays, virtual arcade d-pad and action buttons automatically appear during combat. A persistent floating `🔊 SOUND ON` pill sits at the top-right corner on every screen to mute/unmute at any moment.*
 
 ---
 

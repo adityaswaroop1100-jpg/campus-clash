@@ -83,6 +83,7 @@ export class SoundManager {
     if (this.ctx && this.ctx.state === 'suspended') {
       this.ctx.resume();
     }
+    this.updateAllMuteUI();
   }
 
   updateGainNodes() {
@@ -131,8 +132,20 @@ export class SoundManager {
 
   toggleMute() {
     this.isMuted = !this.isMuted;
+    if (this.isMuted) {
+      if (this.titleAudio) {
+        try {
+          this.titleAudio.pause();
+          this.titleAudio.volume = 0;
+        } catch (e) {}
+      }
+    } else {
+      this.syncTitleAudioVolume();
+      this.playTitleThemeAudio();
+    }
     this.updateGainNodes();
     this.saveAudioPreferences();
+    this.updateAllMuteUI();
     return this.isMuted;
   }
 
@@ -146,6 +159,7 @@ export class SoundManager {
     }
     this.updateGainNodes();
     this.saveAudioPreferences();
+    this.updateAllMuteUI();
   }
 
   unmute() {
@@ -154,6 +168,41 @@ export class SoundManager {
     this.syncTitleAudioVolume();
     this.playTitleThemeAudio();
     this.saveAudioPreferences();
+    this.updateAllMuteUI();
+  }
+
+  updateAllMuteUI() {
+    if (typeof document === 'undefined') return;
+
+    // 1. Global Floating Mute Pill
+    const pill = document.getElementById('global-mute-pill');
+    const pillIcon = document.getElementById('global-mute-icon');
+    const pillText = document.getElementById('global-mute-text');
+    if (pill) {
+      pill.classList.toggle('muted', this.isMuted);
+      if (pillIcon) pillIcon.textContent = this.isMuted ? '🔇' : '🔊';
+      if (pillText) pillText.textContent = this.isMuted ? 'MUTED' : 'SOUND ON';
+    }
+
+    // 2. Entry Portal sound button
+    const portalSound = document.getElementById('portal-btn-sound');
+    if (portalSound) {
+      portalSound.textContent = this.isMuted ? '🔇' : '🔊';
+      portalSound.setAttribute('title', this.isMuted ? 'Unmute Sound (M)' : 'Mute Sound (M)');
+    }
+
+    // 3. Cabinet Rig Top Header sound button
+    const rigSoundIcon = document.getElementById('rig-sound-icon');
+    if (rigSoundIcon) {
+      rigSoundIcon.textContent = this.isMuted ? '🔇 MUTED' : '🔊 SOUND';
+    }
+
+    // 4. In-Game Pause Menu mute button
+    const pauseMute = document.getElementById('pause-btn-mute');
+    if (pauseMute) {
+      pauseMute.textContent = this.isMuted ? 'MUTE (ON)' : 'MUTE (OFF)';
+      pauseMute.classList.toggle('active', this.isMuted);
+    }
   }
 
   toggleStreamSafe() {

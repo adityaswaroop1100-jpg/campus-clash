@@ -316,6 +316,13 @@ class CampusClashGame {
         this.sound.startTitleMusic();
       }
 
+      if (e.code === 'KeyM' && !e.ctrlKey && !e.metaKey && !e.altKey) {
+        e.preventDefault();
+        const isMuted = this.sound.toggleMute();
+        this.showAudioToast(isMuted ? '🔇 AUDIO MUTED' : '🔊 AUDIO UNMUTED');
+        return;
+      }
+
       if (e.code === 'KeyF' && !e.ctrlKey && !e.metaKey && !e.altKey) {
         this.toggleFullscreen();
         return;
@@ -382,6 +389,28 @@ class CampusClashGame {
         this.sound.startTitleMusic();
       }
     }, { passive: true });
+
+    // Global Quick Mute Floating Pill listener (available on all screens)
+    const globalMutePill = document.getElementById('global-mute-pill');
+    if (globalMutePill) {
+      globalMutePill.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this.sound.init();
+        const isMuted = this.sound.toggleMute();
+        this.showAudioToast(isMuted ? '🔇 AUDIO MUTED' : '🔊 AUDIO UNMUTED');
+      });
+    }
+  }
+
+  showAudioToast(text) {
+    const toast = document.getElementById('global-audio-toast');
+    if (!toast) return;
+    toast.textContent = text;
+    toast.classList.remove('hidden');
+    if (this.audioToastTimer) clearTimeout(this.audioToastTimer);
+    this.audioToastTimer = setTimeout(() => {
+      if (toast) toast.classList.add('hidden');
+    }, 1400);
   }
 
   toggleFullscreen() {
@@ -482,8 +511,7 @@ class CampusClashGame {
       if (this.sound.isMuted) muteBtn.classList.add('active');
       muteBtn.addEventListener('click', () => {
         const isMuted = this.sound.toggleMute();
-        muteBtn.textContent = isMuted ? 'MUTE (ON)' : 'MUTE (OFF)';
-        muteBtn.classList.toggle('active', isMuted);
+        this.showAudioToast(isMuted ? '🔇 AUDIO MUTED' : '🔊 AUDIO UNMUTED');
       });
     }
 
