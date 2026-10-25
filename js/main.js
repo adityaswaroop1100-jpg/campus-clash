@@ -3042,7 +3042,7 @@ class CampusClashGame {
           combatGrade = 'S+';
           combatCGPA = '9.95 / 10.0';
           gradeColor = '#ffd700';
-          deanRemark = 'Dean's Combat Laurels. Flawless syllabus mastery, algorithmic precision, and devastating combo thesis.';
+          deanRemark = "Dean's Combat Laurels. Flawless syllabus mastery, algorithmic precision, and devastating combo thesis.";
         } else {
           combatGrade = 'A+';
           combatCGPA = '9.40 / 10.0';
@@ -3486,7 +3486,7 @@ class CampusClashGame {
     ctx.restore();
   }
 
-}}
+}
 
 // Bulletproof bootstrap function that handles all document ready states
 function bootCampusClash() {
