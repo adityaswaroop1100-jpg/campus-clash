@@ -682,7 +682,8 @@ class CampusClashGame {
         subtitle: 'ACADEMIC ASSASSIN',
         quote: '"Syllabus fears me."',
         power: 60, speed: 80, range: 50, control: 85, diff: 45,
-        img: 'assets/characters/topper/showcase.png'
+        img: 'assets/characters/topper/showcase.png',
+        portrait: 'assets/characters/topper/portrait.png'
       },
       {
         num: '02',
@@ -690,7 +691,8 @@ class CampusClashGame {
         subtitle: 'CHAOS BRAWLER',
         quote: '"Last bench, first place in combat."',
         power: 85, speed: 75, range: 60, control: 60, diff: 30,
-        img: 'assets/characters/backbencher/portrait.png'
+        img: 'assets/characters/backbencher/showcase.png',
+        portrait: 'assets/characters/backbencher/portrait.png'
       },
       {
         num: '03',
@@ -698,7 +700,8 @@ class CampusClashGame {
         subtitle: 'TANK GRAPPLER',
         quote: '"Mess food builds real warriors."',
         power: 95, speed: 45, range: 55, control: 70, diff: 35,
-        img: 'assets/characters/hosteler/portrait.png'
+        img: 'assets/characters/hosteler/showcase.png',
+        portrait: 'assets/characters/hosteler/portrait.png'
       },
       {
         num: '04',
@@ -706,7 +709,8 @@ class CampusClashGame {
         subtitle: 'CONTROL ZONER',
         quote: '"Respect the hierarchy, junior."',
         power: 75, speed: 65, range: 85, control: 80, diff: 60,
-        img: 'assets/characters/senior/portrait.png'
+        img: 'assets/characters/senior/showcase.png',
+        portrait: 'assets/characters/senior/portrait.png'
       },
       {
         num: '05',
@@ -714,7 +718,8 @@ class CampusClashGame {
         subtitle: 'RUSHDOWN COMBO',
         quote: '"45 LPA or nothing at all."',
         power: 80, speed: 95, range: 65, control: 75, diff: 85,
-        img: 'assets/characters/placement/portrait.png'
+        img: 'assets/characters/placement/showcase.png',
+        portrait: 'assets/characters/placement/portrait.png'
       },
       {
         num: '06',
@@ -722,7 +727,8 @@ class CampusClashGame {
         subtitle: 'AGILE BRAWLER',
         quote: '"Sweat in training, victory in the cage."',
         power: 70, speed: 90, range: 50, control: 80, diff: 55,
-        img: 'assets/characters/sports/portrait.png'
+        img: 'assets/characters/sports/showcase.png',
+        portrait: 'assets/characters/sports/portrait.png'
       },
       {
         num: '07',
@@ -730,7 +736,8 @@ class CampusClashGame {
         subtitle: 'CAMPUS HACKER',
         quote: '"Your firewall has expired."',
         power: 65, speed: 75, range: 95, control: 90, diff: 90,
-        img: 'assets/characters/cypher/portrait.png'
+        img: 'assets/characters/cypher/showcase.png',
+        portrait: 'assets/characters/cypher/portrait.png'
       },
       {
         num: '08',
@@ -738,7 +745,8 @@ class CampusClashGame {
         subtitle: 'MOOT COURT LEGEND',
         quote: '"Objection sustained. Case closed."',
         power: 90, speed: 50, range: 70, control: 85, diff: 65,
-        img: 'assets/characters/gavel/portrait.png'
+        img: 'assets/characters/gavel/showcase.png',
+        portrait: 'assets/characters/gavel/portrait.png'
       },
       {
         num: '09',
@@ -746,7 +754,8 @@ class CampusClashGame {
         subtitle: 'THE TRACK STAR',
         quote: '"Can\'t fight what you can\'t see."',
         power: 65, speed: 100, range: 75, control: 70, diff: 80,
-        img: 'assets/characters/bolt/portrait.png'
+        img: 'assets/characters/bolt/showcase.png',
+        portrait: 'assets/characters/bolt/portrait.png'
       },
       {
         num: '10',
@@ -754,9 +763,18 @@ class CampusClashGame {
         subtitle: 'FINE ARTS MAJOR',
         quote: '"Every strike is a brushstroke."',
         power: 70, speed: 75, range: 85, control: 85, diff: 85,
-        img: 'assets/characters/palette/portrait.png'
+        img: 'assets/characters/palette/showcase.png',
+        portrait: 'assets/characters/palette/portrait.png'
       }
     ];
+
+    // Preload all 10 showcase images to guarantee instant zero-flicker transitions
+    this.charDetails.forEach(d => {
+      if (d.img) {
+        const img = new Image();
+        img.src = d.img;
+      }
+    });
 
     // Grab DOM elements
     this.charSelectScreen = document.getElementById('characterSelectScreen');
@@ -919,6 +937,13 @@ class CampusClashGame {
         this.sound?.playCardWhoosh();
       });
 
+      tab.addEventListener('mouseleave', () => {
+        if (this.isCountingDown) return;
+        this.portraitManager?.setHovered(-1);
+        const activeIdx = this.charSelectStep === 1 ? this.p2CharIndex : this.p1CharIndex;
+        this.updateShowcasePreview(activeIdx);
+      });
+
       tab.addEventListener('click', () => {
         if (this.isCountingDown) return;
         this.updateShowcasePreview(index);
@@ -948,6 +973,8 @@ class CampusClashGame {
       card.addEventListener('mouseleave', () => {
         if (this.isCountingDown) return;
         this.portraitManager.setHovered(-1);
+        const activeIdx = this.charSelectStep === 1 ? this.p2CharIndex : this.p1CharIndex;
+        this.updateShowcasePreview(activeIdx);
       });
 
       card.addEventListener('click', () => {
@@ -985,7 +1012,14 @@ class CampusClashGame {
     const statDiff = document.getElementById('showcase-stat-diff');
 
     if (watermark) watermark.textContent = detail.num;
-    if (portraitImg) portraitImg.src = detail.img;
+    if (portraitImg) {
+      if (!portraitImg.src.endsWith(detail.img)) {
+        portraitImg.src = detail.img;
+        portraitImg.classList.remove('swapping');
+        void portraitImg.offsetWidth;
+        portraitImg.classList.add('swapping');
+      }
+    }
     if (charName) charName.textContent = detail.name;
     if (charSub) charSub.textContent = `— ${detail.subtitle} —`;
     if (charQuote) charQuote.textContent = detail.quote;
@@ -1092,7 +1126,7 @@ class CampusClashGame {
     if (this.p1ProfileTagline) this.p1ProfileTagline.textContent = p1Item.config.tagline || 'Academic Assassin';
     if (this.p1ProfileEmoji) this.p1ProfileEmoji.textContent = p1Item.emoji;
     const p1Thumb = document.getElementById('p1-profile-thumb');
-    if (p1Thumb) p1Thumb.src = this.charDetails[this.p1CharIndex]?.img || 'assets/characters/topper/portrait.png';
+    if (p1Thumb) p1Thumb.src = this.charDetails[this.p1CharIndex]?.portrait || this.charDetails[this.p1CharIndex]?.img || 'assets/characters/topper/portrait.png';
     if (this.p1ProfileStatus) {
       if (this.p1Locked) {
         this.p1ProfileStatus.innerHTML = '<button class="status-stamp ready p1-lock-action-btn" id="p1-lock-btn">P1 SELECTED ✓</button>';
@@ -1121,7 +1155,7 @@ class CampusClashGame {
     if (this.p2ProfileTagline) this.p2ProfileTagline.textContent = `"${p2Item.config.tagline}"`;
     if (this.p2ProfileEmoji) this.p2ProfileEmoji.textContent = p2Item.emoji;
     const p2Thumb = document.getElementById('p2-profile-thumb');
-    if (p2Thumb) p2Thumb.src = this.charDetails[this.p2CharIndex]?.img || 'assets/characters/backbencher/portrait.png';
+    if (p2Thumb) p2Thumb.src = this.charDetails[this.p2CharIndex]?.portrait || this.charDetails[this.p2CharIndex]?.img || 'assets/characters/backbencher/portrait.png';
     if (this.p2ProfileStatus) {
       if (this.p2Locked) {
         this.p2ProfileStatus.innerHTML = '<button class="status-stamp ready p2-lock-action-btn" id="p2-lock-btn">P2 LOCKED ✓</button>';

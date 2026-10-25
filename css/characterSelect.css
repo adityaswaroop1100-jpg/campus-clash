@@ -301,8 +301,8 @@
    4. Left Column: Character Showcase Panel (~360px width)
    -------------------------------------------------------------------------- */
 .char-showcase-panel {
-  flex: 0 0 365px;
-  width: 365px;
+  flex: 0 0 380px;
+  width: 380px;
   height: 420px;
   max-height: 100%;
   display: flex;
@@ -435,38 +435,61 @@
   align-items: stretch;
   width: 100%;
   height: 100%;
-  padding: 10px;
-  gap: 10px;
+  padding: 8px 12px 8px 10px;
+  gap: 8px;
   box-sizing: border-box;
 }
 
 /* Left side of showcase: Character art */
 .showcase-art-wrap {
-  flex: 0 0 155px;
+  flex: 0 0 180px;
+  width: 180px;
   height: 100%;
   display: flex;
   align-items: flex-end;
   justify-content: center;
   position: relative;
+  overflow: visible;
 }
 
 .showcase-img {
-  max-width: 100%;
-  max-height: 100%;
+  height: 97%;
+  max-width: 125%;
   object-fit: contain;
   object-position: bottom center;
-  filter: drop-shadow(0 0 18px rgba(0, 229, 255, 0.75));
-  transition: transform 0.25s ease, filter 0.25s ease;
+  filter: drop-shadow(0 0 16px rgba(0, 229, 255, 0.75));
+  transition: transform 0.22s cubic-bezier(0.2, 0.9, 0.3, 1.1), filter 0.22s ease;
+  pointer-events: none;
+  z-index: 2;
+  will-change: transform, opacity;
+}
+
+@keyframes showcasePop {
+  0% {
+    opacity: 0.75;
+    transform: translateY(6px) scale(0.97);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.showcase-img.swapping {
+  animation: showcasePop 0.2s cubic-bezier(0.2, 0.9, 0.3, 1.1) forwards;
 }
 
 .showcase-magic-aura {
   position: absolute;
   bottom: 0;
-  left: 10%;
-  right: 10%;
-  height: 6px;
-  background: radial-gradient(ellipse at center, #00e5ff 0%, transparent 70%);
-  box-shadow: 0 0 22px #00e5ff;
+  left: 0;
+  right: 0;
+  height: 8px;
+  background: radial-gradient(ellipse at center, rgba(0, 229, 255, 0.95) 0%, rgba(0, 229, 255, 0.45) 45%, transparent 75%);
+  box-shadow: 0 0 24px #00e5ff, 0 0 8px rgba(255, 255, 255, 0.85);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 1;
 }
 
 /* Right side of showcase: Details & Stats */
@@ -476,6 +499,7 @@
   flex-direction: column;
   justify-content: center;
   min-width: 0;
+  z-index: 3;
 }
 
 .showcase-crown-icon {
