@@ -148,28 +148,37 @@
         const r = await fetch(`${base}/manifest.json`);
         if (r.ok) manifest = (await r.json())[id] || {};
       } catch (e) { /* file:// or missing manifest — fine */ }
-      await Promise.all(STATES.map(async (s) => {
-        let img = await loadImage(`${base}/${id}/${s}.png`);
-        if (!img) {
-          // Automatic state alias fallback for storage optimization (air->jump, dash->run)
-          if (s === 'air') {
-            img = (entry.states.jump && entry.states.jump.img) || await loadImage(`${base}/${id}/jump.png`);
-          } else if (s === 'dash') {
-            img = (entry.states.run && entry.states.run.img) || await loadImage(`${base}/${id}/run.png`);
+      const portraitPromise = loadImage(`${base}/${id}/portrait.png`).then((img) => {
+        if (img) entry.portrait = img;
+        return img;
+      });
+      await Promise.all([
+        portraitPromise,
+        ...STATES.map(async (s) => {
+          let img = await loadImage(`${base}/${id}/${s}.png`);
+          if (!img) {
+            // Automatic state alias fallback for storage optimization (air->jump, dash->run)
+            if (s === 'air') {
+              img = (entry.states.jump && entry.states.jump.img) || await loadImage(`${base}/${id}/jump.png`);
+            } else if (s === 'dash') {
+              img = (entry.states.run && entry.states.run.img) || await loadImage(`${base}/${id}/run.png`);
+            }
           }
-        }
-        if (!img) {
-          return;
-        }
-        const m = manifest[s] || (s === 'air' ? manifest.jump : (s === 'dash' ? manifest.run : {})) || {};
-        const frames = m.frames || 1;
-        entry.states[s] = {
-          img, frames, fw: img.width / frames, fh: img.height,
-          fps: m.fps || DEFAULT_ANIM[s].fps,
-          loop: m.loop !== undefined ? m.loop : DEFAULT_ANIM[s].loop,
-        };
-      }));
-      entry.portrait = await loadImage(`${base}/${id}/portrait.png`) || (entry.states.idle && entry.states.idle.img);
+          if (!img) {
+            return;
+          }
+          const m = manifest[s] || (s === 'air' ? manifest.jump : (s === 'dash' ? manifest.run : {})) || {};
+          const frames = m.frames || 1;
+          entry.states[s] = {
+            img, frames, fw: img.width / frames, fh: img.height,
+            fps: m.fps || DEFAULT_ANIM[s].fps,
+            loop: m.loop !== undefined ? m.loop : DEFAULT_ANIM[s].loop,
+          };
+        })
+      ]);
+      if (!entry.portrait && entry.states.idle) {
+        entry.portrait = entry.states.idle.img;
+      }
       if (!entry.portrait) {
         console.warn(`[CampusVisuals] Missing portrait for character "${id}": ${base}/${id}/portrait.png`);
       }
