@@ -60,7 +60,7 @@ export const SENIOR_CONFIG = {
       damage: 5,
       hitstun: 8,
       knockback: { x: 3, y: 0 },
-      hitbox: { x: 35, y: -75, w: 38, h: 28 },
+      hitbox: { x: 20, y: -95, w: 75, h: 42 },
       particles: 'steam_burst',
       blockable: true,
       sound: 'chaiSplash'
@@ -85,7 +85,7 @@ export const SENIOR_CONFIG = {
       damage: 15,
       hitstun: 18,
       knockback: { x: 10, y: -2 },
-      hitbox: { x: 30, y: -80, w: 60, h: 50 },
+      hitbox: { x: 22, y: -115, w: 95, h: 75 },
       particles: 'paper_explosion',
       blockable: true,
       sound: 'heavyHit'

@@ -59,7 +59,7 @@ export const CYPHER_CONFIG = {
       damage: 7,
       hitstun: 13,
       knockback: { x: 4, y: 0 },
-      hitbox: { x: 42, y: -75, w: 48, h: 26 },
+      hitbox: { x: 20, y: -95, w: 75, h: 42 },
       particles: 'binary_splash',
       blockable: true
     },
@@ -83,7 +83,7 @@ export const CYPHER_CONFIG = {
       damage: 16,
       hitstun: 20,
       knockback: { x: 9, y: -4 },
-      hitbox: { x: 30, y: -80, w: 60, h: 45 },
+      hitbox: { x: 22, y: -115, w: 95, h: 75 },
       particles: 'binary_splash',
       blockable: true
     },

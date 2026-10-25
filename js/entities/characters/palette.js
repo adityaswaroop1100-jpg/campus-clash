@@ -59,7 +59,7 @@ export const PALETTE_CONFIG = {
       damage: 8,
       hitstun: 13,
       knockback: { x: 5, y: 0 },
-      hitbox: { x: 40, y: -78, w: 54, h: 32 },
+      hitbox: { x: 20, y: -95, w: 75, h: 42 },
       particles: 'paint_splatter',
       blockable: true
     },
@@ -83,7 +83,7 @@ export const PALETTE_CONFIG = {
       damage: 16,
       hitstun: 20,
       knockback: { x: 10, y: -3 },
-      hitbox: { x: 30, y: -85, w: 65, h: 48 },
+      hitbox: { x: 22, y: -115, w: 95, h: 75 },
       particles: 'paint_splatter',
       blockable: true
     },

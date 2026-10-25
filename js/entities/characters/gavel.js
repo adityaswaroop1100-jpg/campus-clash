@@ -59,7 +59,7 @@ export const GAVEL_CONFIG = {
       damage: 11,
       hitstun: 15,
       knockback: { x: 6, y: 0 },
-      hitbox: { x: 44, y: -72, w: 52, h: 30 },
+      hitbox: { x: 20, y: -95, w: 75, h: 42 },
       particles: 'gold_sparkles',
       blockable: true
     },
@@ -83,7 +83,7 @@ export const GAVEL_CONFIG = {
       damage: 22,
       hitstun: 26,
       knockback: { x: 14, y: -5 },
-      hitbox: { x: 28, y: -85, w: 65, h: 50 },
+      hitbox: { x: 22, y: -115, w: 95, h: 75 },
       particles: 'shockwave_ring',
       blockable: true
     },

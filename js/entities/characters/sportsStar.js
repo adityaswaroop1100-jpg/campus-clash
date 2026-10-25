@@ -60,7 +60,7 @@ export const SPORTS_STAR_CONFIG = {
       damage: 5,
       hitstun: 8,
       knockback: { x: 3, y: 0 },
-      hitbox: { x: 35, y: -74, w: 38, h: 26 },
+      hitbox: { x: 20, y: -95, w: 75, h: 42 },
       particles: 'air_burst',
       blockable: true,
       sound: 'lightHit'
@@ -85,7 +85,7 @@ export const SPORTS_STAR_CONFIG = {
       damage: 18,
       hitstun: 22,
       knockback: { x: 12, y: -4 },
-      hitbox: { x: 35, y: -82, w: 74, h: 52 },
+      hitbox: { x: 22, y: -115, w: 95, h: 75 },
       particles: 'cricket_explosion',
       blockable: true,
       sound: 'cricketShot'

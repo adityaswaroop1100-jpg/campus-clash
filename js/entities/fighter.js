@@ -256,7 +256,9 @@ export class Fighter {
     }
 
     // 4. ACTIONABLE INPUTS
-    this.handleInputs(inputHandler, opponent, particleSystem, soundManager);
+    if (inputHandler) {
+      this.handleInputs(inputHandler, opponent, particleSystem, soundManager);
+    }
   }
 
   handleInputs(input, opponent, particleSystem, soundManager) {
@@ -294,7 +296,7 @@ export class Fighter {
     // Block / Parry System
     if (isBlockJustPressed && this.isGrounded) {
       this.parry.attemptParry();
-      if (window.CampusVisuals) window.CampusVisuals.onBlock(this);
+      if (typeof window !== 'undefined' && window.CampusVisuals) window.CampusVisuals.onBlock(this);
     }
 
     if (isBlockHeld && this.isGrounded && this.parry.parryCooldown <= 0) {
@@ -425,7 +427,7 @@ export class Fighter {
     );
     this.weaponTrail.clear();
 
-    if (window.CampusVisuals) {
+    if (typeof window !== 'undefined' && window.CampusVisuals) {
       if (category === 'ultimate' || moveConfig.type === 'ultimate' || moveConfig.type === 'viva' || moveConfig.type === 'exam_mode') {
         window.CampusVisuals.onUltimate(this);
       } else if (category === 'heavy' || moveConfig.type === 'heavy' || moveConfig.name === 'Textbook Slam' || (moveConfig.damage && moveConfig.damage >= 14)) {

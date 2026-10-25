@@ -60,7 +60,7 @@ export const TOPPER_CONFIG = {
       damage: 8,
       hitstun: 14,
       knockback: { x: 5, y: 0 },
-      hitbox: { x: 45, y: -72, w: 48, h: 28 },
+      hitbox: { x: 20, y: -95, w: 75, h: 42 },
       particles: 'cyan_sparkles',
       blockable: true
     },
@@ -84,7 +84,7 @@ export const TOPPER_CONFIG = {
       damage: 15,
       hitstun: 19,
       knockback: { x: 10, y: -3 },
-      hitbox: { x: 50, y: -80, w: 60, h: 48 },
+      hitbox: { x: 22, y: -115, w: 95, h: 75 },
       particles: 'formula_burst',
       blockable: true
     },

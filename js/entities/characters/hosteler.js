@@ -60,7 +60,7 @@ export const HOSTELER_CONFIG = {
       damage: 10,
       hitstun: 16,
       knockback: { x: 6, y: 3 },
-      hitbox: { x: 30, y: -70, w: 50, h: 42 },
+      hitbox: { x: 20, y: -95, w: 75, h: 42 },
       particles: 'food_splatter',
       blockable: true,
       sound: 'metalClang'
@@ -85,7 +85,7 @@ export const HOSTELER_CONFIG = {
       damage: 20,
       hitstun: 24,
       knockback: { x: 15, y: -5 },
-      hitbox: { x: 25, y: -80, w: 78, h: 60 },
+      hitbox: { x: 22, y: -115, w: 95, h: 75 },
       particles: 'curry_splatter',
       blockable: true,
       sound: 'whack'

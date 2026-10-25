@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 """
 Standardize all 10 character move configurations:
-- Guarantees point-blank hit reliability: x: 20, w: 75 for light; x: 22, w: 95 for heavy; x: 15, w: 180 for ultimate.
-- Adds explicit category to every move: 'light', 'heavy', 'ultimate', 'special'.
-- Adds unique special move to all characters.
-- Ensures zero overlapping or duplicate move properties across characters.
+- Guarantees point-blank hit reliability:
+  * light: x: 20, y: -95, w: 75, h: 42
+  * heavy: x: 22, y: -115, w: 95, h: 75
+  * ultimate: x: 15, y: -130, w: 180, h: 120
+- Ensures explicit category: 'light', 'heavy', 'ultimate', 'special'.
+- Ensures unique special move for each character.
 """
 
 import os, re
@@ -135,28 +137,16 @@ def update_character(char_file):
         print(f"Skipping unknown character {char_file}")
         return
 
-    # 1. Update light attack hitbox
-    content = re.sub(
-        r'(light:\s*\{[^{}]*hitbox:\s*\{)[^}]+(\})',
-        r'\1 x: 20, y: -95, w: 75, h: 42 \2',
-        content
-    )
+    # Replace hitbox in light: block
+    def replace_move_hitbox(text, move_name, new_hitbox):
+        pattern = rf'({move_name}:\s*\{{.*?(?:hitbox:\s*\{{))[^}}]+(\}})'
+        return re.sub(pattern, rf'\g<1> {new_hitbox} \2', text, flags=re.DOTALL)
 
-    # 2. Update heavy attack hitbox
-    content = re.sub(
-        r'(heavy:\s*\{[^{}]*hitbox:\s*\{)[^}]+(\})',
-        r'\1 x: 22, y: -115, w: 95, h: 75 \2',
-        content
-    )
+    content = replace_move_hitbox(content, 'light', 'x: 20, y: -95, w: 75, h: 42')
+    content = replace_move_hitbox(content, 'heavy', 'x: 22, y: -115, w: 95, h: 75')
+    content = replace_move_hitbox(content, 'ultimate', 'x: 15, y: -130, w: 180, h: 120')
 
-    # 3. Update ultimate attack hitbox
-    content = re.sub(
-        r'(ultimate:\s*\{[^{}]*hitbox:\s*\{)[^}]+(\})',
-        r'\1 x: 15, y: -130, w: 180, h: 120 \2',
-        content
-    )
-
-    # 4. Add special move if missing
+    # Add special move if missing
     if 'special:' not in content:
         spec = SPECIAL_MOVES[char_key]
         special_code = f"""    special: {{
@@ -184,7 +174,6 @@ def update_character(char_file):
       blockable: true
     }},
 """
-        # Insert before ultimate
         content = content.replace("    ultimate: {", special_code + "    ultimate: {")
 
     with open(char_file, 'w') as f:

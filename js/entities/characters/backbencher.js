@@ -61,7 +61,7 @@ export const BACKBENCHER_CONFIG = {
       damage: 6,
       hitstun: 10,
       knockback: { x: 4, y: 0 },
-      hitbox: { x: 45, y: -72, w: 45, h: 28 },
+      hitbox: { x: 20, y: -95, w: 75, h: 42 },
       particles: 'paper_flutter',
       blockable: true
     },
@@ -85,7 +85,7 @@ export const BACKBENCHER_CONFIG = {
       damage: 16,
       hitstun: 20,
       knockback: { x: 12, y: -4 },
-      hitbox: { x: 30, y: -85, w: 75, h: 70 },
+      hitbox: { x: 22, y: -115, w: 95, h: 75 },
       particles: 'item_explosion',
       blockable: true
     },

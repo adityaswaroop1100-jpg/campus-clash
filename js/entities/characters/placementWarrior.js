@@ -60,7 +60,7 @@ export const PLACEMENT_WARRIOR_CONFIG = {
       damage: 7,
       hitstun: 12,
       knockback: { x: 4, y: 0 },
-      hitbox: { x: 35, y: -74, w: 44, h: 30 },
+      hitbox: { x: 20, y: -95, w: 75, h: 42 },
       particles: 'blue_sparkles',
       blockable: true,
       sound: 'lightHit'
@@ -85,7 +85,7 @@ export const PLACEMENT_WARRIOR_CONFIG = {
       damage: 16,
       hitstun: 18,
       knockback: { x: 10, y: -3 },
-      hitbox: { x: 45, y: -78, w: 70, h: 36 },
+      hitbox: { x: 22, y: -115, w: 95, h: 75 },
       particles: 'blue_sparkles',
       blockable: true,
       range: 80,

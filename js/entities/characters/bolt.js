@@ -59,7 +59,7 @@ export const BOLT_CONFIG = {
       damage: 6,
       hitstun: 11,
       knockback: { x: 4, y: 0 },
-      hitbox: { x: 44, y: -74, w: 44, h: 25 },
+      hitbox: { x: 20, y: -95, w: 75, h: 42 },
       particles: 'air_burst',
       blockable: true
     },
@@ -83,7 +83,7 @@ export const BOLT_CONFIG = {
       damage: 18,
       hitstun: 22,
       knockback: { x: 12, y: -3 },
-      hitbox: { x: 20, y: -85, w: 70, h: 55 },
+      hitbox: { x: 22, y: -115, w: 95, h: 75 },
       particles: 'air_burst',
       blockable: true
     },
