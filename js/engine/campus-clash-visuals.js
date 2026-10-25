@@ -149,8 +149,12 @@
         if (r.ok) manifest = (await r.json())[id] || {};
       } catch (e) { /* file:// or missing manifest — fine */ }
 
-      // 1. Immediately load idle sprite so fighter is instantly ready to render
-      const idleImg = await loadImage(`${base}/${id}/idle.png`);
+      const loadAsset = async (name) => {
+        return (await loadImage(`${base}/${id}/${name}.webp`)) || (await loadImage(`${base}/${id}/${name}.png`));
+      };
+
+      // 1. Immediately load idle sprite (WebP prioritized, PNG fallback)
+      const idleImg = await loadAsset('idle');
       if (idleImg) {
         const m = manifest.idle || {};
         const frames = m.frames || 1;
@@ -164,7 +168,7 @@
       }
 
       // 2. Concurrently load portrait and remaining combat animation states
-      const portraitPromise = loadImage(`${base}/${id}/portrait.png`).then((img) => {
+      const portraitPromise = loadAsset('portrait').then((img) => {
         if (img) entry.portrait = img;
         return img;
       });
@@ -172,13 +176,13 @@
       await Promise.all([
         portraitPromise,
         ...STATES.filter((s) => s !== 'idle').map(async (s) => {
-          let img = await loadImage(`${base}/${id}/${s}.png`);
+          let img = await loadAsset(s);
           if (!img) {
             // Automatic state alias fallback for storage optimization (air->jump, dash->run)
             if (s === 'air') {
-              img = (entry.states.jump && entry.states.jump.img) || await loadImage(`${base}/${id}/jump.png`);
+              img = (entry.states.jump && entry.states.jump.img) || await loadAsset('jump');
             } else if (s === 'dash') {
-              img = (entry.states.run && entry.states.run.img) || await loadImage(`${base}/${id}/run.png`);
+              img = (entry.states.run && entry.states.run.img) || await loadAsset('run');
             }
           }
           if (!img) return;

@@ -78,10 +78,15 @@ export class Fighter {
     this._wasGrounded = true;   // For landing dust ring detection
     this._particleSystem = null; // Set by game after spawn (optional, checked before use)
 
-    // Direct high-res idle sprite fallback
+    // Direct high-res idle sprite fallback (WebP prioritized, PNG fallback)
     const cid = this.config.id === 'placementWarrior' ? 'placement' : (this.config.id === 'sportsStar' ? 'sports' : this.config.id);
     this.fallbackImg = new Image();
-    this.fallbackImg.src = `assets/characters/${cid}/idle.png`;
+    this.fallbackImg.onerror = () => {
+      if (!this.fallbackImg.src.endsWith('.png')) {
+        this.fallbackImg.src = `assets/characters/${cid}/idle.png`;
+      }
+    };
+    this.fallbackImg.src = `assets/characters/${cid}/idle.webp`;
   }
 
   get isBlocking() {
