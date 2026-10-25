@@ -53,7 +53,8 @@ export class CollisionSystem {
    * @param {Object} fighterB
    */
   static resolveBodyPush(fighterA, fighterB) {
-    const minDistance = (fighterA.width + fighterB.width) * 0.38;
+    // Generous push distance prevents fighters from clipping through each other or crossing up hitboxes
+    const minDistance = (fighterA.width + fighterB.width) * 0.54;
     const diff = fighterB.x - fighterA.x;
     const dist = Math.abs(diff);
 

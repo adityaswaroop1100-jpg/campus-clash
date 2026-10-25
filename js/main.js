@@ -1638,9 +1638,8 @@ class CampusClashGame {
         }
 
         // --- 2. BLOCK SYSTEM CHECK ---
-        const isFacingAttacker = (defender.facing === 1 && attacker.x > defender.x) ||
-                                 (defender.facing === -1 && attacker.x < defender.x);
-        const blocked = defender.isBlocking && isFacingAttacker && props.blockable;
+        // Hex energy shield provides reliable protection against all blockable strikes while guard is active
+        const blocked = defender.isBlocking && props.blockable;
 
         // Dynamic Hitstop freeze based on character & move archetype
         const hitStopFrames = (attacker.currentMove && attacker.currentMove.hitStop !== undefined)

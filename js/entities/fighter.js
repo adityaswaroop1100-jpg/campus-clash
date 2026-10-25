@@ -21,14 +21,14 @@ export class Fighter {
     this.config = config;
     this.playerId = playerId;
 
-    // Transform (Tall, heroic 135px height)
+    // Transform (Proportional 175px arcade fighting game height)
     this.x = startX;
     this.y = startY;
     this.vx = 0;
     this.vy = 0;
     this.facing = facing;
     this.width = 64;
-    this.height = 135;
+    this.height = 175;
     this.isGrounded = true;
 
     // Attributes
@@ -58,8 +58,8 @@ export class Fighter {
     this.parry = new ParrySystem();
     this.rage = new RageSystem();
 
-    // Generous anatomical hurtbox
-    this.hurtbox = new Box(-28, -130, 56, 130);
+    // Generous anatomical hurtbox (anchored at ground feet y=0)
+    this.hurtbox = new Box(-30, -165, 60, 165);
     this.activeHitboxes = [];
 
     // Animation, Shading & Stance
@@ -77,6 +77,17 @@ export class Fighter {
     // Visual state helpers
     this._wasGrounded = true;   // For landing dust ring detection
     this._particleSystem = null; // Set by game after spawn (optional, checked before use)
+  }
+
+  get isBlocking() {
+    if (!this.stateMachine) return false;
+    return this.stateMachine.getState() === FIGHTER_STATES.BLOCKING &&
+           (!this.stamina || !this.stamina.staminaBreak) &&
+           this.hitstunTimer <= 0;
+  }
+
+  set isBlocking(val) {
+    this._isBlocking = !!val;
   }
 
   get charId() {
@@ -192,6 +203,16 @@ export class Fighter {
     }
 
     const currentState = this.stateMachine.getState();
+
+    // Dynamic hurtbox scaling: crouch/block ducks down profile, standing/jumping extends high
+    const isDucking = currentState === FIGHTER_STATES.CROUCHING || currentState === FIGHTER_STATES.BLOCKING;
+    if (isDucking) {
+      this.hurtbox.y = -115;
+      this.hurtbox.h = 115;
+    } else {
+      this.hurtbox.y = -165;
+      this.hurtbox.h = 165;
+    }
 
     // Smooth Block Shield Fade
     if (this.isBlocking) {
@@ -370,6 +391,7 @@ export class Fighter {
   }
 
   startAttack(moveConfig, category = null) {
+    this.isBlocking = false;
     if (!category) {
       if (moveConfig?.category === 'ultimate' || moveConfig === this.config.moves?.ultimate || moveConfig?.name === this.config.moves?.ultimate?.name) {
         category = 'ultimate';
