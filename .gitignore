@@ -5,3 +5,5 @@ scratch_chrome/
 scratch/
 test.pdf
 node_modules/
+__pycache__/
+*.pyc

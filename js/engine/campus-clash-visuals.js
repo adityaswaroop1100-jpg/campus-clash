@@ -57,8 +57,8 @@
   const RAW = {
     topper:      ['The Topper', 'Academic Assassin', 'Syllabus fears me.', '#2f7bff', '#ffd23f',
                   ['#f2f4ff', '#8aa4d6', '#1f4fe0', '#ffd23f'], ['∑', '∫', 'π', 'E=mc²', 'Δx', '√', 'A+'], [4, 3, 3, 4, 3], '♛'],
-    backbencher: ['The Backbencher', 'Chaos Brawler', 'Attendance is a suggestion.', '#ff3b47', '#ffffff',
-                  ['#ffffff', '#e5202e', '#231a28', '#ffffff'], ['</>', '{ }', '404', 'sudo', 'rm -rf'], [4, 4, 2, 2, 3], '</>'],
+    backbencher: ['The Backbencher', 'Chaos Brawler', 'Attendance is a suggestion.', '#ff6b35', '#00d4aa',
+                  ['#2c2c2c', '#ff6b35', '#00d4aa', '#ffffff'], ['✈️', 'BUNK', 'PROXY', 'CHAOS', '404', 'CHILL'], [4, 4, 2, 2, 3], '🔥'],
     hosteler:    ['The Hosteler', 'Tank Grappler', 'Mess food built this.', '#ff6a3d', '#ffd7c0',
                   ['#ffd7c0', '#ff5a36', '#5a1b12', '#ffffff'], ['7', '🏀', 'BAM', 'DUNK'], [5, 2, 2, 3, 2], '✊'],
     senior:      ['The Senior', 'Control Zoner', 'I have seen this exam before.', '#2fbf71', '#cfe9dc',

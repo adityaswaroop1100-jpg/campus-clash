@@ -7,6 +7,8 @@ export const BACKBENCHER_CONFIG = {
   id: 'backbencher',
   displayName: 'The Backbencher',
   tagline: 'The Chaos Agent',
+  archetype: 'Chaos / Rushdown Brawler',
+  department: 'MECH • REBEL VANGUARD',
   colors: {
     primary: '#2C2C2C',     // Dark Charcoal Grey Hoodie
     secondary: '#FF6B35',   // Neon Orange Trim & Backpack
