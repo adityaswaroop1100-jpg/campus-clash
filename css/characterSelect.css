@@ -596,12 +596,12 @@
 }
 
 /* --------------------------------------------------------------------------
-   5. Right Column: 4x2 Card Grid Section (~510px width)
+   5. Right Column: 4x2 Card Grid Section (~580px width)
    -------------------------------------------------------------------------- */
 .char-grid-section {
   position: relative;
-  flex: 0 0 510px;
-  width: 510px;
+  flex: 0 0 580px;
+  width: 580px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -613,9 +613,9 @@
   position: relative;
   z-index: 2;
   display: grid;
-  grid-template-columns: repeat(4, 115px);
-  grid-template-rows: repeat(2, 172px);
-  gap: 8px 10px;
+  grid-template-columns: repeat(4, 132px);
+  grid-template-rows: repeat(2, 196px);
+  gap: 10px 12px;
   justify-content: center;
 }
 
@@ -624,20 +624,20 @@
    -------------------------------------------------------------------------- */
 .char-card {
   position: relative;
-  width: 110px;
-  height: 172px;
+  width: 132px;
+  height: 196px;
   box-sizing: border-box;
   background: linear-gradient(145deg, rgba(12, 20, 36, 0.82) 0%, rgba(6, 12, 24, 0.9) 100%);
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
   border: 1.5px solid rgba(255, 255, 255, 0.16);
   clip-path: polygon(
-    9px 0,
+    10px 0,
     100% 0,
-    100% calc(100% - 9px),
-    calc(100% - 9px) 100%,
+    100% calc(100% - 10px),
+    calc(100% - 10px) 100%,
     0 100%,
-    0 9px
+    0 10px
   );
   cursor: pointer;
   transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), border-color 0.2s ease, box-shadow 0.2s ease;
@@ -663,7 +663,7 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 4px 5px 3px 5px;
+  padding: 5px 6px 4px 6px;
   box-sizing: border-box;
   z-index: 2;
 }
@@ -753,9 +753,9 @@
 
 .card-num-badge {
   font-family: 'Press Start 2P', monospace;
-  font-size: 6px;
+  font-size: 7px;
   font-weight: 900;
-  padding: 2px 3.5px;
+  padding: 2.5px 4.5px;
   border-radius: 2px;
   display: inline-flex;
   align-items: center;
@@ -782,7 +782,7 @@
 
 .card-slogan {
   font-family: 'Rajdhani', sans-serif;
-  font-size: 5px;
+  font-size: 5.8px;
   font-weight: 700;
   line-height: 1.15;
   color: rgba(255, 255, 255, 0.85);
@@ -792,23 +792,23 @@
 }
 
 .slogan-crown {
-  font-size: 6.5px;
+  font-size: 7.5px;
   line-height: 1;
   filter: drop-shadow(0 0 4px #ffd700);
 }
 
 .card-decor-icon {
-  font-size: 6.5px;
+  font-size: 7.5px;
   line-height: 1;
 }
 
 /* Pick Badges */
 .card-badge {
   position: absolute;
-  top: 20px;
-  padding: 2px 5px;
+  top: 24px;
+  padding: 2.5px 6px;
   font-family: 'Press Start 2P', monospace;
-  font-size: 5.5px;
+  font-size: 6px;
   font-weight: 900;
   border-radius: 3px;
   display: none;
@@ -850,7 +850,7 @@
 .card-portrait-wrap {
   position: relative;
   width: 100%;
-  height: 84px;
+  height: 98px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -903,7 +903,7 @@
 /* Card Nameplate */
 .card-nameplate {
   text-align: center;
-  padding: 2px 3px;
+  padding: 2.5px 3px;
   background: linear-gradient(180deg, rgba(8, 14, 28, 0.95) 0%, rgba(14, 24, 46, 0.98) 100%);
   border-top: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 0 0 2px 2px;
@@ -911,7 +911,7 @@
 
 .char-name {
   font-family: 'Press Start 2P', monospace;
-  font-size: 6px;
+  font-size: 7px;
   color: #ffffff;
   letter-spacing: 0.2px;
   text-shadow: 0 0 6px var(--card-accent, #ffd700);
@@ -922,13 +922,13 @@
 }
 
 .char-card[data-id="placementWarrior"] .char-name {
-  font-size: 4.8px;
+  font-size: 5.6px;
   letter-spacing: -0.2px;
 }
 
 .char-subtitle {
   font-family: 'Rajdhani', sans-serif;
-  font-size: 7.5px;
+  font-size: 8px;
   font-weight: 700;
   color: var(--card-accent, #ffd700);
   letter-spacing: 0.8px;
@@ -939,28 +939,28 @@
 .card-stats {
   display: flex;
   flex-direction: column;
-  gap: 2px;
-  margin: 1.5px 0 1px 0;
+  gap: 2.5px;
+  margin: 2px 0 1px 0;
   padding: 0 2px;
 }
 
 .stat-bar-row {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 5px;
 }
 
 .stat-label {
   width: 20px;
   font-family: 'Press Start 2P', monospace;
-  font-size: 5px;
+  font-size: 5.5px;
   color: #90a4ae;
   letter-spacing: 0.2px;
 }
 
 .stat-bar-track {
   flex: 1;
-  height: 3.5px;
+  height: 4.5px;
   background: #080e1b;
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 2px;
