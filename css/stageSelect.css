@@ -12,9 +12,8 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  background:
-    radial-gradient(ellipse at center, rgba(3, 7, 18, 0.45) 0%, rgba(2, 5, 14, 0.82) 100%),
-    url('../assets/char_select_clean_bg.jpg') center center / cover no-repeat !important;
+  /* Clean, simple dark tactical combat background */
+  background: radial-gradient(ellipse 85% 65% at 50% 45%, #0d1a30 0%, #060e1d 55%, #02050b 100%) !important;
   color: #ffffff;
   font-family: 'Rajdhani', sans-serif;
   overflow: hidden;
@@ -29,36 +28,46 @@
   pointer-events: none;
 }
 
-/* Subtle Ambient CRT Vignette Overlay */
+/* 3D Perspective Tactical Combat Arena Grid Floor */
+.stage-select-screen::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: -50%;
+  width: 200%;
+  height: 55%;
+  background-image:
+    linear-gradient(rgba(0, 229, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 229, 255, 0.05) 1px, transparent 1px);
+  background-size: 44px 44px;
+  transform: perspective(350px) rotateX(68deg);
+  transform-origin: bottom center;
+  pointer-events: none;
+  z-index: 0;
+  mask-image: linear-gradient(to top, rgba(0, 0, 0, 0.75) 0%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to top, rgba(0, 0, 0, 0.75) 0%, transparent 100%);
+  animation: stage-floor-drift 25s linear infinite;
+}
+
+@keyframes stage-floor-drift {
+  0% { background-position: 0 0; }
+  100% { background-position: 0 44px; }
+}
+
+/* Subtle Tactical Horizon Line & Vignette */
 .stage-select-screen::after {
   content: '';
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse at center, transparent 60%, rgba(0, 0, 0, 0.65) 100%);
+  background:
+    /* Glowing tactical horizon line behind cards */
+    linear-gradient(180deg, transparent 48.5%, rgba(0, 229, 255, 0.12) 50%, transparent 51.5%),
+    /* Soft center spotlight behind cards */
+    radial-gradient(circle at 50% 50%, rgba(0, 229, 255, 0.05) 0%, transparent 55%),
+    /* Clean vignette */
+    radial-gradient(ellipse at center, transparent 60%, rgba(1, 4, 10, 0.8) 100%);
   pointer-events: none;
   z-index: 1;
-}
-
-/* Subtle Animated Tech Blueprint Grid Pattern */
-.stage-select-screen::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-image:
-    linear-gradient(rgba(0, 229, 255, 0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 229, 255, 0.04) 1px, transparent 1px),
-    linear-gradient(rgba(255, 215, 0, 0.02) 2px, transparent 2px),
-    linear-gradient(90deg, rgba(255, 215, 0, 0.02) 2px, transparent 2px);
-  background-size: 32px 32px, 32px 32px, 128px 128px, 128px 128px;
-  background-position: center center;
-  pointer-events: none;
-  animation: stage-grid-drift 30s linear infinite;
-  z-index: 0;
-}
-
-@keyframes stage-grid-drift {
-  0% { background-position: 0 0, 0 0, 0 0, 0 0; }
-  100% { background-position: 64px 64px, 64px 64px, 128px 128px, 128px 128px; }
 }
 
 /* Top Header Bar */
@@ -114,10 +123,24 @@
   position: relative;
   flex: 1;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   padding: 10px 20px;
   z-index: 5;
+}
+
+.stage-grid-section::before {
+  content: 'ARENA DATABASE // ACTIVE COMBAT SECTORS [05/05]';
+  display: block;
+  font-family: monospace;
+  font-size: 8.5px;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  color: rgba(0, 229, 255, 0.4);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  pointer-events: none;
 }
 
 .stage-grid {
