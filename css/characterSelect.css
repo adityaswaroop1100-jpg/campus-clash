@@ -15,7 +15,11 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  background: radial-gradient(circle at 50% 15%, rgba(254, 107, 0, 0.14) 0%, transparent 55%), radial-gradient(circle at 50% 30%, #0d162c 0%, #080f1e 55%, #05070f 100%);
+  background:
+    radial-gradient(ellipse at 30% 10%, rgba(0, 229, 255, 0.06) 0%, transparent 40%),
+    radial-gradient(ellipse at 70% 10%, rgba(255, 215, 0, 0.05) 0%, transparent 40%),
+    radial-gradient(ellipse at 50% 90%, rgba(255, 23, 68, 0.04) 0%, transparent 50%),
+    radial-gradient(circle at 50% 30%, #0d162c 0%, #080f1e 55%, #04060d 100%);
   color: #ffffff;
   font-family: 'Rajdhani', sans-serif;
   overflow: hidden;
@@ -36,10 +40,10 @@
   position: absolute;
   inset: 0;
   background-image:
-    linear-gradient(rgba(0, 229, 255, 0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 229, 255, 0.04) 1px, transparent 1px),
-    linear-gradient(rgba(255, 215, 0, 0.02) 2px, transparent 2px),
-    linear-gradient(90deg, rgba(255, 215, 0, 0.02) 2px, transparent 2px);
+    linear-gradient(rgba(0, 229, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 229, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(rgba(255, 215, 0, 0.018) 2px, transparent 2px),
+    linear-gradient(90deg, rgba(255, 215, 0, 0.018) 2px, transparent 2px);
   background-size: 32px 32px, 32px 32px, 128px 128px, 128px 128px;
   background-position: center center;
   pointer-events: none;
@@ -57,7 +61,7 @@
   content: '';
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse at center, transparent 60%, rgba(0, 0, 0, 0.65) 100%);
+  background: radial-gradient(ellipse at center, transparent 55%, rgba(0, 0, 0, 0.7) 100%);
   pointer-events: none;
   z-index: 1;
 }
@@ -72,16 +76,35 @@
   align-items: center;
   justify-content: space-between;
   padding: 0 24px;
-  background: linear-gradient(180deg, rgba(14, 26, 48, 0.95) 0%, rgba(8, 14, 26, 0.8) 100%);
-  border-bottom: 2px solid rgba(0, 229, 255, 0.35);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6), 0 1px 0 rgba(255, 215, 0, 0.2);
+  background:
+    linear-gradient(180deg, rgba(10, 18, 36, 0.98) 0%, rgba(6, 12, 22, 0.9) 100%);
+  border-bottom: 1px solid rgba(0, 229, 255, 0.25);
+  box-shadow:
+    0 1px 0 rgba(255, 215, 0, 0.15),
+    0 4px 24px rgba(0, 0, 0, 0.7);
   z-index: 10;
+}
+
+/* Horizontal scan-line accent on banner bottom */
+.char-top-banner::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(0, 229, 255, 0.5) 20%,
+    rgba(255, 215, 0, 0.5) 50%,
+    rgba(0, 229, 255, 0.5) 80%,
+    transparent 100%);
 }
 
 /* Back Button */
 .char-nav-btn {
-  background: rgba(10, 20, 36, 0.85);
-  border: 1px solid rgba(0, 229, 255, 0.6);
+  background: rgba(10, 20, 36, 0.9);
+  border: 1px solid rgba(0, 229, 255, 0.5);
   color: #00e5ff;
   font-family: 'Press Start 2P', monospace;
   font-size: 9px;
@@ -90,14 +113,16 @@
   border-radius: 4px;
   letter-spacing: 0.5px;
   transition: all 0.2s ease;
-  box-shadow: 0 0 10px rgba(0, 229, 255, 0.15);
+  box-shadow: 0 0 8px rgba(0, 229, 255, 0.1), inset 0 0 8px rgba(0, 229, 255, 0.05);
 }
 
 .char-nav-btn:hover {
-  background: #00e5ff;
-  color: #061124;
-  box-shadow: 0 0 16px #00e5ff;
+  background: rgba(0, 229, 255, 0.15);
+  color: #00e5ff;
+  border-color: #00e5ff;
+  box-shadow: 0 0 18px rgba(0, 229, 255, 0.4), inset 0 0 12px rgba(0, 229, 255, 0.1);
   transform: translateX(-2px);
+  text-shadow: 0 0 8px #00e5ff;
 }
 
 /* Title & Animated Chevrons */
@@ -108,12 +133,12 @@
 }
 
 .char-banner-sub {
-  font-family: monospace;
+  font-family: 'Rajdhani', sans-serif;
   font-size: 10px;
   font-weight: 700;
-  color: #00e5ff;
-  letter-spacing: 1px;
-  text-shadow: 0 0 8px rgba(0, 229, 255, 0.6);
+  color: rgba(0, 229, 255, 0.7);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
 }
 
 .char-select-title-wrap {
@@ -135,20 +160,20 @@
   color: #ffd700;
   letter-spacing: 1.5px;
   text-transform: uppercase;
-  text-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
 }
 
 .char-select-main-title {
   margin: 0;
-  font-family: 'Press Start 2P', monospace;
-  font-size: 15px;
+  font-family: 'Orbitron', 'Press Start 2P', monospace;
+  font-size: 16px;
+  font-weight: 900;
   color: #ffffff;
-  letter-spacing: 2px;
+  letter-spacing: 3px;
   text-shadow:
-    0 0 8px #ffd700,
-    0 0 20px rgba(255, 215, 0, 0.6),
-    2px 2px 0 #000;
-  -webkit-text-stroke: 0.5px #ffd700;
+    0 0 8px rgba(255, 215, 0, 0.8),
+    0 0 24px rgba(255, 215, 0, 0.4),
+    0 2px 0 rgba(0, 0, 0, 0.8);
 }
 
 .arcade-chevron {
@@ -169,13 +194,13 @@
 }
 
 @keyframes chevron-left-bounce {
-  0% { transform: translateX(0); opacity: 0.6; }
-  100% { transform: translateX(4px); opacity: 1; text-shadow: 0 0 16px #ffd700; }
+  0% { transform: translateX(0); opacity: 0.5; }
+  100% { transform: translateX(4px); opacity: 1; text-shadow: 0 0 16px #ffd700; color: #ffd700; }
 }
 
 @keyframes chevron-right-bounce {
-  0% { transform: translateX(0); opacity: 0.6; }
-  100% { transform: translateX(-4px); opacity: 1; text-shadow: 0 0 16px #ffd700; }
+  0% { transform: translateX(0); opacity: 0.5; }
+  100% { transform: translateX(-4px); opacity: 1; text-shadow: 0 0 16px #ffd700; color: #ffd700; }
 }
 
 /* Mode Indicator Badge */
@@ -183,22 +208,25 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  background: rgba(255, 215, 0, 0.12);
-  border: 1px solid rgba(255, 215, 0, 0.5);
-  border-radius: 12px;
-  padding: 5px 12px;
-  font-family: monospace;
+  background: rgba(255, 215, 0, 0.08);
+  border: 1px solid rgba(255, 215, 0, 0.35);
+  border-radius: 20px;
+  padding: 5px 14px;
+  font-family: 'Rajdhani', sans-serif;
   font-size: 11px;
   font-weight: 700;
   color: #ffd700;
-  box-shadow: 0 0 12px rgba(255, 215, 0, 0.2);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  box-shadow: 0 0 8px rgba(255, 215, 0, 0.1);
+  transition: all 0.2s ease;
 }
 
 .venue-pill-btn {
-  background: rgba(0, 229, 255, 0.12);
-  border-color: rgba(0, 229, 255, 0.5);
+  background: rgba(0, 229, 255, 0.08);
+  border-color: rgba(0, 229, 255, 0.35);
   color: #00e5ff;
-  box-shadow: 0 0 12px rgba(0, 229, 255, 0.2);
+  box-shadow: 0 0 8px rgba(0, 229, 255, 0.1);
   cursor: pointer;
   outline: none;
   transition: all 0.2s ease;
@@ -206,9 +234,9 @@
 
 .venue-pill-btn:hover,
 .venue-pill-btn:focus-visible {
-  background: rgba(0, 229, 255, 0.28);
-  border-color: #00e5ff;
-  box-shadow: 0 0 18px rgba(0, 229, 255, 0.5);
+  background: rgba(0, 229, 255, 0.2);
+  border-color: rgba(0, 229, 255, 0.7);
+  box-shadow: 0 0 16px rgba(0, 229, 255, 0.3);
   transform: translateY(-1px);
 }
 
@@ -239,34 +267,45 @@
 
 .char-grid {
   display: grid;
-  grid-template-columns: repeat(5, 164px);
-  grid-template-rows: repeat(2, 202px);
-  gap: 8px 10px;
+  grid-template-columns: repeat(5, 168px);
+  grid-template-rows: repeat(2, 210px);
+  gap: 10px 12px;
   justify-content: center;
 }
 
 /* --------------------------------------------------------------------------
-   4. Character Cards (Beveled Arcade Panels)
+   4. Character Cards (Premium Glassmorphism Arcade Panels)
    -------------------------------------------------------------------------- */
 .char-card {
   position: relative;
-  width: 164px;
-  height: 202px;
+  width: 168px;
+  height: 210px;
   box-sizing: border-box;
-  background: linear-gradient(135deg, rgba(14, 22, 38, 0.95) 0%, rgba(8, 14, 26, 0.98) 100%);
-  border: 2px solid rgba(255, 255, 255, 0.12);
+  background:
+    linear-gradient(160deg,
+      rgba(18, 28, 50, 0.95) 0%,
+      rgba(10, 16, 30, 0.98) 50%,
+      rgba(6, 10, 20, 0.99) 100%);
+  border: 1.5px solid rgba(255, 255, 255, 0.1);
   /* Retro Arcade Beveled Corners */
   clip-path: polygon(
-    14px 0,
+    12px 0,
     100% 0,
-    100% calc(100% - 14px),
-    calc(100% - 14px) 100%,
+    100% calc(100% - 12px),
+    calc(100% - 12px) 100%,
     0 100%,
-    0 14px
+    0 12px
   );
   cursor: pointer;
-  transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), border-color 0.2s ease, box-shadow 0.2s ease;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(0, 0, 0, 0.8);
+  transition:
+    transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+    border-color 0.2s ease,
+    box-shadow 0.25s ease,
+    filter 0.2s ease;
+  box-shadow:
+    0 4px 16px rgba(0, 0, 0, 0.5),
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
   outline: none;
 }
 
@@ -275,9 +314,11 @@
   content: '';
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at 50% 25%, var(--card-primary) 0%, transparent 75%);
-  opacity: 0.22;
-  transition: opacity 0.25s ease;
+  background:
+    radial-gradient(ellipse at 50% 20%, var(--card-primary) 0%, transparent 70%),
+    radial-gradient(ellipse at 50% 100%, rgba(0, 0, 0, 0.4) 0%, transparent 50%);
+  opacity: 0.18;
+  transition: opacity 0.3s ease;
   pointer-events: none;
   z-index: 1;
 }
@@ -297,42 +338,51 @@
 /* Hover / Focus State */
 .char-card:hover,
 .char-card:focus-visible {
-  transform: scale(1.03) translateY(-2px);
+  transform: scale(1.04) translateY(-3px);
   border-color: var(--card-accent, #ffd700);
   box-shadow:
-    0 0 22px var(--card-accent, #ffd700),
-    0 12px 30px rgba(0, 0, 0, 0.7),
-    inset 0 0 25px rgba(255, 255, 255, 0.15);
+    0 0 20px color-mix(in srgb, var(--card-accent, #ffd700) 60%, transparent),
+    0 0 40px color-mix(in srgb, var(--card-accent, #ffd700) 25%, transparent),
+    0 12px 40px rgba(0, 0, 0, 0.6),
+    inset 0 0 30px rgba(255, 255, 255, 0.08);
   z-index: 10;
+  filter: brightness(1.08);
 }
 
 .char-card:hover::before,
 .char-card:focus-visible::before {
-  opacity: 0.45;
+  opacity: 0.4;
 }
 
 /* Active / Picked Border Highlights */
 .char-card.selected-p1 {
   border-color: #ffd700;
-  box-shadow: 0 0 18px rgba(255, 215, 0, 0.75), inset 0 0 15px rgba(255, 215, 0, 0.2);
+  box-shadow:
+    0 0 16px rgba(255, 215, 0, 0.6),
+    0 0 32px rgba(255, 215, 0, 0.2),
+    inset 0 0 18px rgba(255, 215, 0, 0.12);
 }
 
 .char-card.selected-p2 {
   border-color: #00e5ff;
-  box-shadow: 0 0 18px rgba(0, 229, 255, 0.75), inset 0 0 15px rgba(0, 229, 255, 0.2);
+  box-shadow:
+    0 0 16px rgba(0, 229, 255, 0.6),
+    0 0 32px rgba(0, 229, 255, 0.2),
+    inset 0 0 18px rgba(0, 229, 255, 0.12);
 }
 
 .char-card.selected-p1.selected-p2 {
   border-color: #ffffff;
   box-shadow:
-    0 0 20px #ffd700,
-    0 0 35px #00e5ff,
-    inset 0 0 20px rgba(255, 255, 255, 0.3);
+    0 0 18px rgba(255, 215, 0, 0.6),
+    0 0 35px rgba(0, 229, 255, 0.5),
+    0 0 50px rgba(255, 255, 255, 0.15),
+    inset 0 0 22px rgba(255, 255, 255, 0.15);
 }
 
 /* Locked-in Card State */
 .char-card.locked {
-  filter: brightness(0.85);
+  filter: brightness(0.85) saturate(0.9);
 }
 
 .char-card.locked::after {
@@ -342,16 +392,17 @@
   left: 50%;
   transform: translate(-50%, -50%) rotate(-12deg);
   font-family: 'Press Start 2P', monospace;
-  font-size: 13px;
+  font-size: 12px;
   color: #00e676;
-  background: rgba(0, 0, 0, 0.88);
+  background: rgba(0, 0, 0, 0.92);
   border: 2px solid #00e676;
-  padding: 6px 14px;
+  padding: 6px 16px;
   border-radius: 4px;
-  box-shadow: 0 0 20px #00e676;
+  box-shadow: 0 0 24px rgba(0, 230, 118, 0.5), inset 0 0 8px rgba(0, 230, 118, 0.1);
   text-shadow: 0 0 8px #00e676;
   z-index: 15;
   pointer-events: none;
+  letter-spacing: 1px;
 }
 
 /* --------------------------------------------------------------------------
@@ -368,28 +419,28 @@
 }
 
 .card-num-badge {
-  font-family: 'Press Start 2P', monospace;
+  font-family: 'Orbitron', 'Press Start 2P', monospace;
   font-size: 7.5px;
   font-weight: 900;
-  padding: 2.5px 5px;
-  border-radius: 2px;
+  padding: 3px 6px;
+  border-radius: 3px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   letter-spacing: 0.5px;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.7);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
 }
 
-.badge-p1 { background: #ffd700; color: #000; box-shadow: 0 0 8px rgba(255, 215, 0, 0.7); }
-.badge-p2 { background: #00f0ff; color: #000; box-shadow: 0 0 8px rgba(0, 240, 255, 0.7); }
-.badge-p3 { background: #ff3333; color: #fff; box-shadow: 0 0 8px rgba(255, 51, 51, 0.7); }
-.badge-p4 { background: #00e676; color: #000; box-shadow: 0 0 8px rgba(0, 230, 118, 0.7); }
-.badge-p5 { background: #b388ff; color: #000; box-shadow: 0 0 8px rgba(179, 136, 255, 0.7); }
-.badge-p6 { background: #ff9100; color: #000; box-shadow: 0 0 8px rgba(255, 145, 0, 0.7); }
-.badge-p7 { background: #00e5ff; color: #000; box-shadow: 0 0 8px rgba(0, 229, 255, 0.7); }
-.badge-p8 { background: #ffb300; color: #000; box-shadow: 0 0 8px rgba(255, 179, 0, 0.7); }
-.badge-p9 { background: #00b0ff; color: #000; box-shadow: 0 0 8px rgba(0, 176, 255, 0.7); }
-.badge-p10 { background: #ff4081; color: #fff; box-shadow: 0 0 8px rgba(255, 64, 129, 0.7); }
+.badge-p1 { background: linear-gradient(135deg, #ffd700, #ffaa00); color: #000; box-shadow: 0 0 10px rgba(255, 215, 0, 0.5); }
+.badge-p2 { background: linear-gradient(135deg, #00f0ff, #0088cc); color: #000; box-shadow: 0 0 10px rgba(0, 240, 255, 0.5); }
+.badge-p3 { background: linear-gradient(135deg, #ff3333, #cc0000); color: #fff; box-shadow: 0 0 10px rgba(255, 51, 51, 0.5); }
+.badge-p4 { background: linear-gradient(135deg, #00e676, #00aa55); color: #000; box-shadow: 0 0 10px rgba(0, 230, 118, 0.5); }
+.badge-p5 { background: linear-gradient(135deg, #b388ff, #7c4dff); color: #000; box-shadow: 0 0 10px rgba(179, 136, 255, 0.5); }
+.badge-p6 { background: linear-gradient(135deg, #ff9100, #e65100); color: #000; box-shadow: 0 0 10px rgba(255, 145, 0, 0.5); }
+.badge-p7 { background: linear-gradient(135deg, #00e5ff, #0091ea); color: #000; box-shadow: 0 0 10px rgba(0, 229, 255, 0.5); }
+.badge-p8 { background: linear-gradient(135deg, #ffb300, #ff8f00); color: #000; box-shadow: 0 0 10px rgba(255, 179, 0, 0.5); }
+.badge-p9 { background: linear-gradient(135deg, #00b0ff, #0077cc); color: #000; box-shadow: 0 0 10px rgba(0, 176, 255, 0.5); }
+.badge-p10 { background: linear-gradient(135deg, #ff4081, #d50058); color: #fff; box-shadow: 0 0 10px rgba(255, 64, 129, 0.5); }
 
 .card-slogan-wrap {
   display: flex;
@@ -400,11 +451,12 @@
 }
 
 .card-slogan {
-  font-family: 'Press Start 2P', monospace;
-  font-size: 5px;
-  line-height: 1.2;
-  color: rgba(255, 255, 255, 0.88);
-  letter-spacing: 0.2px;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 6px;
+  font-weight: 700;
+  line-height: 1.25;
+  color: rgba(255, 255, 255, 0.65);
+  letter-spacing: 0.8px;
   text-transform: uppercase;
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
 }
@@ -418,36 +470,36 @@
 .card-decor-icon {
   font-size: 8px;
   line-height: 1;
-  opacity: 0.9;
+  opacity: 0.85;
 }
 
 .card-badge {
   position: absolute;
   top: 26px;
-  padding: 2.5px 7px;
-  font-family: 'Press Start 2P', monospace;
+  padding: 3px 8px;
+  font-family: 'Orbitron', 'Press Start 2P', monospace;
   font-size: 7px;
   font-weight: 900;
   border-radius: 3px;
   display: none;
   z-index: 20;
   letter-spacing: 0.5px;
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
 }
 
 .p1-badge {
   left: 8px;
-  background: #ffd700;
+  background: linear-gradient(135deg, #ffd700, #ffaa00);
   color: #061124;
-  box-shadow: 0 0 12px #ffd700, 0 2px 6px rgba(0, 0, 0, 0.8);
+  box-shadow: 0 0 14px rgba(255, 215, 0, 0.6), 0 2px 8px rgba(0, 0, 0, 0.7);
 }
 
 .p2-badge {
   right: 8px;
-  background: #00e5ff;
+  background: linear-gradient(135deg, #00e5ff, #0088cc);
   color: #061124;
-  box-shadow: 0 0 12px #00e5ff, 0 2px 6px rgba(0, 0, 0, 0.8);
+  box-shadow: 0 0 14px rgba(0, 229, 255, 0.6), 0 2px 8px rgba(0, 0, 0, 0.7);
 }
 
 .selected-p1 .p1-badge {
@@ -471,14 +523,26 @@
 .card-portrait-wrap {
   position: relative;
   width: 100%;
-  height: 98px;
+  height: 100px;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
   border-radius: 4px;
-  background: linear-gradient(180deg, rgba(6, 12, 22, 0.4) 0%, rgba(10, 18, 32, 0.9) 100%);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background:
+    linear-gradient(180deg, rgba(6, 12, 22, 0.3) 0%, rgba(10, 18, 32, 0.85) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.4);
+}
+
+/* Inner vignette on portrait */
+.card-portrait-wrap::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, transparent 50%, rgba(0, 0, 0, 0.35) 100%);
+  pointer-events: none;
+  z-index: 3;
 }
 
 .char-portrait-img {
@@ -490,12 +554,13 @@
   object-position: center 15%;
   z-index: 1;
   pointer-events: none;
-  filter: drop-shadow(0 0 8px var(--card-accent, #ffd700));
-  transition: transform 0.2s ease;
+  filter: drop-shadow(0 0 6px var(--card-accent, #ffd700));
+  transition: transform 0.25s ease, filter 0.25s ease;
 }
 
 .char-card:hover .char-portrait-img {
-  transform: scale(1.05);
+  transform: scale(1.06);
+  filter: drop-shadow(0 0 10px var(--card-accent, #ffd700));
 }
 
 .char-portrait-canvas {
@@ -512,55 +577,66 @@
 .portrait-glow {
   position: absolute;
   bottom: 0;
-  left: 15%;
-  right: 15%;
-  height: 4px;
+  left: 10%;
+  right: 10%;
+  height: 3px;
   background: var(--card-accent, #ffd700);
-  box-shadow: 0 0 14px var(--card-accent, #ffd700);
-  opacity: 0.65;
+  box-shadow:
+    0 0 10px var(--card-accent, #ffd700),
+    0 0 20px color-mix(in srgb, var(--card-accent, #ffd700) 50%, transparent);
+  opacity: 0.6;
   border-radius: 50%;
+  z-index: 4;
+  transition: opacity 0.2s ease;
+}
+
+.char-card:hover .portrait-glow {
+  opacity: 0.85;
 }
 
 /* --------------------------------------------------------------------------
-   7. Neon Laser Stat Bars
+   7. Neon Laser Stat Bars (Enhanced Readability)
    -------------------------------------------------------------------------- */
 .card-stats {
   display: flex;
   flex-direction: column;
-  gap: 3.5px;
+  gap: 3px;
   margin: 3px 0;
-  padding: 0 4px;
+  padding: 0 3px;
 }
 
 .stat-bar-row {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 5px;
 }
 
 .stat-label {
   width: 26px;
-  font-family: 'Press Start 2P', monospace;
-  font-size: 6.5px;
-  color: #90a4ae;
+  font-family: 'Orbitron', 'Press Start 2P', monospace;
+  font-size: 6px;
+  font-weight: 700;
+  color: rgba(176, 190, 197, 0.85);
   letter-spacing: 0.5px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
 }
 
 .stat-bar-track {
   flex: 1;
-  height: 4.5px;
-  background: #080e1b;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 2px;
+  height: 5px;
+  background: rgba(8, 14, 27, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 3px;
   overflow: hidden;
   position: relative;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.6);
 }
 
 .stat-bar-fill {
   height: 100%;
   width: var(--val, 50%);
-  border-radius: 2px;
-  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 3px;
+  transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
 }
 
@@ -570,49 +646,52 @@
   top: 0;
   right: 0;
   bottom: 0;
-  width: 3px;
-  background: #ffffff;
-  box-shadow: 0 0 6px #ffffff;
+  width: 2px;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 0 4px #ffffff;
+  border-radius: 1px;
 }
 
 /* Stat Laser Color Variations */
 .stat-bar-fill.atk {
-  background: linear-gradient(90deg, #ff1744, #ff9100);
-  box-shadow: 0 0 8px #ff1744;
+  background: linear-gradient(90deg, #ff1744 0%, #ff5252 60%, #ff9100 100%);
+  box-shadow: 0 0 6px rgba(255, 23, 68, 0.6);
 }
 
 .stat-bar-fill.def {
-  background: linear-gradient(90deg, #1565c0, #00e5ff);
-  box-shadow: 0 0 8px #00e5ff;
+  background: linear-gradient(90deg, #1565c0 0%, #2196f3 60%, #00e5ff 100%);
+  box-shadow: 0 0 6px rgba(0, 229, 255, 0.5);
 }
 
 .stat-bar-fill.spd {
-  background: linear-gradient(90deg, #00e676, #76ff03);
-  box-shadow: 0 0 8px #00e676;
+  background: linear-gradient(90deg, #00c853 0%, #00e676 60%, #76ff03 100%);
+  box-shadow: 0 0 6px rgba(0, 230, 118, 0.5);
 }
 
 .stat-bar-fill.rch {
-  background: linear-gradient(90deg, #d500f9, #ff4081);
-  box-shadow: 0 0 8px #d500f9;
+  background: linear-gradient(90deg, #aa00ff 0%, #d500f9 60%, #ff4081 100%);
+  box-shadow: 0 0 6px rgba(213, 0, 249, 0.5);
 }
 
 /* --------------------------------------------------------------------------
-   8. Nameplate Arch
+   8. Nameplate (Enhanced Typography)
    -------------------------------------------------------------------------- */
 .card-nameplate {
   text-align: center;
   padding: 4px 6px;
-  background: linear-gradient(180deg, rgba(8, 14, 28, 0.95) 0%, rgba(14, 24, 46, 0.98) 100%);
-  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  background:
+    linear-gradient(180deg, rgba(8, 14, 28, 0.92) 0%, rgba(12, 20, 40, 0.95) 100%);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 0 0 3px 3px;
 }
 
 .char-name {
-  font-family: 'Press Start 2P', monospace;
+  font-family: 'Orbitron', 'Press Start 2P', monospace;
   font-size: 7.5px;
+  font-weight: 800;
   color: #ffffff;
-  letter-spacing: 0.2px;
-  text-shadow: 0 0 6px var(--card-accent, #ffd700);
+  letter-spacing: 0.5px;
+  text-shadow: 0 0 8px var(--card-accent, #ffd700);
   margin-bottom: 2px;
   white-space: nowrap;
   overflow: hidden;
@@ -621,8 +700,8 @@
 
 /* Ensure long character names never get truncated */
 .char-card[data-id="placementWarrior"] .char-name {
-  font-size: 5.8px;
-  letter-spacing: -0.2px;
+  font-size: 5.5px;
+  letter-spacing: -0.1px;
 }
 .char-card[data-id="backbencher"] .char-name,
 .char-card[data-id="hosteler"] .char-name {
@@ -632,15 +711,16 @@
 
 .char-subtitle {
   font-family: 'Rajdhani', sans-serif;
-  font-size: 9.5px;
+  font-size: 9px;
   font-weight: 700;
   color: var(--card-accent, #ffd700);
-  letter-spacing: 1px;
+  letter-spacing: 1.2px;
   text-transform: uppercase;
+  opacity: 0.85;
 }
 
 /* --------------------------------------------------------------------------
-   8.5 Showcase Arcade Rail (Reference Artwork Bottom Bar)
+   8.5 Showcase Arcade Rail (Bottom Bar with Scan-line)
    -------------------------------------------------------------------------- */
 .char-arcade-rail {
   position: relative;
@@ -648,36 +728,38 @@
   align-items: center;
   justify-content: space-between;
   padding: 5px 24px;
-  background: rgba(6, 12, 22, 0.96);
-  border-top: 1px solid rgba(0, 229, 255, 0.35);
-  border-bottom: 1px solid rgba(255, 215, 0, 0.35);
-  font-family: 'Press Start 2P', monospace;
-  font-size: 8px;
-  letter-spacing: 1px;
+  background: rgba(4, 8, 16, 0.96);
+  border-top: 1px solid rgba(0, 229, 255, 0.2);
+  border-bottom: 1px solid rgba(255, 215, 0, 0.2);
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
   z-index: 10;
-  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.4);
 }
 
 .rail-left {
-  color: #00e5ff;
-  text-shadow: 0 0 8px #00e5ff;
+  color: rgba(0, 229, 255, 0.8);
+  text-shadow: 0 0 6px rgba(0, 229, 255, 0.4);
 }
 
 .rail-pill {
-  background: linear-gradient(90deg, rgba(255, 215, 0, 0.18), rgba(255, 23, 68, 0.18));
-  border: 1px solid #ffd700;
+  background: linear-gradient(90deg, rgba(255, 215, 0, 0.1), rgba(255, 23, 68, 0.1));
+  border: 1px solid rgba(255, 215, 0, 0.5);
   color: #ffd700;
-  padding: 3px 14px;
-  border-radius: 10px;
+  padding: 3px 16px;
+  border-radius: 16px;
   font-weight: 700;
   letter-spacing: 1.2px;
-  text-shadow: 0 0 8px #ffd700;
-  box-shadow: 0 0 10px rgba(255, 215, 0, 0.2);
+  text-shadow: 0 0 8px rgba(255, 215, 0, 0.5);
+  box-shadow: 0 0 12px rgba(255, 215, 0, 0.12);
 }
 
 .rail-right {
-  color: #00e676;
-  text-shadow: 0 0 8px #00e676;
+  color: rgba(0, 230, 118, 0.8);
+  text-shadow: 0 0 6px rgba(0, 230, 118, 0.4);
 }
 
 /* --------------------------------------------------------------------------
@@ -686,14 +768,30 @@
 .char-bottom-bar {
   position: relative;
   height: 114px;
-  background: linear-gradient(0deg, rgba(6, 11, 20, 0.98) 0%, rgba(12, 20, 36, 0.92) 100%);
-  border-top: 2px solid rgba(255, 215, 0, 0.3);
-  box-shadow: 0 -6px 24px rgba(0, 0, 0, 0.8);
+  background:
+    linear-gradient(0deg, rgba(4, 8, 16, 0.99) 0%, rgba(10, 18, 34, 0.95) 100%);
+  border-top: 1px solid rgba(255, 215, 0, 0.2);
+  box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.7);
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 24px;
   z-index: 10;
+}
+
+/* Gradient scan-line on top border */
+.char-bottom-bar::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg,
+    rgba(255, 215, 0, 0.5) 0%,
+    rgba(255, 23, 68, 0.4) 30%,
+    rgba(0, 229, 255, 0.5) 60%,
+    rgba(255, 215, 0, 0.5) 100%);
 }
 
 /* Player Profile Card */
@@ -705,51 +803,85 @@
   height: 84px;
   padding: 10px 16px;
   box-sizing: border-box;
-  background: rgba(10, 18, 34, 0.85);
-  border: 1.5px solid rgba(255, 255, 255, 0.15);
-  border-radius: 6px;
+  background:
+    linear-gradient(135deg, rgba(12, 20, 38, 0.92) 0%, rgba(8, 14, 28, 0.95) 100%);
+  border: 1.5px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
   position: relative;
   overflow: hidden;
   transition: all 0.25s ease;
 }
 
+/* Ambient corner glow for P1 */
 .p1-profile {
-  border-color: rgba(255, 215, 0, 0.4);
-  box-shadow: 0 0 16px rgba(255, 215, 0, 0.15), inset 0 0 15px rgba(21, 101, 192, 0.2);
+  border-color: rgba(255, 215, 0, 0.35);
+  box-shadow:
+    0 0 20px rgba(255, 215, 0, 0.1),
+    inset 0 0 20px rgba(255, 215, 0, 0.04);
+}
+
+.p1-profile::before {
+  content: '';
+  position: absolute;
+  top: -20px;
+  left: -20px;
+  width: 60px;
+  height: 60px;
+  background: radial-gradient(circle, rgba(255, 215, 0, 0.15), transparent);
+  pointer-events: none;
 }
 
 .p2-profile {
-  border-color: rgba(0, 229, 255, 0.4);
-  box-shadow: 0 0 16px rgba(0, 229, 255, 0.15), inset 0 0 15px rgba(255, 107, 53, 0.2);
+  border-color: rgba(0, 229, 255, 0.35);
+  box-shadow:
+    0 0 20px rgba(0, 229, 255, 0.1),
+    inset 0 0 20px rgba(0, 229, 255, 0.04);
   flex-direction: row;
   justify-content: flex-end;
 }
 
-/* Player Avatar Box */
-.player-avatar-box {
+.p2-profile::before {
+  content: '';
+  position: absolute;
+  top: -20px;
+  right: -20px;
   width: 60px;
   height: 60px;
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.12) 0%, rgba(0, 0, 0, 0.6) 100%);
+  background: radial-gradient(circle, rgba(0, 229, 255, 0.15), transparent);
+  pointer-events: none;
+}
+
+/* Player Avatar Box */
+.player-avatar-box {
+  width: 58px;
+  height: 58px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.08) 0%, rgba(0, 0, 0, 0.4) 100%);
   border: 2px solid #ffd700;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 0 14px rgba(255, 215, 0, 0.4);
+  box-shadow:
+    0 0 12px rgba(255, 215, 0, 0.3),
+    inset 0 0 8px rgba(255, 215, 0, 0.1);
+  flex-shrink: 0;
 }
 
 .p2-profile .player-avatar-box {
   border-color: #00e5ff;
-  box-shadow: 0 0 14px rgba(0, 229, 255, 0.4);
+  box-shadow:
+    0 0 12px rgba(0, 229, 255, 0.3),
+    inset 0 0 8px rgba(0, 229, 255, 0.1);
 }
 
 .player-avatar-emoji {
-  font-size: 32px;
+  font-size: 28px;
 }
 
 /* Info Box */
 .player-info-box {
   flex: 1;
+  min-width: 0;
 }
 
 .text-right {
@@ -757,34 +889,45 @@
 }
 
 .player-slot-label {
-  font-family: 'Press Start 2P', monospace;
-  font-size: 8px;
-  color: #90a4ae;
+  font-family: 'Orbitron', 'Press Start 2P', monospace;
+  font-size: 7px;
+  font-weight: 700;
+  color: #607d8b;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
   margin-bottom: 4px;
 }
 
 .p1-profile .player-slot-label {
   color: #ffd700;
+  text-shadow: 0 0 6px rgba(255, 215, 0, 0.3);
 }
 
 .p2-profile .player-slot-label {
   color: #00e5ff;
+  text-shadow: 0 0 6px rgba(0, 229, 255, 0.3);
 }
 
 .player-char-name {
-  font-family: 'Press Start 2P', monospace;
+  font-family: 'Orbitron', 'Press Start 2P', monospace;
   font-size: 11px;
+  font-weight: 800;
   color: #ffffff;
   letter-spacing: 0.5px;
-  text-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
-  margin-bottom: 2px;
+  text-shadow: 0 0 8px rgba(255, 255, 255, 0.4);
+  margin-bottom: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .player-char-tagline {
   font-family: 'Rajdhani', sans-serif;
   font-size: 11px;
+  font-weight: 600;
   font-style: italic;
-  color: #b0bec5;
+  color: #78909c;
+  letter-spacing: 0.5px;
 }
 
 /* Status Stamp Badge */
@@ -794,34 +937,36 @@
 
 .status-stamp {
   display: inline-block;
-  font-family: 'Press Start 2P', monospace;
-  font-size: 7.5px;
+  font-family: 'Orbitron', 'Press Start 2P', monospace;
+  font-size: 7px;
+  font-weight: 700;
   padding: 6px 10px;
-  border-radius: 3px;
+  border-radius: 4px;
   letter-spacing: 0.5px;
   text-align: center;
+  text-transform: uppercase;
 }
 
 .status-stamp.selecting {
-  background: rgba(255, 215, 0, 0.15);
-  border: 1px solid #ffd700;
+  background: rgba(255, 215, 0, 0.1);
+  border: 1px solid rgba(255, 215, 0, 0.5);
   color: #ffd700;
-  box-shadow: 0 0 12px rgba(255, 215, 0, 0.35);
+  box-shadow: 0 0 12px rgba(255, 215, 0, 0.2);
   animation: pulse-selecting 1s infinite alternate;
 }
 
 .status-stamp.pending {
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid #546e7a;
-  color: #78909c;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(84, 110, 122, 0.5);
+  color: #546e7a;
 }
 
 .status-stamp.ready {
-  background: rgba(0, 230, 118, 0.2);
+  background: rgba(0, 230, 118, 0.12);
   border: 1.5px solid #00e676;
   color: #00e676;
-  box-shadow: 0 0 18px #00e676;
-  text-shadow: 0 0 8px #00e676;
+  box-shadow: 0 0 18px rgba(0, 230, 118, 0.35);
+  text-shadow: 0 0 8px rgba(0, 230, 118, 0.5);
   animation: stamp-pop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
@@ -849,16 +994,17 @@
 }
 
 .diagonal-slash {
-  width: 32px;
-  height: 3px;
+  width: 36px;
+  height: 2px;
   background: linear-gradient(90deg, #ffd700, #ff1744);
   transform: skewX(-35deg);
-  box-shadow: 0 0 12px #ff1744;
+  box-shadow: 0 0 10px rgba(255, 23, 68, 0.6);
+  border-radius: 1px;
 }
 
 .slash-right {
   background: linear-gradient(90deg, #ff1744, #00e5ff);
-  box-shadow: 0 0 12px #00e5ff;
+  box-shadow: 0 0 10px rgba(0, 229, 255, 0.6);
 }
 
 .vs-emblem-wrap {
@@ -869,23 +1015,25 @@
 }
 
 .vs-emblem {
-  font-family: 'Press Start 2P', monospace;
-  font-size: 26px;
+  font-family: 'Orbitron', 'Press Start 2P', monospace;
+  font-size: 28px;
+  font-weight: 900;
   color: #ff1744;
-  -webkit-text-stroke: 1.5px #ffd700;
+  -webkit-text-stroke: 1px #ffd700;
   text-shadow:
-    0 0 12px #ff1744,
-    0 0 25px rgba(255, 23, 68, 0.8),
+    0 0 10px rgba(255, 23, 68, 0.7),
+    0 0 25px rgba(255, 23, 68, 0.4),
+    0 0 40px rgba(255, 215, 0, 0.2),
     2px 2px 0 #000;
   animation: vs-heartbeat 1.6s ease-in-out infinite;
-  letter-spacing: 1px;
+  letter-spacing: 2px;
 }
 
 @keyframes vs-heartbeat {
   0%, 100% { transform: scale(1); }
-  14% { transform: scale(1.16); }
+  14% { transform: scale(1.14); }
   28% { transform: scale(1.04); }
-  42% { transform: scale(1.12); }
+  42% { transform: scale(1.1); }
   70% { transform: scale(1); }
 }
 
@@ -919,8 +1067,8 @@
 .char-countdown-overlay {
   position: absolute;
   inset: 0;
-  background: rgba(6, 11, 20, 0.85);
-  backdrop-filter: blur(4px);
+  background: rgba(4, 8, 16, 0.88);
+  backdrop-filter: blur(6px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -939,29 +1087,37 @@
 
 .countdown-card {
   text-align: center;
-  padding: 30px 60px;
-  background: radial-gradient(circle, rgba(20, 32, 54, 0.95) 0%, rgba(6, 10, 18, 0.98) 100%);
-  border: 3px solid #ffd700;
-  border-radius: 12px;
-  box-shadow: 0 0 40px rgba(255, 215, 0, 0.4), 0 16px 50px rgba(0, 0, 0, 0.9);
+  padding: 32px 64px;
+  background:
+    radial-gradient(circle at center, rgba(20, 32, 54, 0.96) 0%, rgba(6, 10, 18, 0.99) 100%);
+  border: 2px solid rgba(255, 215, 0, 0.6);
+  border-radius: 16px;
+  box-shadow:
+    0 0 40px rgba(255, 215, 0, 0.25),
+    0 0 80px rgba(255, 215, 0, 0.1),
+    0 20px 60px rgba(0, 0, 0, 0.9),
+    inset 0 0 30px rgba(255, 215, 0, 0.05);
 }
 
 .countdown-badge {
-  font-family: 'Press Start 2P', monospace;
+  font-family: 'Orbitron', 'Press Start 2P', monospace;
   font-size: 11px;
+  font-weight: 700;
   color: #00e5ff;
-  letter-spacing: 2px;
+  letter-spacing: 3px;
   margin-bottom: 16px;
-  text-shadow: 0 0 10px #00e5ff;
+  text-shadow: 0 0 12px rgba(0, 229, 255, 0.6);
 }
 
 .countdown-number {
-  font-family: 'Press Start 2P', Impact, sans-serif;
-  font-size: 72px;
+  font-family: 'Orbitron', Impact, sans-serif;
+  font-size: 76px;
+  font-weight: 900;
   color: #ffd700;
   text-shadow:
-    0 0 20px #ff6b35,
-    0 0 40px #ff1744,
+    0 0 20px rgba(255, 107, 53, 0.8),
+    0 0 40px rgba(255, 23, 68, 0.5),
+    0 0 60px rgba(255, 215, 0, 0.3),
     4px 4px 0 #000;
   animation: countdown-pop 0.9s cubic-bezier(0.175, 0.885, 0.32, 1.275) infinite;
 }
@@ -977,8 +1133,9 @@
   font-family: 'Rajdhani', sans-serif;
   font-size: 18px;
   font-weight: 700;
-  color: #ffffff;
-  letter-spacing: 3px;
+  color: rgba(255, 255, 255, 0.9);
+  letter-spacing: 4px;
+  text-transform: uppercase;
   margin-top: 14px;
 }
 
@@ -990,4 +1147,63 @@
 @keyframes white-screen-flash {
   0% { filter: brightness(3.5); }
   100% { filter: brightness(1); }
+}
+
+/* --------------------------------------------------------------------------
+   12. Card Entry Stagger Animation
+   -------------------------------------------------------------------------- */
+@keyframes card-enter {
+  0% {
+    opacity: 0;
+    transform: translateY(16px) scale(0.94);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.char-card {
+  animation: card-enter 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94) backwards;
+}
+
+.char-card[data-index="0"] { animation-delay: 0.03s; }
+.char-card[data-index="1"] { animation-delay: 0.06s; }
+.char-card[data-index="2"] { animation-delay: 0.09s; }
+.char-card[data-index="3"] { animation-delay: 0.12s; }
+.char-card[data-index="4"] { animation-delay: 0.15s; }
+.char-card[data-index="5"] { animation-delay: 0.18s; }
+.char-card[data-index="6"] { animation-delay: 0.21s; }
+.char-card[data-index="7"] { animation-delay: 0.24s; }
+.char-card[data-index="8"] { animation-delay: 0.27s; }
+.char-card[data-index="9"] { animation-delay: 0.30s; }
+
+/* --------------------------------------------------------------------------
+   13. Selected Card Animated Border Glow
+   -------------------------------------------------------------------------- */
+@keyframes p1-border-pulse {
+  0%, 100% { box-shadow: 0 0 14px rgba(255, 215, 0, 0.5), 0 0 28px rgba(255, 215, 0, 0.15), inset 0 0 16px rgba(255, 215, 0, 0.08); }
+  50% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.7), 0 0 40px rgba(255, 215, 0, 0.25), inset 0 0 20px rgba(255, 215, 0, 0.12); }
+}
+
+@keyframes p2-border-pulse {
+  0%, 100% { box-shadow: 0 0 14px rgba(0, 229, 255, 0.5), 0 0 28px rgba(0, 229, 255, 0.15), inset 0 0 16px rgba(0, 229, 255, 0.08); }
+  50% { box-shadow: 0 0 20px rgba(0, 229, 255, 0.7), 0 0 40px rgba(0, 229, 255, 0.25), inset 0 0 20px rgba(0, 229, 255, 0.12); }
+}
+
+.char-card.selected-p1 {
+  animation: p1-border-pulse 2s ease-in-out infinite;
+}
+
+.char-card.selected-p2 {
+  animation: p2-border-pulse 2s ease-in-out infinite;
+}
+
+.char-card.selected-p1.selected-p2 {
+  animation: none;
+  box-shadow:
+    0 0 18px rgba(255, 215, 0, 0.6),
+    0 0 35px rgba(0, 229, 255, 0.5),
+    0 0 50px rgba(255, 255, 255, 0.15),
+    inset 0 0 22px rgba(255, 255, 255, 0.15);
 }
