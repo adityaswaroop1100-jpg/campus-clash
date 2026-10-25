@@ -1,6 +1,6 @@
 /**
  * Campus Clash 2D — Stage Select Screen Manager & Procedural Thumbnail Renderer
- * Renders live procedural mini-canvas snapshots for all 6 authentic SRM KTR venues,
+ * Renders live procedural mini-canvas snapshots for all 5 authentic battle venues,
  * handles selection state, hover audio, and random stage picking.
  * @module ui/stageSelectManager
  */
@@ -205,7 +205,7 @@ export class StageSelectManager {
   }
 
   /**
-   * Procedurally renders an animated miniature representation of the SRM KTR venue
+   * Procedurally renders an animated miniature representation of the battle venue
    */
   renderVenueThumbnail(ctx, venueId, w, h, time) {
     const t = time * 0.001;
@@ -651,11 +651,11 @@ export class StageSelectManager {
       ctx.lineTo(cx + 20, bTop + 36);
       ctx.stroke();
 
-      // "SRM" lettering in center
+      // "CC" lettering in center
       ctx.font = '900 6px sans-serif';
       ctx.fillStyle = '#ffffff';
       ctx.textAlign = 'center';
-      ctx.fillText('SRM', cx, bTop + 32);
+      ctx.fillText('CC', cx, bTop + 32);
 
       // Red Cantilevered Roof Canopy
       ctx.fillStyle = '#d32f2f';
@@ -702,10 +702,10 @@ export class StageSelectManager {
       ctx.fillStyle = '#607d8b';
       ctx.fillRect(0, 102, w, h - 102);
 
-      // 3D SRM Sign
+      // 3D Sign
       ctx.font = '900 9px "Arial Black", sans-serif';
       ctx.fillStyle = '#ffd700';
-      ctx.fillText('SRM', w - 24, 106);
+      ctx.fillText('CC', w - 24, 106);
 
     } else if (venueId === 'universitybuilding') {
       // Chennai Sky
@@ -753,7 +753,7 @@ export class StageSelectManager {
       const tcx = w / 2;
 
       // -----------------------------------------------------------------------
-      // REAL FREESTANDING SRM CLOCK TOWER
+      // REAL FREESTANDING CAMPUS CLOCK TOWER
       // -----------------------------------------------------------------------
       // Fluted Golden Dome
       const domeGrad = ctx.createLinearGradient(tcx - 16, 6, tcx + 16, 22);
@@ -864,7 +864,7 @@ export class StageSelectManager {
       ctx.fillStyle = '#455a64';
       ctx.fillRect(0, 96, w, h - 96);
 
-      // Yellow Road Barricades (SRM)
+      // Yellow Road Barricades
       ctx.fillStyle = '#ffd600';
       ctx.fillRect(15, 98, 18, 8);
       ctx.fillRect(w - 33, 98, 18, 8);
@@ -874,7 +874,7 @@ export class StageSelectManager {
 
     } else if (venueId === 'tpganesan') {
       // -----------------------------------------------------------------------
-      // REAL DR. T.P. GANESAN AUDITORIUM (SRM KTR)
+      // REAL DR. T.P. GANESAN AUDITORIUM
       // -----------------------------------------------------------------------
       // Dark Cavernous Auditorium Hall Void
       const hallGrad = ctx.createLinearGradient(0, 0, 0, h);
@@ -921,7 +921,7 @@ export class StageSelectManager {
       ctx.fillStyle = '#002b80';
       ctx.font = '900 5.5px serif';
       ctx.textAlign = 'center';
-      ctx.fillText('SRM DR. T.P. GANESAN AUDITORIUM', w / 2, 28);
+      ctx.fillText('CAMPUS GRAND AUDITORIUM', w / 2, 28);
       ctx.fillStyle = '#b71c1c';
       ctx.font = 'bold 5px sans-serif';
       ctx.fillText('MILAN 2026 CONVOCATION', w / 2, 37);
@@ -939,7 +939,7 @@ export class StageSelectManager {
       ctx.lineWidth = 1;
       ctx.strokeRect(w * 0.12, 4, w * 0.76, 11);
 
-      // Circular SRM Blue Seals
+      // Circular Blue Seals
       ctx.fillStyle = '#002b80';
       ctx.beginPath();
       ctx.arc(w / 2 - 45, 9.5, 3, 0, Math.PI * 2);
@@ -1008,7 +1008,7 @@ export class StageSelectManager {
 
     } else if (venueId === 'archgate') {
       // -----------------------------------------------------------------------
-      // REAL SRM SILVER JUBILEE ARCH GATE (GST ROAD / NH45)
+      // REAL SILVER JUBILEE ARCH GATE (GST ROAD / NH45)
       // -----------------------------------------------------------------------
       // Tamil Nadu Coastal Sky
       const sky = ctx.createLinearGradient(0, 0, 0, h);
@@ -1025,7 +1025,7 @@ export class StageSelectManager {
       ctx.ellipse(w * 0.8, 16, 26, 7, 0, 0, Math.PI * 2);
       ctx.fill();
 
-      // Background SRM High-Rise Tower (Behind Left Pavilion)
+      // Background High-Rise Tower (Behind Left Pavilion)
       ctx.fillStyle = '#ebccd1';
       ctx.fillRect(25, 4, 34, 75);
       ctx.fillStyle = '#0288d1';
@@ -1103,7 +1103,7 @@ export class StageSelectManager {
       drawThumbArch(archLeftX);
       drawThumbArch(archRightX);
 
-      // Center Dividing Pier & SRM Circular Seal
+      // Center Dividing Pier & Circular Seal
       ctx.fillStyle = '#ffffff';
       ctx.beginPath();
       ctx.arc(w / 2, 48, 11, 0, Math.PI * 2);
@@ -1116,13 +1116,13 @@ export class StageSelectManager {
       ctx.arc(w / 2, 46, 5, 0, Math.PI * 2);
       ctx.fill();
 
-      // White Architrave & Frieze: "SRM UNIVERSITY"
+      // White Architrave & Frieze: "CAMPUS CLASH"
       ctx.fillStyle = '#ffffff';
       ctx.fillRect(ax + 28, ay - 5, aw - 56, 10);
       ctx.font = '900 6.5px serif';
       ctx.fillStyle = '#002b80';
       ctx.textAlign = 'center';
-      ctx.fillText('SRM UNIVERSITY', w / 2, ay + 2);
+      ctx.fillText('CAMPUS CLASH', w / 2, ay + 2);
 
       // Rooftop White Balustrade
       ctx.fillStyle = '#ffffff';
@@ -1167,7 +1167,7 @@ export class StageSelectManager {
       ctx.lineTo(w / 2 + 4, 74); // Walking stick
       ctx.stroke();
 
-      // Yellow SRM Security Barricades
+      // Yellow Security Barricades
       ctx.fillStyle = '#ffd600';
       ctx.fillRect(18, 76, 16, 12);
       ctx.fillRect(w - 34, 76, 16, 12);
@@ -1177,7 +1177,7 @@ export class StageSelectManager {
 
     } else if (venueId === 'vendharsquare' || venueId === 'canteen') {
       // -----------------------------------------------------------------------
-      // REAL SRM VENDHAR SQUARE (FOUNDER MONUMENT & PLAZA)
+      // REAL VENDHAR SQUARE (FOUNDER MONUMENT & PLAZA)
       // -----------------------------------------------------------------------
       // Fiery Golden Sunset Sky
       const sky = ctx.createLinearGradient(0, 0, 0, h);
@@ -1345,7 +1345,7 @@ export class StageSelectManager {
 
     } else if (venueId === 'architectureblock' || venueId === 'centrallibrary') {
       // -----------------------------------------------------------------------
-      // REAL SRM SCHOOL OF ARCHITECTURE & DESIGN
+      // REAL SCHOOL OF ARCHITECTURE & DESIGN
       // -----------------------------------------------------------------------
       // Morning Azure Sky
       const sky = ctx.createLinearGradient(0, 0, 0, h);
@@ -1420,11 +1420,11 @@ export class StageSelectManager {
       ctx.fillStyle = '#fbc02d';
       ctx.fillRect(gx, gy + 32, gw, 2.5);
 
-      // Typography on Glass: "SRM" & "School of Architecture"
+      // Typography on Glass: "CAMPUS" & "School of Architecture"
       ctx.font = '900 6px serif';
       ctx.fillStyle = '#ffffff';
       ctx.textAlign = 'center';
-      ctx.fillText('SRM', w / 2, gy + 12);
+      ctx.fillText('CAMPUS', w / 2, gy + 12);
       ctx.font = 'italic 5px cursive, sans-serif';
       ctx.fillText('School of Architecture', w / 2, gy + 22);
 

@@ -216,7 +216,7 @@ export class ArchiveVaultStage extends StageBase {
     ctx.translate(farOffsetX, 0);
 
     if (era === 1) {
-      // Distant Mountain Castles & Waterfall Spires (SRM-like towers in medieval form)
+      // Distant Mountain Castles & Waterfall Spires (Towering spires in medieval form)
       ctx.fillStyle = '#1c0c08';
       ctx.fillRect(180, 80, 160, 440);
       ctx.fillRect(620, 60, 180, 460);
@@ -367,7 +367,7 @@ export class ArchiveVaultStage extends StageBase {
       }
     }
 
-    // SRM banners — era-styled
+    // Banners — era-styled
     if (this.qualityTier !== 'low') {
       for (let b = 0; b < 4; b++) {
         const bx = 60 + b * 225;

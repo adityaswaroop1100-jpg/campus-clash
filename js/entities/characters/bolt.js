@@ -8,7 +8,7 @@ export const BOLT_CONFIG = {
   displayName: 'Bolt',
   tagline: 'The Track Star',
   colors: {
-    primary: '#00b4d8',      // SRM athletic singlet cyan
+    primary: '#00b4d8',      // Athletic singlet cyan
     secondary: '#023e8a',    // Deep blue running tights
     accent: '#ffd700',       // Gold championship trim
     glow: '#00e5ff',         // Cyan speed glow

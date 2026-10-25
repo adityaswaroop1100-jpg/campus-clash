@@ -1,5 +1,5 @@
 /**
- * Campus Clash 2D — WebNexus Tech Modifier System
+ * Campus Clash 2D — Tech Modifier System
  * Spawns periodic Tech Pods (Cloud Backup, SSL Encryption, Edge Overclock, IoT EMP)
  * with holographic beacons, collision detection, particle explosions, and buff timers.
  * @module engine/nexusModifiers

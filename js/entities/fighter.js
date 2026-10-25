@@ -1329,7 +1329,7 @@ export class Fighter {
     ctx.restore();
 
     // -------------------------------------------------------------
-    // 6. TORSO (Crisp White SRM Hoodie with Royal Blue Insignia)
+    // 6. TORSO (Crisp White Hoodie with Royal Blue Insignia)
     // -------------------------------------------------------------
     ctx.save();
     ctx.translate(0, torsoY);
@@ -1359,12 +1359,12 @@ export class Fighter {
     ctx.fillStyle = '#cbd5e1';
     ctx.fillRect(-15, 24, 30, 4);
 
-    // Bold "SRM" Chest Insignia (Royal Blue #1d4ed8)
+    // Bold Chest Insignia (Royal Blue #1d4ed8)
     ctx.font = '900 10px "Arial Black", sans-serif';
     ctx.fillStyle = '#1d4ed8';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillText('SRM', 0, -8);
+    ctx.fillText('CC', 0, -8);
 
     // Hoodie Neck Collar & Hood Rim Behind Neck
     ctx.fillStyle = '#f1f5f9';
@@ -1391,10 +1391,10 @@ export class Fighter {
     ctx.restore();
 
     // -------------------------------------------------------------
-    // 7. LEAD LEG (Vibrant SRM Royal Navy Blue)
+    // 7. LEAD LEG (Vibrant Royal Navy Blue)
     // -------------------------------------------------------------
     ctx.save();
-    ctx.fillStyle = '#1e3a8a'; // Lead SRM Navy Blue
+    ctx.fillStyle = '#1e3a8a'; // Lead Navy Blue
     ctx.beginPath();
     ctx.moveTo(-2, torsoY + 28);
     ctx.lineTo(rFootX - 8, rFootY - 6 + rKneeBend);
@@ -1864,11 +1864,11 @@ export class Fighter {
     ctx.closePath();
     ctx.fill();
 
-    // Bold Red SRM Chest Logo
+    // Bold Red Chest Logo
     ctx.font = '900 8.5px "Arial Black", sans-serif';
     ctx.fillStyle = '#ff1744';
     ctx.textAlign = 'center';
-    ctx.fillText('SRM', 0, -28);
+    ctx.fillText('CC', 0, -28);
 
     // Red Drawstrings
     ctx.strokeStyle = '#ff1744';
@@ -2096,7 +2096,7 @@ export class Fighter {
     ctx.fillRect(-19, -56, 3, 22);
     ctx.fillRect(16, -56, 3, 22);
 
-    // Torso: Red Basketball Jersey (#7 SRM)
+    // Torso: Red Basketball Jersey (#7 CC)
     const torsoY = isBlock ? -58 : -64 + breath;
     const torsoTilt = isHurt ? -0.2 : (isAttack ? 0.2 : 0);
 
@@ -2125,11 +2125,11 @@ export class Fighter {
     ctx.arc(0, -46, 8, 0, Math.PI);
     ctx.stroke();
 
-    // #7 SRM on Chest
+    // #7 CC on Chest
     ctx.font = '900 9px "Arial Black", sans-serif';
     ctx.fillStyle = '#ffffff';
     ctx.textAlign = 'center';
-    ctx.fillText('#7 SRM', 0, -22);
+    ctx.fillText('#7 CC', 0, -22);
 
     // Arms & Basketball
     if (isBlock) {
@@ -2455,7 +2455,7 @@ export class Fighter {
     ctx.fillRect(lFootX - 5, lFootY - 6, 8, 2);
     ctx.fillRect(rFootX - 5, rFootY - 6, 8, 2);
 
-    // Torso: Sharp Black Suit Blazer, White Shirt, Red Tie & SRM ID Lanyard
+    // Torso: Sharp Black Suit Blazer, White Shirt, Red Tie & ID Lanyard
     const torsoY = isBlock ? -60 : -66 + breath;
     const torsoTilt = isHurt ? -0.2 : (isAttack ? 0.22 : 0);
 
@@ -2491,14 +2491,14 @@ export class Fighter {
     ctx.closePath();
     ctx.fill();
 
-    // Royal Blue SRM ID Card Lanyard around neck
+    // Royal Blue ID Card Lanyard around neck
     ctx.strokeStyle = '#1976d2';
     ctx.lineWidth = 1.8;
     ctx.beginPath();
     ctx.moveTo(-6, -46); ctx.lineTo(-1, -22); ctx.lineTo(6, -46);
     ctx.stroke();
 
-    // Dangling SRM Student ID Card
+    // Dangling Student ID Card
     ctx.fillStyle = '#ffffff';
     ctx.fillRect(-5, -22, 10, 14);
     ctx.fillStyle = '#1565c0';
@@ -2666,7 +2666,7 @@ export class Fighter {
     ctx.fillRect(lFootX - 11, lFootY - 2, 22, 3);
     ctx.fillRect(rFootX - 11, rFootY - 2, 24, 3);
 
-    // Torso: Royal Blue SRM Athletic Jersey
+    // Torso: Royal Blue Athletic Jersey
     const torsoY = isBlock ? -60 : -66 + breath;
     const torsoTilt = isHurt ? -0.2 : (isAttack ? 0.22 : 0);
 
@@ -2684,11 +2684,11 @@ export class Fighter {
     ctx.closePath();
     ctx.fill();
 
-    // SRM Athletic Text
+    // Athletic Text
     ctx.font = '900 11px "Arial Black", sans-serif';
     ctx.fillStyle = '#ffffff';
     ctx.textAlign = 'center';
-    ctx.fillText('SRM', 0, -22);
+    ctx.fillText('CLASH', 0, -22);
 
     // White Shoulder Trim
     ctx.fillStyle = '#ffffff';
@@ -2997,17 +2997,17 @@ export class Fighter {
     ctx.closePath();
     ctx.fill();
 
-    // White shirt + gold SRM crest
+    // White shirt + gold crest
     ctx.fillStyle = '#f5f5f5';
     ctx.fillRect(-6, -108 + breath, 12, 20);
 
-    // Gold SRM Moot Court Crest
+    // Gold Moot Court Crest
     ctx.font = '900 7px sans-serif';
     ctx.fillStyle = '#ffd700';
     ctx.shadowColor = '#ffd700';
     ctx.shadowBlur = 6;
     ctx.textAlign = 'center';
-    ctx.fillText('SRM', -18, -94 + breath);
+    ctx.fillText('LAW', -18, -94 + breath);
     ctx.shadowBlur = 0;
 
     // Arms / Weapon
@@ -3188,11 +3188,11 @@ export class Fighter {
     ctx.fillRect(-24, -110 + breath, 4, 46);
     ctx.fillRect(20, -110 + breath, 4, 46);
 
-    // SRM logo on chest
+    // Logo on chest
     ctx.font = '900 10px "Arial Black", sans-serif';
     ctx.fillStyle = '#ffffff';
     ctx.textAlign = 'center';
-    ctx.fillText('SRM', 0, -88 + breath);
+    ctx.fillText('CC', 0, -88 + breath);
 
     // Cyan Wristbands
     ctx.fillStyle = '#00e5ff';

@@ -2,7 +2,7 @@
  * The Vertical Sprawl — Venue Stage Implementation
  * Five-level neon city block with rooftops, balconies, walkways, and wet courtyard.
  * High verticality, architectural depth layers, rain-slick reflections.
- * Enhanced: SRM student crowd on balconies, phone-light spectators, reactive cheer,
+ * Enhanced: Student crowd on balconies, phone-light spectators, reactive cheer,
  *           stronger 3D perspective floor grid, depth fog layers.
  * @module stages/venues/verticalSprawlStage
  */
@@ -139,7 +139,7 @@ export class VerticalSprawlStage extends StageBase {
     ctx.save();
     ctx.translate(farOffsetX, 0);
 
-    // SRM-like academic towers silhouettes
+    // Towering academic silhouettes
     ctx.fillStyle = '#060f1e';
     ctx.fillRect(80, 30, 100, 500); // narrow left tower
     ctx.fillRect(200, 20, 160, 490); // main slab
@@ -226,7 +226,7 @@ export class VerticalSprawlStage extends StageBase {
     }
     ctx.restore();
 
-    // 5. Midground Multi-Tier Walkways & Concrete Balconies with SRM Students (Z = -120, Parallax 0.45)
+    // 5. Midground Multi-Tier Walkways & Concrete Balconies with Spectators (Z = -120, Parallax 0.45)
     const midOffsetX = -camX * 0.45;
     ctx.save();
     ctx.translate(midOffsetX, 0);
@@ -249,7 +249,7 @@ export class VerticalSprawlStage extends StageBase {
       ctx.fillRect(20, by + 4, 65, 14);
       ctx.shadowBlur = 0;
 
-      // SRM Student Crowd on left balconies
+      // Student crowd on left balconies
       this._renderBalconyCrowd(ctx, t, 'left', tier, by - 18, bw - 100, this.crowdCheerLevel);
     }
 
@@ -272,7 +272,7 @@ export class VerticalSprawlStage extends StageBase {
       ctx.fillRect(bx + 20, by + 4, 65, 14);
       ctx.shadowBlur = 0;
 
-      // SRM Student Crowd on right balconies
+      // Student crowd on right balconies
       this._renderBalconyCrowd(ctx, t, 'right', tier, by - 18, bx + 20, this.crowdCheerLevel);
     }
 

@@ -2,7 +2,7 @@
  * The Modular Arena — Venue Stage Implementation
  * Hex floor panels that raise and lower between rounds to reconfigure the layout,
  * surrounded by stadium tiers, broadcast rigs, and overhead LED screens.
- * Enhanced: Dense SRM student stadium audience, reactive crowd wave, confetti burst
+ * Enhanced: Dense student stadium audience, reactive crowd wave, confetti burst
  *           on heavy hits, richer camera-flash density, enhanced 3D perspective floor,
  *           holographic fighter stats on Jumbotron, combat energy flares.
  * @module stages/venues/modularArenaStage
@@ -199,7 +199,7 @@ export class ModularArenaStage extends StageBase {
     ctx.fillStyle = this._fogGrad;
     ctx.fillRect(0, 0, 960, 320);
 
-    // 2. Far Background: Tiered Stadium Grandstands with Dense SRM Crowd (Z = -400, Parallax 0.1)
+    // 2. Far Background: Tiered Stadium Grandstands with Dense Crowd (Z = -400, Parallax 0.1)
     const farOffsetX = -camX * 0.1;
     ctx.save();
     ctx.translate(farOffsetX, 0);
@@ -234,7 +234,7 @@ export class ModularArenaStage extends StageBase {
       }
       ctx.fill();
 
-      // SRM colour banners on tier rails
+      // Color banners on tier rails
       if (this.qualityTier !== 'low' && tier < 2) {
         const bannerColors = ['#00e5ff', '#ffffff', '#ffd600', '#ff007f'];
         for (let b = 0; b < 5; b++) {

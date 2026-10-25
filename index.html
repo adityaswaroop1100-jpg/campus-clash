@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-  <meta name="description" content="Campus Clash — 2D Arcade Fighting Game set in SRM Campus">
+  <meta name="description" content="Campus Clash — 2D Arcade Fighting Game">
   <meta name="author" content="Aditya Swaroop (RA2511026010269)">
-  <title>Campus Clash | SRM Arcade Fighter</title>
+  <title>Campus Clash | 2D Arcade Fighter</title>
 
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
@@ -70,7 +70,7 @@
 
   <!-- Main Viewport Container -->
   <main id="app-container" role="main">
-    <h1 class="sr-only">Campus Clash — SRM Campus 2D Fighting Game</h1>
+    <h1 class="sr-only">Campus Clash — 2D Arcade Fighting Game</h1>
 
     <!-- Ambient Stadium Cyber Rig Backdrop (Eliminates Empty Box Margin) -->
     <div class="rig-ambient-backdrop" aria-hidden="true">
@@ -253,8 +253,8 @@
                   <input type="text" id="entry-partid" name="partid" placeholder="AR-9842" required>
                 </div>
                 <div class="portal-input-group">
-                  <label for="entry-srmmail">SRM MAIL ID *</label>
-                  <input type="email" id="entry-srmmail" name="srmmail" placeholder="as1234@srmist.edu.in" required>
+                  <label for="entry-srmmail">STUDENT EMAIL ID *</label>
+                  <input type="email" id="entry-srmmail" name="srmmail" placeholder="student@campus.edu" required>
                 </div>
                 <div class="portal-input-group">
                   <label for="entry-phone">PHONE NUMBER *</label>
@@ -279,7 +279,7 @@
           <span class="portal-footer-dot"></span>
           <span>SYSTEM ONLINE</span>
           <span>|</span>
-          <span>SRMIST KTR FESTIVAL GRID</span>
+          <span>CAMPUS CLASH FESTIVAL GRID</span>
           <span>|</span>
           <span>v2.4.1</span>
         </footer>
@@ -322,17 +322,17 @@
           </div>
           <div class="portal-modal-body">
             <h3 style="color:#00f0ff;margin:0 0 10px 0;font-family:'Orbitron',sans-serif;">MISSION DIRECTIVE</h3>
-            <p>Welcome to <strong>AARUUSH CLASH: CAMPUS CLASH</strong> — the premier SRMIST nationwide techno-management combat simulation.</p>
+            <p>Welcome to <strong>CAMPUS CLASH</strong> — the premier nationwide techno-management combat simulation.</p>
             
             <div style="background:rgba(0,240,255,0.08);border-left:3px solid #00f0ff;padding:10px 14px;margin:12px 0;border-radius:4px;">
               <strong style="color:#ffd602;">CORE OBJECTIVE:</strong>
-              <p style="margin:4px 0 0 0;">Navigate all 17 Portals across SRM Kattankulathur Campus within the 180-second clock window. Neutralize rival department champions and claim the ultimate 10 CGPA victory.</p>
+              <p style="margin:4px 0 0 0;">Navigate all 17 Portals across the Campus within the 180-second clock window. Neutralize rival department champions and claim the ultimate 10 CGPA victory.</p>
             </div>
 
             <h4 style="color:#ffd602;margin:14px 0 6px 0;font-family:'Orbitron',sans-serif;">KEY PROTOCOLS</h4>
             <ul style="padding-left:20px;margin:0;line-height:1.7;">
               <li><strong>Fighter Archetypes:</strong> Choose from 10 distinct campus legends including Topper, Backbencher, Hosteler, Senior, Placement Warrior, and Cypher.</li>
-              <li><strong>Campus Arenas:</strong> Battle across authentic SRM landmarks — Tech Park Steps, UB Clock Tower, Dr. T.P. Ganesan Auditorium, and the Grand Arch Gate.</li>
+              <li><strong>Campus Arenas:</strong> Battle across authentic student landmarks, tech courtyards, and futuristic combat arenas.</li>
               <li><strong>Deterministic Combat:</strong> Frame-accurate hitboxes, cancelable light/heavy attacks, directional blocking, and devastating cinematic Ultimates.</li>
               <li><strong>Live Leaderboard:</strong> All clearance records and battle telemetry sync directly with the festival Supabase cloud database.</li>
             </ul>
@@ -357,7 +357,7 @@
                   <span>PHASE 1: REGISTRATION & INITIAL CLEARANCE</span>
                   <span>ROUND 0</span>
                 </div>
-                <p style="margin:6px 0 0 0;font-size:12px;color:#94a3b8;">Identity verification on SRMIST Festival Grid. All participant details locked in Supabase.</p>
+                <p style="margin:6px 0 0 0;font-size:12px;color:#94a3b8;">Identity verification on Festival Grid. All participant details locked in Supabase.</p>
               </div>
 
               <div style="background:rgba(0,240,255,0.08);border:1px solid rgba(0,240,255,0.3);border-radius:8px;padding:12px;">
@@ -383,7 +383,7 @@
         </div>
       </div>
 
-      <!-- Layer 0: Main Background Canvas (Parallax SRM Skyline, Spotlights, Silhouettes) -->
+      <!-- Layer 0: Main Background Canvas (Parallax Skyline, Spotlights, Silhouettes) -->
       <canvas id="game-canvas" width="960" height="640" aria-label="Campus Clash 2D Game Screen">
         Your browser does not support the HTML5 canvas element.
       </canvas>
@@ -394,12 +394,12 @@
         <header class="cabinet-marquee-header">
           <div class="marquee-badge-left">
             <span class="marquee-dot"></span>
-            <span class="marquee-title">★ SRM TECH PARK ARCADE // CYBER RIG v2.5</span>
+            <span class="marquee-title">★ TECH PARK ARCADE // CYBER RIG v2.5</span>
           </div>
 
           <div class="marquee-badge-center">
-            <div class="srm-presents-pill">★ SRM GAMES PRESENTS ★</div>
-            <div class="srm-location-pill">TECH PARK ARCADE • KATTANKULATHUR</div>
+            <div class="arcade-presents-pill">★ ARCADE GAMES PRESENTS ★</div>
+            <div class="arcade-location-pill">TECH PARK ARCADE • CHAMPIONSHIP</div>
           </div>
 
           <div class="marquee-controls-right">
@@ -497,9 +497,9 @@
               <div class="stick-ball"></div>
             </div>
             <div class="deck-center-title">
-              <span class="deck-brand">SRM KTR CAMPUS CLASH</span>
+              <span class="deck-brand">CAMPUS CLASH</span>
               <span class="deck-dot">•</span>
-              <span class="deck-nexus">WEBNEXUS</span>
+              <span class="deck-nexus">CHAMPIONSHIP</span>
             </div>
             <div class="deck-joystick right" id="deck-stick-p2" title="Player 2 Stick">
               <div class="stick-ball"></div>
@@ -1062,7 +1062,7 @@
         </div>
       </div>
 
-      <!-- Layer 26: SRM KTR Battle Venue Select Screen Overlay -->
+      <!-- Layer 26: Battle Venue Select Screen Overlay -->
       <div id="stageSelectScreen" class="stage-select-screen hidden" role="region" aria-label="Battle Venue Selection Screen">
         <!-- Top Header Bar -->
         <header class="stage-header-bar">
@@ -1081,7 +1081,7 @@
 
           <div class="stage-mode-pill" id="stage-matchup-pill">
             <span class="pill-dot">●</span>
-            <span class="pill-text" id="stage-matchup-text">SRM KTR CAMPUS</span>
+            <span class="pill-text" id="stage-matchup-text">GLOBAL ARENA</span>
           </div>
         </header>
 
@@ -1267,7 +1267,7 @@
           <div class="credits-body">
             <div class="credits-row">
               <span class="credits-label">Game Title</span>
-              <span class="credits-value highlight">Campus Clash 2D (SRM Edition)</span>
+              <span class="credits-value highlight">Campus Clash 2D</span>
             </div>
             <div class="credits-row">
               <span class="credits-label">Lead Developer</span>
@@ -1279,7 +1279,7 @@
             </div>
             <div class="credits-row">
               <span class="credits-label">Organization</span>
-              <span class="credits-value highlight">ACM SIGGRAPH SRM Chapter</span>
+              <span class="credits-value highlight">ACM SIGGRAPH Student Chapter</span>
             </div>
             <div class="credits-row">
               <span class="credits-label">Engine Architecture</span>

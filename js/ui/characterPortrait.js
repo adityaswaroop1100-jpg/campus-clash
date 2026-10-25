@@ -268,7 +268,7 @@ export class CharacterPortraitManager {
   }
 
   /**
-   * Signature visible prop for Topper: Golden Pen & SRM Tech Notebook in hand
+   * Signature visible prop for Topper: Golden Pen & Tech Notebook in hand
    */
   renderTopperSignatureProp(ctx, time) {
     ctx.save();
@@ -279,10 +279,10 @@ export class CharacterPortraitManager {
     // Gold Spine
     ctx.fillStyle = '#ffd700';
     ctx.fillRect(22, -46 + bob, 3, 28);
-    // SRM text on book
+    // Text on book
     ctx.font = 'bold 6px monospace';
     ctx.fillStyle = '#ffffff';
-    ctx.fillText('SRM', 27, -34 + bob);
+    ctx.fillText('CC', 27, -34 + bob);
     ctx.fillText('ENG', 27, -26 + bob);
 
     // Glowing Golden Pen tip

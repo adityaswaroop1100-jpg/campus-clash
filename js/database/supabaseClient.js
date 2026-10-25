@@ -105,7 +105,7 @@ class SupabaseService {
       }
     }
 
-    // Fallback: cached or default SRM Champions roster
+    // Fallback: cached or default Champions roster
     if (typeof localStorage !== 'undefined') {
       const cached = localStorage.getItem('campus_clash_cached_leaderboard');
       if (cached) {
@@ -133,7 +133,7 @@ class SupabaseService {
    */
   async submitScore(entry) {
     const payload = {
-      player_name: entry.playerName || 'SRM Brawler',
+      player_name: entry.playerName || 'Campus Brawler',
       fighter_id: entry.fighterId || 'topper',
       fighter_name: entry.fighterName || 'Topper',
       score: entry.score || 0,

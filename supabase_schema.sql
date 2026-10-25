@@ -1,12 +1,12 @@
 -- ============================================================================
--- CAMPUS CLASH 2D: WEBNEXUS / AARUUSH EDITION — SUPABASE DATABASE SCHEMA
+-- CAMPUS CLASH 2D: CHAMPIONSHIP EDITION — SUPABASE DATABASE SCHEMA
 -- Execute this entire script in Supabase Dashboard -> SQL Editor -> Run
 -- ============================================================================
 
 -- 1. LEADERBOARD TABLE (High Scores & Match Victories)
 CREATE TABLE IF NOT EXISTS public.campus_clash_leaderboard (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    player_name TEXT NOT NULL DEFAULT 'SRM Brawler',
+    player_name TEXT NOT NULL DEFAULT 'Campus Brawler',
     fighter_id TEXT NOT NULL,
     fighter_name TEXT NOT NULL,
     score INTEGER NOT NULL DEFAULT 0,
@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS public.campus_clash_leaderboard (
 CREATE INDEX IF NOT EXISTS idx_campus_clash_leaderboard_score 
 ON public.campus_clash_leaderboard (score DESC, created_at DESC);
 
--- 2. PARTICIPANTS REGISTRATION TABLE (Name, RegNo, SRM Mail, Participation ID, Phone)
+-- 2. PARTICIPANTS REGISTRATION TABLE (Name, RegNo, Student Email, Participation ID, Phone)
 CREATE TABLE IF NOT EXISTS public.campus_clash_participants (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     name TEXT NOT NULL,

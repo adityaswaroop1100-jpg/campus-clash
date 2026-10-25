@@ -1,6 +1,6 @@
-# Campus Clash 2D: WebNexus Edition 🥊⚡
+# Campus Clash 2D 🥊⚡
 
-**Arcade 2D Fighting Game — SRM Campus & WebNexus Tech Edition**
+**Arcade 2D Fighting Game — Campus Tech Edition**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![HTML5 Canvas](https://img.shields.io/badge/Render-HTML5%20Canvas%202D-orange.svg)](https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API)
@@ -13,9 +13,9 @@
 
 ## 🎮 Overview
 
-**Campus Clash 2D: WebNexus Edition** is a high-octane, retro-arcade pixel/vector 2D fighting game built for college tech fests, hackathons, and esports arenas. Built with **100% pure procedural HTML5 Canvas 2D and the Web Audio API**, the game runs at a deterministic **60 FPS** in any modern web browser with zero external image or audio file dependencies!
+**Campus Clash 2D** is a high-octane, retro-arcade pixel/vector 2D fighting game built for college tech fests, hackathons, and esports arenas. Built with **100% pure procedural HTML5 Canvas 2D and the Web Audio API**, the game runs at a deterministic **60 FPS** in any modern web browser with zero external image or audio file dependencies!
 
-The game unites **relatable college student archetypes** with emerging tech tracks (**Cloud Computing, Cyber Security, Internet of Things, and Edge Computing**). Players duel across iconic SRM KTR campus landmarks and futuristic WebNexus tech arenas, collecting real-time falling **"Nexus Modifiers"** (Tech Pods) that turn technical engineering principles into battle buffs!
+The game unites **relatable college student archetypes** with emerging tech tracks (**Cloud Computing, Cyber Security, Internet of Things, and Edge Computing**). Players duel across iconic campus landmarks and futuristic tech arenas, collecting real-time falling **"Nexus Modifiers"** (Tech Pods) that turn technical engineering principles into battle buffs!
 
 ---
 
@@ -36,15 +36,15 @@ The game unites **relatable college student archetypes** with emerging tech trac
 
 ## 🏟️ Battleground Arenas (10 Total Venues)
 
-### SRM Campus Landmarks
+### Campus Landmarks
 * **Tech Park Steps & Plaza**: 15-tier IT powerhouse, skywalk & sea breeze papers hazard.
 * **University Building (UB) Quadrangle**: Neoclassical colonnade, clock bell tolls & ambassador car.
 * **Dr. T.P. Ganesan Auditorium**: Asia's premier 4000-seat hall with moving spotlights & bass subwoofer.
-* **SRM Grand Arch Gate**: GST Road (NH45) entrance with bouncing barricades & bus horns.
+* **Grand Arch Gate**: GST Road (NH45) entrance with bouncing barricades & bus horns.
 * **Vendhar Square**: Founder monument plaza, geodesic fountain sprays & sunset flare.
 * **School of Architecture**: Teal solar glass curtain, drafting T-squares & jury laser scans.
 
-### WebNexus Tech Arenas
+### Tech Arenas
 * ☁️ **The Cloud Citadel**: Server blade skyscrapers, Kubernetes pod clusters & CPU load tickers.
 * 🛡️ **Cyber Fortress Zero-Day**: Cascading binary rain waterfalls, honeycomb firewall barrier & SEC_OPS HUD.
 * 📡 **IoT Sensor Matrix**: PCB motherboard copper traces, ESP32 microcontrollers & 2.4 GHz radio waves.

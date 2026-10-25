@@ -8,8 +8,8 @@ export const TOPPER_CONFIG = {
   displayName: 'The Topper',
   tagline: 'Academic Assassin',
   colors: {
-    primary: '#FFFFFF',     // Clean White SRM Hoodie
-    secondary: '#1A2A6C',   // SRM Royal Navy Blue Trousers
+    primary: '#FFFFFF',     // Clean White Hoodie
+    secondary: '#1A2A6C',   // Royal Navy Blue Trousers
     accent: '#00F0FF',      // Luminous Cyan Holographic Panels
     glow: '#00E5FF',        // Cyan HUD Matrix Glow
     visor: '#FFD700',       // Cyber Gold Academic Visor

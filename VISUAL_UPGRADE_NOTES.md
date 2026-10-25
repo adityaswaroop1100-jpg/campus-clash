@@ -1,7 +1,7 @@
 # Campus Clash 2D — Visual Upgrade System Audit
 
 **Audit Date**: 2026-09-24  
-**Project**: Campus Clash 2D (SRM Campus Brawler)  
+**Project**: Campus Clash 2D (Campus Brawler)  
 **Status**: Step 0 Complete — Audit & State/Roster Mapping (No feature code modified)
 
 ---

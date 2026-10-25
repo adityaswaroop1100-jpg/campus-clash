@@ -11,15 +11,15 @@ export const BRANDING_CONFIG = {
   version: "2.5.0",
   
   // Institution / University Branding
-  institutionShort: "SRM",
-  institutionFull: "SRM Institute of Science and Technology",
-  campusLocation: "Tech Park, Kattankulathur",
+  institutionShort: "CAMPUS",
+  institutionFull: "Campus Clash Championship",
+  campusLocation: "Cyber Campus Arena",
   tagline: "BRAWL FOR THE 10 CGPA",
-  marqueeHeader: "★ SRM TECH PARK ARCADE // CYBER RIG v2.5",
-  presentsText: "★ SRM GAMES PRESENTS ★",
+  marqueeHeader: "★ TECH PARK ARCADE // CYBER RIG v2.5",
+  presentsText: "★ ARCADE GAMES PRESENTS ★",
   
-  // White-Label Mode: Setting this to true removes specific SRM trademarks and replaces with generic Cyber Tech University
-  isWhiteLabel: false,
+  // White-Label Mode: Setting this to true removes trademarks and provides clean generic Cyber Tech branding University
+  isWhiteLabel: true,
 
   getDisplayInstitution() {
     return this.isWhiteLabel ? "TECH ACADEMY" : this.institutionShort;

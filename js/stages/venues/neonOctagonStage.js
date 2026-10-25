@@ -219,7 +219,7 @@ export class NeonOctagonStage extends StageBase {
     }
     ctx.fill();
 
-    // SRM College Banners on upper balcony rail
+    // College Banners on upper balcony rail
     if (this.qualityTier !== 'low') {
       const bannerColors = ['#00e5ff', '#ff007f', '#ffd600', '#00e5ff'];
       for (let b = 0; b < 4; b++) {

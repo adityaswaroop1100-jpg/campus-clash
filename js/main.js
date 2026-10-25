@@ -216,7 +216,7 @@ class CampusClashGame {
     this.selectedMode = GAME_MODES.PVP;
     this.modeIndex = 0; // 0 = PvP, 1 = PvC
 
-    // Character Selection State — All 10 SRM Archetypes
+    // Character Selection State — All 10 Fighter Archetypes
     this.roster = [
       { config: TOPPER_CONFIG, emoji: '🎓', archetype: 'Academic Assassin', difficulty: 'Normal', speed: 5, power: 3, defense: 4 },
       { config: BACKBENCHER_CONFIG, emoji: '🔥', archetype: 'Chaos Agent', difficulty: 'Easy', speed: 4, power: 5, defense: 3 },
@@ -672,7 +672,7 @@ class CampusClashGame {
   initCharacterSelect() {
     this.portraitManager = new CharacterPortraitManager(this.roster);
 
-    // 10 SRM Archetypes Detailed Showcase Telemetry
+    // 10 Fighter Archetypes Detailed Showcase Telemetry
     this.charDetails = [
       {
         num: '01',
@@ -1068,7 +1068,7 @@ class CampusClashGame {
       if (this.selectedMode === GAME_MODES.TRAINING) {
         this.charModeText.textContent = '🥋 TRAINING DOJO';
       } else if (this.selectedMode === GAME_MODES.PVC) {
-        this.charModeText.textContent = '⚡ PLAYER VS SRM BOT [EXPERT]';
+        this.charModeText.textContent = '⚡ PLAYER VS AI BOT [EXPERT]';
       } else {
         this.charModeText.textContent = '⚔️ 2-PLAYER LOCAL BRAWL';
       }
@@ -1193,7 +1193,7 @@ class CampusClashGame {
       this.charSelectStep = 2;
       this.updateCharSelectUI();
 
-      // Both players locked in -> Transition to SRM KTR Battle Venue Select!
+      // Both players locked in -> Transition to Battle Venue Select!
       setTimeout(() => {
         this.closeCharSelect();
         this.openStageSelect();
@@ -1384,7 +1384,7 @@ class CampusClashGame {
       ]);
     }
 
-    // Instantiate selected SRM Arena
+    // Instantiate selected Arena
     this.stage = new this.arenas[this.currentArenaIndex].stageClass();
     this.stage.qualityTier = this.qualityTier;
 
@@ -1566,7 +1566,7 @@ class CampusClashGame {
       const loser = isP1Winner ? this.p2 : this.p1;
       const stats = this.matchStats[winnerId] || { totalDamage: 300, maxCombo: 5 };
       const score = Math.round(stats.totalDamage * 8 + stats.maxCombo * 120 + (isP1Winner ? this.p1RoundWins : this.p2RoundWins) * 500);
-      const playerName = isP1Winner ? (this.p1.config.displayName || 'P1 Champion') : (this.selectedMode === GAME_MODES.PVC ? 'SRM Campus AI' : 'P2 Challenger');
+      const playerName = isP1Winner ? (this.p1.config.displayName || 'P1 Champion') : (this.selectedMode === GAME_MODES.PVC ? 'Campus AI' : 'P2 Challenger');
 
       // 1. Submit high score to Leaderboard
       supabaseService.submitScore({
@@ -2237,7 +2237,7 @@ class CampusClashGame {
   // SCREEN: MODE SELECT RENDER
   // =========================================================================
   renderModeSelect(ctx) {
-    // Cyberpunk SRM Background gradient
+    // Cyberpunk Background gradient
     const bgGrad = ctx.createLinearGradient(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
     bgGrad.addColorStop(0, '#040b17');
     bgGrad.addColorStop(0.5, '#0b162c');
@@ -2267,10 +2267,10 @@ class CampusClashGame {
     ctx.save();
     ctx.textAlign = 'center';
 
-    // SRM Logo / Badge Top
+    // Logo / Badge Top
     ctx.font = 'bold 14px monospace';
     ctx.fillStyle = '#00e5ff';
-    ctx.fillText('SRM INSTITUTE OF SCIENCE & TECHNOLOGY — TECH PARK ARCADE', CANVAS_WIDTH / 2, 75);
+    ctx.fillText('CAMPUS CLASH CHAMPIONSHIP — TECH PARK ARCADE', CANVAS_WIDTH / 2, 75);
 
     // Neon Game Title
     ctx.font = '900 68px "Arial Black", Impact, sans-serif';
@@ -2294,7 +2294,7 @@ class CampusClashGame {
       },
       {
         id: GAME_MODES.PVC,
-        title: '🤖  VS COMPUTER (EXPERT SRM AI)',
+        title: '🤖  VS COMPUTER (EXPERT AI)',
         desc: 'Test your reflexes against tournament-tier frame data and whiff punishes'
       },
       {
@@ -2378,7 +2378,7 @@ class CampusClashGame {
     ctx.fillStyle = bgGrad;
     ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 
-    // Subtle SRM Tech Blueprint grid lines
+    // Subtle Tech Blueprint grid lines
     ctx.save();
     ctx.strokeStyle = 'rgba(0, 229, 255, 0.04)';
     ctx.lineWidth = 1;
@@ -2413,7 +2413,7 @@ class CampusClashGame {
     ctx.fillStyle = bgGrad;
     ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 
-    // Subtle SRM Tech Blueprint grid lines
+    // Subtle Tech Blueprint grid lines
     ctx.strokeStyle = 'rgba(0, 229, 255, 0.04)';
     ctx.lineWidth = 1;
     const gridStep = 40;
@@ -3307,12 +3307,12 @@ class CampusClashGame {
       }
     } else {
       if (p1Won) {
-        bannerTitle = '👑 PLAYER 1 CONQUERS THE SRM ARENA! 🥇';
-        bannerSub = `${this.p1.config.displayName.toUpperCase()} TAKES THE SRM BRAWL TROPHY & DEAN'S HONORS!`;
+        bannerTitle = '👑 PLAYER 1 CONQUERS THE CLASH ARENA! 🥇';
+        bannerSub = `${this.p1.config.displayName.toUpperCase()} TAKES THE CAMPUS BRAWL TROPHY & CHAMPION HONORS!`;
         bannerColor = '#00e5ff';
       } else if (p2Won) {
-        bannerTitle = '👑 PLAYER 2 CONQUERS THE SRM ARENA! 🥇';
-        bannerSub = `${this.p2.config.displayName.toUpperCase()} TAKES THE SRM BRAWL TROPHY & DEAN'S HONORS!`;
+        bannerTitle = '👑 PLAYER 2 CONQUERS THE CLASH ARENA! 🥇';
+        bannerSub = `${this.p2.config.displayName.toUpperCase()} TAKES THE CAMPUS BRAWL TROPHY & CHAMPION HONORS!`;
         bannerColor = '#ff6b35';
       }
     }
@@ -3322,7 +3322,7 @@ class CampusClashGame {
     ctx.fillStyle = bannerColor;
     ctx.shadowColor = bannerColor;
     ctx.shadowBlur = 8;
-    ctx.fillText('🏛️ SRM INSTITUTE OF COMBAT SCIENCES // SEMESTER CLASH EVALUATION TRANSCRIPT', w / 2, 28);
+    ctx.fillText('🏛️ CAMPUS CLASH TOURNAMENT // BRAWL EVALUATION TRANSCRIPT', w / 2, 28);
 
     // Big Headline in Orbitron
     ctx.font = '900 28px "Orbitron", sans-serif';

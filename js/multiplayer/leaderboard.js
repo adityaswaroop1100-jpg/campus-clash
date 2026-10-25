@@ -114,7 +114,7 @@ export class LeaderboardManager {
 
   async refreshScores() {
     if (!this.tableBodyEl) return;
-    this.tableBodyEl.innerHTML = '<tr><td colspan="5" style="text-align:center; padding: 24px; color: #00e5ff;">Loading SRM Champions...</td></tr>';
+    this.tableBodyEl.innerHTML = '<tr><td colspan="5" style="text-align:center; padding: 24px; color: #00e5ff;">Loading Champions...</td></tr>';
 
     const result = await supabaseService.getLeaderboard(10);
     const data = result.data || [];

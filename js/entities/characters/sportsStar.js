@@ -9,7 +9,7 @@ export const SPORTS_STAR_CONFIG = {
   tagline: 'The Campus Athlete',
   archetype: 'Agile / Brawler',
   colors: {
-    primary: '#00D4FF',     // Neon Cyan SRM Athletic Jersey
+    primary: '#00D4FF',     // Neon Cyan Athletic Jersey
     secondary: '#1A1A1A',   // Pitch Black Athletic Shorts
     accent: '#FF6B35',      // Neon Orange Headband & Sneakers
     glow: '#39FF14',        // Neon Green Cricket Bat Glow
@@ -143,8 +143,8 @@ export const SPORTS_STAR_CONFIG = {
     }
   },
   dialogue: {
-    intro: 'SRM sports ground is my kingdom!',
-    win: 'Match point! That is how SRM takes the trophy.',
+    intro: 'This sports ground is my kingdom!',
+    win: 'Match point! That is how champions take the trophy.',
     taunt: 'You can’t beat the campus athlete!',
     ultimate: 'Game over! I win!',
     lose: 'Good game. Next time on the cricket pitch!'

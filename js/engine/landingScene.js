@@ -1,6 +1,6 @@
 /**
  * Campus Clash 2D — Landing Page & Title Screen Scene Controller
- * Procedural SRM Tech Park Parallax Skyline, Rotating Spotlights,
+ * Procedural Tech Park Parallax Skyline, Rotating Spotlights,
  * Academic Dust FX (Layer 2), Versus Silhouettes, and Audio Sync.
  * @module engine/landingScene
  */
@@ -561,7 +561,7 @@ export class LandingScene {
     }
     ctx.restore();
 
-    // 3. Parallax Skyline (Distant & Mid SRM Architecture)
+    // 3. Parallax Skyline (Distant & Mid Architecture)
     this.renderParallaxSkyline(ctx, w, h);
 
     // 4. Rotating Spotlights Sweep (Intersecting Title Area with Additive Blend)
@@ -577,7 +577,7 @@ export class LandingScene {
   }
 
   // =========================================================================
-  // SRM TECH PARK PARALLAX SKYLINE
+  // TECH PARK PARALLAX SKYLINE
   // =========================================================================
   renderParallaxSkyline(ctx, w, h) {
     const groundBase = h - 35;
@@ -616,7 +616,7 @@ export class LandingScene {
     }
     ctx.restore();
 
-    // --- Layer B: Foreground SRM Tech Park Facade with Glowing Windows (0.52 px speed) ---
+    // --- Layer B: Foreground Tech Park Facade with Glowing Windows (0.52 px speed) ---
     ctx.save();
     const fgOffset = -this.fgSkylineX;
 

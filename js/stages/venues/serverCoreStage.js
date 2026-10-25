@@ -2,7 +2,7 @@
  * The Server Core — Venue Stage Implementation
  * Floating circuit-trace platforms, data-stream ribbons as hazards, "breathing" quantum glow,
  * and endless server racks receding into the cyber void.
- * Enhanced: SRM hackathon student engineers watching from walkways, reactive crowd
+ * Enhanced: Student engineers watching from walkways, reactive crowd
  *           phone-glow, enhanced 3D server depth, breathing floor circuit pattern,
  *           student silhouettes on upper catwalks synced to hits.
  * @module stages/venues/serverCoreStage

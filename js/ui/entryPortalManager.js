@@ -178,7 +178,7 @@ export class EntryPortalManager {
     }
 
     if (!srmMail || !srmMail.includes('@')) {
-      this.showAlert('⚠️ Please enter a valid SRM Mail ID (e.g. as1234@srmist.edu.in).');
+      this.showAlert('⚠️ Please enter a valid email address (e.g. student@campus.edu).');
       if (this.srmMailInput) this.srmMailInput.focus();
       return;
     }
