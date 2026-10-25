@@ -35,6 +35,10 @@ export class SoundManager {
     this.musicBpm = 132;
     this.isDangerMusic = false;
     this.musicType = 'none'; // 'title' | 'combat'
+
+    // Studio Title Track Audio Element (Zero Beeping, High Clarity)
+    this.titleAudio = null;
+    this.titleTrackUrl = 'assets/audio/music/title_theme.mp3';
   }
 
   /**
@@ -78,6 +82,7 @@ export class SoundManager {
     this.masterGain.gain.setValueAtTime(effectiveMaster, now);
     this.sfxGain.gain.setValueAtTime(this.sfxVolume, now);
     this.musicGain.gain.setValueAtTime(this.musicVolume, now);
+    this.syncTitleAudioVolume();
   }
 
   saveAudioPreferences() {
@@ -114,6 +119,18 @@ export class SoundManager {
     this.updateGainNodes();
     this.saveAudioPreferences();
     return this.isMuted;
+  }
+
+  mute() {
+    this.isMuted = true;
+    this.updateGainNodes();
+    this.saveAudioPreferences();
+  }
+
+  unmute() {
+    this.isMuted = false;
+    this.updateGainNodes();
+    this.saveAudioPreferences();
   }
 
   toggleStreamSafe() {
@@ -811,6 +828,7 @@ export class SoundManager {
    */
   startCombatMusic() {
     this.init();
+    this.stopTitleThemeAudio();
     if (this.audioManager) {
       this.audioManager.startCombatMusic();
     }
@@ -827,22 +845,76 @@ export class SoundManager {
   }
 
   /**
-   * Starts atmospheric title / menu music
+   * Starts atmospheric title / menu music using the clear studio theme song
    */
   startTitleMusic() {
     this.init();
     if (this.audioManager) {
       this.audioManager.startTitleMusic();
     }
-    if (this.musicPlaying && this.musicType === 'title') return;
-    this.stopMusic();
+    if (this.musicPlaying && this.musicType === 'title' && this.isTitleMusicPlaying()) return;
+
+    if (this.musicTimer) {
+      clearTimeout(this.musicTimer);
+      this.musicTimer = null;
+    }
 
     this.musicPlaying = true;
     this.musicType = 'title';
-    this.musicStep = 0;
-    this.musicBpm = 95;
 
-    this.runMusicSequencer();
+    this.playTitleThemeAudio();
+  }
+
+  /**
+   * Plays the official Campus Clash title track (high-clarity Suno audio)
+   */
+  playTitleThemeAudio() {
+    if (!this.titleAudio) {
+      try {
+        this.titleAudio = new Audio(this.titleTrackUrl);
+        this.titleAudio.loop = true;
+        this.titleAudio.preload = 'auto';
+      } catch (e) {
+        console.warn('[SoundManager] titleAudio creation error:', e);
+      }
+    }
+    if (this.titleAudio) {
+      this.syncTitleAudioVolume();
+      const p = this.titleAudio.play();
+      if (p !== undefined) {
+        p.catch(() => {
+          // Autoplay was blocked by browser; will start smoothly on first user interaction
+        });
+      }
+    }
+  }
+
+  /**
+   * Stops title theme track smoothly
+   */
+  stopTitleThemeAudio() {
+    if (this.titleAudio) {
+      try {
+        this.titleAudio.pause();
+        this.titleAudio.currentTime = 0;
+      } catch (e) {}
+    }
+  }
+
+  /**
+   * Synchronizes title audio volume with current game settings
+   */
+  syncTitleAudioVolume() {
+    if (!this.titleAudio) return;
+    const effectiveVol = this.isMuted ? 0 : Math.max(0, Math.min(1, this.masterVolume * this.musicVolume));
+    this.titleAudio.volume = effectiveVol;
+  }
+
+  /**
+   * Checks if title track is currently playing
+   */
+  isTitleMusicPlaying() {
+    return Boolean(this.titleAudio && !this.titleAudio.paused);
   }
 
   /**
@@ -852,6 +924,7 @@ export class SoundManager {
     if (this.audioManager) {
       this.audioManager.stopMusic();
     }
+    this.stopTitleThemeAudio();
     this.musicPlaying = false;
     this.musicType = 'none';
     if (this.musicTimer) {
@@ -895,15 +968,12 @@ export class SoundManager {
 
   runMusicSequencer() {
     if (!this.musicPlaying || !this.ctx) return;
+    if (this.musicType !== 'combat') return;
 
     const stepInterval = (60 / this.musicBpm) / 4; // 16th note in seconds
     const time = this.ctx.currentTime;
 
-    if (this.musicType === 'combat') {
-      this.playCombatStep(this.musicStep, time);
-    } else if (this.musicType === 'title') {
-      this.playTitleStep(this.musicStep, time);
-    }
+    this.playCombatStep(this.musicStep, time);
 
     this.musicStep = (this.musicStep + 1) % 64;
 
@@ -1005,27 +1075,8 @@ export class SoundManager {
   }
 
   playTitleStep(step, time) {
-    if (this.isMuted) return;
-    const dest = this.getOutputNode(true);
-    if (!dest) return;
-
-    // Atmospheric chill pulse every 8 steps
-    if (step % 8 === 0) {
-      try {
-        const osc = this.ctx.createOscillator();
-        const gain = this.ctx.createGain();
-        osc.type = 'sine';
-        const notes = [130.81, 164.81, 196.00, 246.94]; // C chord tones
-        const note = notes[(step / 8) % notes.length];
-        osc.frequency.setValueAtTime(note, time);
-        gain.gain.setValueAtTime(0.08, time);
-        gain.gain.exponentialRampToValueAtTime(0.0001, time + 0.45);
-        osc.connect(gain);
-        gain.connect(dest);
-        osc.start(time);
-        osc.stop(time + 0.45);
-      } catch (e) {}
-    }
+    // Legacy procedural beeping tone completely purged.
+    // The official Suno studio title track is played directly via this.titleAudio.
   }
 
   // =========================================================================

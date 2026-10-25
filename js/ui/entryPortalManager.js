@@ -236,6 +236,10 @@ export class EntryPortalManager {
     if (this.portalEl) {
       this.portalEl.classList.add('hidden');
     }
+    // Launch title music if unmuted
+    if (this.game && this.game.sound && !this.game.sound.isMuted) {
+      this.game.sound.startTitleMusic();
+    }
     // Update player 1 name in game
     if (this.game && this.nameInput && this.nameInput.value.trim()) {
       const playerName = this.nameInput.value.trim();

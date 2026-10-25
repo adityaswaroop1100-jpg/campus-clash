@@ -312,6 +312,9 @@ class CampusClashGame {
       }
 
       this.sound.init(); // Initialize Web Audio on first user interaction
+      if (this.currentScreen !== GAME_SCREENS.MATCH && !this.sound.isMuted) {
+        this.sound.startTitleMusic();
+      }
 
       if (e.code === 'KeyF' && !e.ctrlKey && !e.metaKey && !e.altKey) {
         this.toggleFullscreen();
@@ -352,6 +355,9 @@ class CampusClashGame {
     // Mouse / Touch Pointer interaction on Canvas
     this.canvas.addEventListener('pointerdown', (e) => {
       this.sound.init();
+      if (this.currentScreen !== GAME_SCREENS.MATCH && !this.sound.isMuted) {
+        this.sound.startTitleMusic();
+      }
       const rect = this.canvas.getBoundingClientRect();
       const scaleX = CANVAS_WIDTH / rect.width;
       const scaleY = CANVAS_HEIGHT / rect.height;
@@ -368,6 +374,14 @@ class CampusClashGame {
         this.handleMatchClick(x, y);
       }
     });
+
+    // Window gesture trigger to seamlessly start title music on first tap anywhere
+    window.addEventListener('pointerdown', () => {
+      this.sound.init();
+      if (this.currentScreen !== GAME_SCREENS.MATCH && !this.sound.isMuted) {
+        this.sound.startTitleMusic();
+      }
+    }, { passive: true });
   }
 
   toggleFullscreen() {
@@ -1017,6 +1031,9 @@ class CampusClashGame {
 
   openCharSelect() {
     this.currentScreen = GAME_SCREENS.CHAR_SELECT;
+    if (this.sound && !this.sound.isMuted) {
+      this.sound.startTitleMusic();
+    }
     document.getElementById('hud-btn-pause')?.classList.add('hidden');
     document.getElementById('virtual-touch-controls')?.classList.add('hidden');
     if (this.isPaused) this.togglePause(false);
@@ -1549,14 +1566,14 @@ class CampusClashGame {
       // Character Select button (x: 365 to 595, y: 545 to 605)
       else if (x >= 365 && x <= 595 && y >= 545 && y <= 605) {
         this.sound.playLightHit();
-        this.currentScreen = GAME_SCREENS.CHAR_SELECT;
-        this.charSelectStep = 0;
+        this.openCharSelect();
       }
       // Main Menu button (x: 630 to 860, y: 545 to 605)
       else if (x >= 630 && x <= 860 && y >= 545 && y <= 605) {
         this.sound.playBlock();
         this.currentScreen = GAME_SCREENS.LANDING;
         if (this.landingScene) this.landingScene.show();
+        if (this.sound && !this.sound.isMuted) this.sound.startTitleMusic();
       }
     }
   }

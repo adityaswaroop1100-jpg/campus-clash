@@ -31,8 +31,7 @@ export class AdaptiveMusic {
   startTitleMusic() {
     this.stop();
     this.mode = 'title';
-    this.isPlaying = true;
-    this.playCurrentMode();
+    this.isPlaying = false; // Real studio title track handled by SoundManager
   }
 
   startCombatMusic() {
