@@ -38,8 +38,7 @@ export class AdaptiveMusic {
     this.stop();
     this.mode = 'combat';
     this.isDanger = false;
-    this.isPlaying = true;
-    this.playCurrentMode();
+    this.isPlaying = false; // Official Suno soundtrack handled cleanly by SoundManager
   }
 
   playCurrentMode() {

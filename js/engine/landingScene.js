@@ -474,15 +474,6 @@ export class LandingScene {
   update(dt) {
     this.time += 0.025;
 
-    // Audio Sync: Trigger deep thump on title pulse peak every 2.2s (~132 frames)
-    const pulseCycle = Math.sin(this.time * 2.85);
-    if (pulseCycle > 0.98 && Date.now() - this.lastThumpTime > 1800) {
-      this.lastThumpTime = Date.now();
-      if (!this.isTransitioning && !this.isCreditsOpen && this.game.currentScreen === GAME_SCREENS.LANDING) {
-        this.sound.playTitleThump();
-      }
-    }
-
     // Parallax Skyline Scrolls
     this.bgSkylineX = (this.bgSkylineX + 0.22) % 480;
     this.fgSkylineX = (this.fgSkylineX + 0.52) % 480;

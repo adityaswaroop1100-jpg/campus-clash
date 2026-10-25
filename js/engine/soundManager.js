@@ -36,9 +36,24 @@ export class SoundManager {
     this.isDangerMusic = false;
     this.musicType = 'none'; // 'title' | 'combat'
 
-    // Studio Title Track Audio Element (Zero Beeping, High Clarity)
+    // Studio Title & Gameplay Soundtrack (Official Suno Campus Clash Track)
     this.titleAudio = null;
     this.titleTrackUrl = 'assets/audio/music/title_theme.mp3';
+    this.bindUserGestureUnlock();
+  }
+
+  bindUserGestureUnlock() {
+    const unlock = () => {
+      this.init();
+      if (!this.isMuted) {
+        this.playTitleThemeAudio();
+      }
+    };
+    if (typeof window !== 'undefined') {
+      ['click', 'pointerdown', 'touchstart', 'keydown'].forEach(evt => {
+        window.addEventListener(evt, unlock, { passive: true });
+      });
+    }
   }
 
   /**
@@ -123,6 +138,12 @@ export class SoundManager {
 
   mute() {
     this.isMuted = true;
+    if (this.titleAudio) {
+      try {
+        this.titleAudio.pause();
+        this.titleAudio.volume = 0;
+      } catch (e) {}
+    }
     this.updateGainNodes();
     this.saveAudioPreferences();
   }
@@ -130,6 +151,8 @@ export class SoundManager {
   unmute() {
     this.isMuted = false;
     this.updateGainNodes();
+    this.syncTitleAudioVolume();
+    this.playTitleThemeAudio();
     this.saveAudioPreferences();
   }
 
@@ -283,24 +306,10 @@ export class SoundManager {
   }
 
   /**
-   * Deep sub-bass impact thump on title pulse
+   * Deep sub-bass impact thump (disabled to eliminate procedural beeps)
    */
   playTitleThump() {
-    this.init();
-    if (this.isMuted || !this.ctx) return;
-    try {
-      const osc = this.ctx.createOscillator();
-      const gain = this.ctx.createGain();
-      osc.type = 'triangle';
-      osc.frequency.setValueAtTime(95, this.ctx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(32, this.ctx.currentTime + 0.35);
-      gain.gain.setValueAtTime(0.35, this.ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.35);
-      osc.connect(gain);
-      gain.connect(this.ctx.destination);
-      osc.start();
-      osc.stop(this.ctx.currentTime + 0.35);
-    } catch (e) {}
+    // Disabled in favor of clear soundtrack audio
   }
 
   /**
@@ -312,15 +321,15 @@ export class SoundManager {
     try {
       const osc = this.ctx.createOscillator();
       const gain = this.ctx.createGain();
-      osc.type = 'square';
-      osc.frequency.setValueAtTime(580, this.ctx.currentTime);
-      osc.frequency.setValueAtTime(820, this.ctx.currentTime + 0.025);
-      gain.gain.setValueAtTime(0.12, this.ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.06);
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(320, this.ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(240, this.ctx.currentTime + 0.025);
+      gain.gain.setValueAtTime(0.025, this.ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + 0.025);
       osc.connect(gain);
       gain.connect(this.ctx.destination);
       osc.start();
-      osc.stop(this.ctx.currentTime + 0.06);
+      osc.stop(this.ctx.currentTime + 0.025);
     } catch (e) {}
   }
 
@@ -824,24 +833,18 @@ export class SoundManager {
   // =========================================================================
 
   /**
-   * Starts high-energy adaptive combat music with vertical stem stacking
+   * Starts high-energy adaptive combat music using the official Suno soundtrack
    */
   startCombatMusic() {
     this.init();
-    this.stopTitleThemeAudio();
     if (this.audioManager) {
       this.audioManager.startCombatMusic();
     }
-    if (this.musicPlaying && this.musicType === 'combat') return;
-    this.stopMusic();
-
     this.musicPlaying = true;
     this.musicType = 'combat';
-    this.musicStep = 0;
-    this.musicBpm = 132;
-    this.isDangerMusic = false;
 
-    this.runMusicSequencer();
+    // Keep the official Campus Clash soundtrack playing through combat with ZERO beeps
+    this.playTitleThemeAudio();
   }
 
   /**
@@ -852,13 +855,6 @@ export class SoundManager {
     if (this.audioManager) {
       this.audioManager.startTitleMusic();
     }
-    if (this.musicPlaying && this.musicType === 'title' && this.isTitleMusicPlaying()) return;
-
-    if (this.musicTimer) {
-      clearTimeout(this.musicTimer);
-      this.musicTimer = null;
-    }
-
     this.musicPlaying = true;
     this.musicType = 'title';
 
@@ -869,22 +865,30 @@ export class SoundManager {
    * Plays the official Campus Clash title track (high-clarity Suno audio)
    */
   playTitleThemeAudio() {
+    if (this.isMuted) return;
     if (!this.titleAudio) {
-      try {
-        this.titleAudio = new Audio(this.titleTrackUrl);
-        this.titleAudio.loop = true;
-        this.titleAudio.preload = 'auto';
-      } catch (e) {
-        console.warn('[SoundManager] titleAudio creation error:', e);
+      if (typeof document !== 'undefined') {
+        this.titleAudio = document.getElementById('campus-clash-bgm');
+      }
+      if (!this.titleAudio) {
+        try {
+          this.titleAudio = new Audio(this.titleTrackUrl);
+          this.titleAudio.loop = true;
+          this.titleAudio.preload = 'auto';
+        } catch (e) {
+          console.warn('[SoundManager] titleAudio creation error:', e);
+        }
       }
     }
     if (this.titleAudio) {
       this.syncTitleAudioVolume();
-      const p = this.titleAudio.play();
-      if (p !== undefined) {
-        p.catch(() => {
-          // Autoplay was blocked by browser; will start smoothly on first user interaction
-        });
+      if (this.titleAudio.paused) {
+        const p = this.titleAudio.play();
+        if (p !== undefined) {
+          p.catch(() => {
+            // Browser autoplay restricted; will play on first user tap/click
+          });
+        }
       }
     }
   }
@@ -967,116 +971,15 @@ export class SoundManager {
   }
 
   runMusicSequencer() {
-    if (!this.musicPlaying || !this.ctx) return;
-    if (this.musicType !== 'combat') return;
-
-    const stepInterval = (60 / this.musicBpm) / 4; // 16th note in seconds
-    const time = this.ctx.currentTime;
-
-    this.playCombatStep(this.musicStep, time);
-
-    this.musicStep = (this.musicStep + 1) % 64;
-
-    this.musicTimer = setTimeout(() => {
-      this.runMusicSequencer();
-    }, stepInterval * 1000);
+    // Procedural beeping sequencer permanently disabled in favor of real soundtrack
   }
 
   playCombatStep(step, time) {
-    if (this.isMuted) return;
-    const dest = this.getOutputNode(true);
-    if (!dest) return;
-
-    // 1. Kick Drum: on steps 0, 4, 8, 12 of every 16
-    const step16 = step % 16;
-    if (step16 === 0 || step16 === 4 || step16 === 8 || step16 === 12) {
-      try {
-        const osc = this.ctx.createOscillator();
-        const gain = this.ctx.createGain();
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(this.isDangerMusic ? 145 : 125, time);
-        osc.frequency.exponentialRampToValueAtTime(32, time + 0.12);
-        gain.gain.setValueAtTime(0.28, time);
-        gain.gain.exponentialRampToValueAtTime(0.001, time + 0.14);
-        osc.connect(gain);
-        gain.connect(dest);
-        osc.start(time);
-        osc.stop(time + 0.14);
-      } catch (e) {}
-    }
-
-    // 2. Snare Drum: on steps 4 and 12
-    if (step16 === 4 || step16 === 12) {
-      try {
-        // High-frequency burst
-        const osc = this.ctx.createOscillator();
-        const gain = this.ctx.createGain();
-        osc.type = 'triangle';
-        osc.frequency.setValueAtTime(220, time);
-        gain.gain.setValueAtTime(0.18, time);
-        gain.gain.exponentialRampToValueAtTime(0.001, time + 0.10);
-        osc.connect(gain);
-        gain.connect(dest);
-        osc.start(time);
-        osc.stop(time + 0.10);
-      } catch (e) {}
-    }
-
-    // 3. Hi-Hat: on every odd step
-    if (step % 2 === 1) {
-      try {
-        const osc = this.ctx.createOscillator();
-        const gain = this.ctx.createGain();
-        osc.type = 'square';
-        osc.frequency.setValueAtTime(4200, time);
-        gain.gain.setValueAtTime(step % 4 === 2 ? 0.04 : 0.02, time);
-        gain.gain.exponentialRampToValueAtTime(0.0001, time + 0.025);
-        osc.connect(gain);
-        gain.connect(dest);
-        osc.start(time);
-        osc.stop(time + 0.025);
-      } catch (e) {}
-    }
-
-    // 4. Synth Bassline Arpeggio (Am -> F -> C -> G progression)
-    const bar = Math.floor(step / 16) % 4;
-    const rootPitches = [
-      [55, 110, 82.4, 110],  // A1, A2, E2, A2
-      [43.65, 87.3, 65.4, 87.3], // F1, F2, C2, F2
-      [65.4, 130.8, 98.0, 130.8], // C2, C3, G2, C3
-      [49.0, 98.0, 73.4, 98.0]   // G1, G2, D2, G2
-    ];
-    const barNotes = rootPitches[bar];
-    const noteFreq = barNotes[step16 % 4];
-
-    if (noteFreq) {
-      try {
-        const osc = this.ctx.createOscillator();
-        const filter = this.ctx.createBiquadFilter();
-        const gain = this.ctx.createGain();
-
-        osc.type = 'sawtooth';
-        osc.frequency.setValueAtTime(noteFreq, time);
-
-        filter.type = 'lowpass';
-        filter.frequency.setValueAtTime(this.isDangerMusic ? 1800 : 900, time);
-        filter.frequency.exponentialRampToValueAtTime(220, time + 0.10);
-
-        gain.gain.setValueAtTime(0.12, time);
-        gain.gain.exponentialRampToValueAtTime(0.001, time + 0.11);
-
-        osc.connect(filter);
-        filter.connect(gain);
-        gain.connect(dest);
-        osc.start(time);
-        osc.stop(time + 0.11);
-      } catch (e) {}
-    }
+    // Procedural square-wave hi-hat and sawtooth synthesizer permanently disabled
   }
 
   playTitleStep(step, time) {
-    // Legacy procedural beeping tone completely purged.
-    // The official Suno studio title track is played directly via this.titleAudio.
+    // Legacy procedural beeping tone completely purged
   }
 
   // =========================================================================
