@@ -14,7 +14,7 @@ export class EntryPortalManager {
     this.form = document.getElementById('portal-reg-form');
     this.nameInput = document.getElementById('entry-name');
     this.regNoInput = document.getElementById('entry-regno');
-    this.srmMailInput = document.getElementById('entry-srmmail');
+    this.emailInput = document.getElementById('entry-email');
     this.partIdInput = document.getElementById('entry-partid');
     this.phoneInput = document.getElementById('entry-phone');
     this.alertBox = document.getElementById('entry-alert-box');
@@ -41,7 +41,8 @@ export class EntryPortalManager {
     if (participant) {
       if (this.nameInput && participant.name) this.nameInput.value = participant.name;
       if (this.regNoInput && participant.registration_number) this.regNoInput.value = participant.registration_number;
-      if (this.srmMailInput && participant.srm_mail_id) this.srmMailInput.value = participant.srm_mail_id;
+      if (this.emailInput && participant.student_email) this.emailInput.value = participant.student_email;
+      else if (this.emailInput && participant.email) this.emailInput.value = participant.email;
       if (this.partIdInput && participant.participation_id) this.partIdInput.value = participant.participation_id;
       if (this.phoneInput && participant.phone_number) this.phoneInput.value = participant.phone_number;
       if (this.submitBtn) {
@@ -52,7 +53,7 @@ export class EntryPortalManager {
 
   initEventListeners() {
     // Shield all input fields from any window-level key handlers
-    const inputElements = [this.nameInput, this.regNoInput, this.srmMailInput, this.partIdInput, this.phoneInput];
+    const inputElements = [this.nameInput, this.regNoInput, this.emailInput, this.partIdInput, this.phoneInput];
     inputElements.forEach(inp => {
       if (!inp) return;
       inp.addEventListener('keydown', (e) => e.stopPropagation());
@@ -160,7 +161,7 @@ export class EntryPortalManager {
   async handleRegistration() {
     const name = this.nameInput ? this.nameInput.value.trim() : '';
     const regNo = this.regNoInput ? this.regNoInput.value.trim().toUpperCase() : '';
-    const srmMail = this.srmMailInput ? this.srmMailInput.value.trim().toLowerCase() : '';
+    const email = this.emailInput ? this.emailInput.value.trim().toLowerCase() : '';
     const partId = this.partIdInput ? this.partIdInput.value.trim().toUpperCase() : '';
     const phone = this.phoneInput ? this.phoneInput.value.trim() : '';
 
@@ -172,14 +173,14 @@ export class EntryPortalManager {
     }
 
     if (!regNo || regNo.length < 5) {
-      this.showAlert('⚠️ Please enter a valid Registration Number (e.g. RA2511026010269).');
+      this.showAlert('⚠️ Please enter a valid Registration Number (e.g. REG-10269).');
       if (this.regNoInput) this.regNoInput.focus();
       return;
     }
 
-    if (!srmMail || !srmMail.includes('@')) {
+    if (!email || !email.includes('@')) {
       this.showAlert('⚠️ Please enter a valid email address (e.g. student@campus.edu).');
-      if (this.srmMailInput) this.srmMailInput.focus();
+      if (this.emailInput) this.emailInput.focus();
       return;
     }
 
@@ -206,7 +207,7 @@ export class EntryPortalManager {
       const res = await supabaseService.registerParticipant({
         name,
         regNo,
-        srmMail,
+        email,
         partId,
         phone
       });

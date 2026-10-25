@@ -202,7 +202,7 @@ class SupabaseService {
     const payload = {
       name: participant.name ? participant.name.trim() : 'Participant',
       registration_number: participant.regNo ? participant.regNo.trim().toUpperCase() : '',
-      srm_mail_id: participant.srmMail ? participant.srmMail.trim().toLowerCase() : '',
+      student_email: participant.email ? participant.email.trim().toLowerCase() : '',
       participation_id: participant.partId ? participant.partId.trim().toUpperCase() : '',
       phone_number: participant.phone ? participant.phone.trim() : '',
       last_active_at: new Date().toISOString()

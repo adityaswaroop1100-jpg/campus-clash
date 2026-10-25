@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS public.campus_clash_participants (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     name TEXT NOT NULL,
     registration_number TEXT NOT NULL,
-    srm_mail_id TEXT NOT NULL,
+    student_email TEXT NOT NULL,
     participation_id TEXT NOT NULL,
     phone_number TEXT NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,

@@ -1,6 +1,6 @@
 # Campus Clash 2D 🥊⚡
 
-**Arcade 2D Fighting Game — Campus Tech Edition**
+**Arcade 2D Fighting Game — Cyber Campus Championship**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![HTML5 Canvas](https://img.shields.io/badge/Render-HTML5%20Canvas%202D-orange.svg)](https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API)
@@ -13,50 +13,40 @@
 
 ## 🎮 Overview
 
-**Campus Clash 2D** is a high-octane, retro-arcade pixel/vector 2D fighting game built for college tech fests, hackathons, and esports arenas. Built with **100% pure procedural HTML5 Canvas 2D and the Web Audio API**, the game runs at a deterministic **60 FPS** in any modern web browser with zero external image or audio file dependencies!
+**Campus Clash 2D** is a high-octane, retro-arcade pixel and vector 2D fighting game designed for college tech fests, competitive esports, and hackathons. Built with **100% pure procedural HTML5 Canvas 2D and the Web Audio API**, the game runs at a silky-smooth, deterministic **60 FPS** in any modern web browser with zero plugin or external engine dependencies!
 
-The game unites **relatable college student archetypes** with emerging tech tracks (**Cloud Computing, Cyber Security, Internet of Things, and Edge Computing**). Players duel across iconic campus landmarks and futuristic tech arenas, collecting real-time falling **"Nexus Modifiers"** (Tech Pods) that turn technical engineering principles into battle buffs!
-
----
-
-## 👥 Character Roster (10 Unique Archetypes)
-
-1. **Aarav (The Topper)** — *Academic Prodigy*: Long-range laser beams, graph bursts, formula projectiles, and high-frequency energy attacks.
-2. **Kabir (The Backbencher)** — *Slacker Heavy*: Heavy crush counters, chaotic paper-plane arcs, and high-impact physical knockdowns.
-3. **Rohan (The Hosteler)** — *Brawler / Grappler*: Maggi kettle steam bursts, blanket-wrap command grabs, and high close-range damage.
-4. **Vikram (The Senior)** — *Spacing & Zoner*: Resume wave projectiles, placement guidance spacing, and golden chime shockwaves.
-5. **Priya (Placement Warrior)** — *Rushdown Flurry*: DSA code matrix flurries, offer letter strikes, and hyper-aggressive speed.
-6. **Arjun (Sports Star)** — *Aerial Specialist*: Football dive kicks, badminton shuttle smashes, and high jump arcs.
-7. **Cypher (Tech Hacker)** — *Disrupter*: Binary glitch traps, DDoS shockwaves, and CRT scanline visual distortions.
-8. **Gavel (The Debater)** — *Counter / Parry*: Super-armor objection stances, argumentative shockwaves, and gavel slams.
-9. **Bolt (The Sprinter)** — *Hit & Run Speedster*: Rapid lightning dashes, supersonic rolls, and high-mobility mixups.
-10. **Palette (The Designer)** — *Trap Specialist*: Color splash puddles, lingering RGB paint traps, and visual stun flashes.
+The game unites **relatable college student archetypes** with emerging cyber technology tracks (**Cloud Computing, Cyber Security, Internet of Things, and Edge Computing**). Players duel across high-tech combat arenas, collecting real-time falling **Tech Modifiers** (Tech Pods) that turn computer science principles into battle buffs!
 
 ---
 
-## 🏟️ Battleground Arenas (10 Total Venues)
+## 👥 Character Roster (8 Unique Archetypes)
 
-### Campus Landmarks
-* **Tech Park Steps & Plaza**: 15-tier IT powerhouse, skywalk & sea breeze papers hazard.
-* **University Building (UB) Quadrangle**: Neoclassical colonnade, clock bell tolls & ambassador car.
-* **Dr. T.P. Ganesan Auditorium**: Asia's premier 4000-seat hall with moving spotlights & bass subwoofer.
-* **Grand Arch Gate**: GST Road (NH45) entrance with bouncing barricades & bus horns.
-* **Vendhar Square**: Founder monument plaza, geodesic fountain sprays & sunset flare.
-* **School of Architecture**: Teal solar glass curtain, drafting T-squares & jury laser scans.
-
-### Tech Arenas
-* ☁️ **The Cloud Citadel**: Server blade skyscrapers, Kubernetes pod clusters & CPU load tickers.
-* 🛡️ **Cyber Fortress Zero-Day**: Cascading binary rain waterfalls, honeycomb firewall barrier & SEC_OPS HUD.
-* 📡 **IoT Sensor Matrix**: PCB motherboard copper traces, ESP32 microcontrollers & 2.4 GHz radio waves.
-* ⚡ **Edge Gateway Station**: Decentralized edge node towers, optical laser conduits & 0.2ms latency status.
+1. 🎓 **Aarav (The Topper)** — *Academic Prodigy*: Long-range laser beams, graph bursts, formula projectiles, and high-frequency energy attacks.
+2. 🔥 **Kabir (The Backbencher)** — *Slacker Heavy*: Heavy crush counters, chaotic paper-plane arcs, and high-impact physical knockdowns.
+3. 🍲 **Rohan (The Hosteler)** — *Brawler / Grappler*: Maggi kettle steam bursts, blanket-wrap command grabs, and devastating close-range damage.
+4. ☕ **Vikram (The Senior)** — *Spacing & Zoner*: Resume wave projectiles, guidance spacing, and golden chime shockwaves.
+5. 💼 **Priya (Placement Warrior)** — *Rushdown Flurry*: DSA code matrix flurries, offer letter strikes, and hyper-aggressive speed combos.
+6. ⚡ **Arjun (Sports Star)** — *Aerial Specialist*: Football dive kicks, badminton shuttle smashes, and high jump arcs.
+7. 🏃 **Bolt (The Sprinter)** — *Hit & Run Speedster*: Rapid lightning dashes, supersonic rolls, and high-mobility mixups.
+8. 🎨 **Palette (The Designer)** — *Trap Specialist*: Color splash puddles, lingering RGB paint traps, and visual stun flashes.
 
 ---
 
-## ⚡ In-Game "Nexus Modifiers" (Tech Drops)
+## 🏟️ Battleground Arenas (5 Global Combat Venues)
+
+1. 🏙️ **The Vertical Sprawl** — *5-Tier Cyber City Courtyard*: Acid rain streaks, multi-tier skybridges, hot magenta/cyan neon signage, and wet puddle reflections.
+2. ⚡ **The Neon Octagon** — *Underground Cyber Fight Cage*: Raised octagonal steel dais, reactive spotlight cones, caged perimeter fencing, and crowd balconies.
+3. 🌐 **The Server Core** — *Floating Quantum Cyber Void*: Towering quantum server monoliths, matrix data streams, suspended glass walkways, and a central pulsing plasma reactor.
+4. 🏟️ **The Modular Arena** — *Reconfigurable Hex Combat Stadium*: Hydraulic hexagonal platform lifts, warning caution stripes, amber stadium floodlights, and hydraulic pistons.
+5. ⏳ **The Archive Vault** — *Tri-Era Temporal Architectural Chamber*: Neoclassical stone pillars fused with glowing violet cyber databanks, digital knowledge waterfalls, and celestial armillary rings.
+
+---
+
+## ⚡ In-Game Tech Modifiers (Dynamic Field Drops)
 
 * **☁️ Cloud Backup**: Restores **+25 HP** to the player (System Rollback & Data Recovery).
 * **🛡️ SSL Encryption**: Grants a **5-second 4096-Bit Super Armor Shield** (-40% damage taken).
-* **⚡ Edge Overclock**: Grants **+35% movement speed** and **+20 Ultimate Meter** (Zero-Latency Mode).
+* **⚡ Edge Overclock**: Grants **+35% movement speed** and **+20 Ultimate Meter** (Zero-Latency Overdrive).
 * **📡 IoT 2.4GHz EMP**: Drains **25 Ultimate Meter** from opponent with glitch stun.
 
 ---
@@ -72,6 +62,8 @@ The game unites **relatable college student archetypes** with emerging tech trac
 | **Block / Shield** | `I` | `Numpad 4` or `P` |
 | **Dodge Roll** | `U` | `Numpad 5` or `I` |
 | **Ultimate Move** | `Spacebar` | `Numpad 0` or `Enter` |
+
+*Touch Controls: On mobile and touch displays, virtual arcade d-pad and action buttons automatically appear during combat.*
 
 ---
 
@@ -94,5 +86,5 @@ Open `http://localhost:8080` in your web browser.
 ## 👨‍💻 Developer Information
 
 - **Developer**: Aditya Swaroop
-- **Registration No**: RA2511026010269
-- **Tech Stack**: HTML5 Canvas 2D, Vanilla JavaScript (ES6+ Modules), CSS3, Web Audio API (Zero External Assets)
+- **Tech Stack**: HTML5 Canvas 2D, Vanilla JavaScript (ES6+ Modules), CSS3, Web Audio API
+- **Repository**: [https://github.com/adityaswaroop1100-jpg/campus-clash](https://github.com/adityaswaroop1100-jpg/campus-clash)
