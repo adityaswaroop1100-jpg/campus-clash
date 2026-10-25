@@ -14,28 +14,8 @@ export class CrowdSystem {
   }
 
   startAmbientMurmur() {
-    if (this.isRunning) return;
-    this.isRunning = true;
-    const now = this.ctx.currentTime;
-
-    // Filtered pink-noise spectator room hum
-    this.ambientOsc = this.ctx.createOscillator();
-    this.ambientGain = this.ctx.createGain();
-
-    const filter = this.ctx.createBiquadFilter();
-    filter.type = 'bandpass';
-    filter.frequency.setValueAtTime(320, now);
-    filter.Q.setValueAtTime(1.2, now);
-
-    this.ambientOsc.type = 'triangle';
-    this.ambientOsc.frequency.setValueAtTime(160, now);
-    this.ambientGain.gain.setValueAtTime(0.08, now);
-
-    this.ambientOsc.connect(filter);
-    filter.connect(this.ambientGain);
-    this.ambientGain.connect(this.crowdBus);
-
-    this.ambientOsc.start(now);
+    // Disabled continuous synth murmurs
+    this.isRunning = false;
   }
 
   stop() {

@@ -7,7 +7,7 @@ import { CANVAS_WIDTH, CANVAS_HEIGHT, FIGHTER_STATES, INPUT_ACTIONS, ROUND_STATE
 import { GameLoop } from './engine/gameLoop.js';
 import { InputHandler } from './engine/input.js?v=2.4.3';
 import { ParticleSystem } from './engine/particleSystem.js';
-import { SoundManager } from './engine/soundManager.js';
+import { SoundManager } from './engine/soundManager.js?v=2.6.0';
 import { ScreenShake } from './engine/screenshake.js';
 import { CollisionSystem } from './engine/collision.js';
 import { BotController } from './ai/botController.js';
@@ -31,7 +31,7 @@ import { ModularArenaStage } from './stages/venues/modularArenaStage.js';
 import { ArchiveVaultStage } from './stages/venues/archiveVaultStage.js';
 import { NexusModifierSystem } from './engine/nexusModifiers.js';
 import { PostProcessing } from './engine/postProcess.js';
-import { LandingScene } from './engine/landingScene.js';
+import { LandingScene } from './engine/landingScene.js?v=2.6.0';
 import { CharacterPortraitManager } from './ui/characterPortrait.js';
 import { StageSelectManager } from './ui/stageSelectManager.js';
 import { LeaderboardManager } from './multiplayer/leaderboard.js';

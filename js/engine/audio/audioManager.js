@@ -5,14 +5,14 @@
  * @module engine/audio/audioManager
  */
 
-import { BusController } from './busController.js';
-import { VoiceLimiter } from './voiceLimiter.js';
-import { HitSoundStack } from './hitSoundStack.js';
-import { SpatialAcoustics } from './spatialAcoustics.js';
-import { AnnouncerSystem } from './announcerSystem.js';
-import { AdaptiveMusic } from './adaptiveMusic.js';
-import { CrowdSystem } from './crowdSystem.js';
-import { BUS_CONFIG } from '../../../data/audio_configs/buses.config.js';
+import { BusController } from './busController.js?v=2.6.0';
+import { VoiceLimiter } from './voiceLimiter.js?v=2.6.0';
+import { HitSoundStack } from './hitSoundStack.js?v=2.6.0';
+import { SpatialAcoustics } from './spatialAcoustics.js?v=2.6.0';
+import { AnnouncerSystem } from './announcerSystem.js?v=2.6.0';
+import { AdaptiveMusic } from './adaptiveMusic.js?v=2.6.0';
+import { CrowdSystem } from './crowdSystem.js?v=2.6.0';
+import { BUS_CONFIG } from '../../../data/audio_configs/buses.config.js?v=2.6.0';
 
 export class AudioManager {
   constructor() {

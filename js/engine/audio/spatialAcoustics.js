@@ -4,7 +4,7 @@
  * @module engine/audio/spatialAcoustics
  */
 
-import { VENUES_AUDIO_CONFIG } from '../../../data/audio_configs/venues.config.js';
+import { VENUES_AUDIO_CONFIG } from '../../../data/audio_configs/venues.config.js?v=2.6.0';
 
 export class SpatialAcoustics {
   constructor(audioCtx, venueBusNode) {
@@ -90,36 +90,8 @@ export class SpatialAcoustics {
   }
 
   startAmbientEmitters(emitters) {
-    // Clean up previous emitters
+    // Disabled continuous ambient oscillators to guarantee zero background beeps
     this.stopAmbientEmitters();
-
-    const now = this.ctx.currentTime;
-    for (const em of emitters) {
-      const osc = this.ctx.createOscillator();
-      const gain = this.ctx.createGain();
-
-      osc.type = em.type === 'noise' ? 'triangle' : (em.type || 'sine');
-      osc.frequency.setValueAtTime(em.freq || 120, now);
-
-      gain.gain.setValueAtTime(em.gain || 0.08, now);
-
-      // Stereo positioning
-      if (this.ctx.createStereoPanner) {
-        const pan = this.ctx.createStereoPanner();
-        pan.pan.setValueAtTime(Math.max(-0.9, Math.min(0.9, em.x || 0)), now);
-        osc.connect(gain);
-        gain.connect(pan);
-        pan.connect(this.reverbFilter);
-        pan.connect(this.dryGain);
-      } else {
-        osc.connect(gain);
-        gain.connect(this.reverbFilter);
-        gain.connect(this.dryGain);
-      }
-
-      osc.start(now);
-      this.activeEmitters.push({ osc, gain });
-    }
   }
 
   stopAmbientEmitters() {

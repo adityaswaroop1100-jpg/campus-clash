@@ -4,7 +4,7 @@
  * @module engine/soundManager
  */
 
-import { AudioManager } from './audio/audioManager.js';
+import { AudioManager } from './audio/audioManager.js?v=2.6.0';
 
 export class SoundManager {
   constructor() {

@@ -52,26 +52,6 @@ export class AdaptiveMusic {
    */
   startWarmAmbience() {
     this.stopWarmAmbience();
-    try {
-      const now = this.ctx.currentTime;
-      this.padFilter = this.ctx.createBiquadFilter();
-      this.padFilter.type = 'lowpass';
-      this.padFilter.frequency.setValueAtTime(220, now); // Cuts all treble beeps completely
-
-      this.padGain = this.ctx.createGain();
-      this.padGain.gain.setValueAtTime(0.001, now);
-      this.padGain.gain.exponentialRampToValueAtTime(0.22, now + 1.2);
-
-      this.padOsc = this.ctx.createOscillator();
-      this.padOsc.type = 'sine'; // Pure smooth sine tone, no harsh harmonics
-      this.padOsc.frequency.setValueAtTime(65.41, now); // C2 warm sub-bass
-
-      this.padOsc.connect(this.padFilter);
-      this.padFilter.connect(this.padGain);
-      this.padGain.connect(this.musicBus);
-
-      this.padOsc.start(now);
-    } catch (e) {}
   }
 
   stopWarmAmbience() {
