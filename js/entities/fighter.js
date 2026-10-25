@@ -77,6 +77,11 @@ export class Fighter {
     // Visual state helpers
     this._wasGrounded = true;   // For landing dust ring detection
     this._particleSystem = null; // Set by game after spawn (optional, checked before use)
+
+    // Direct high-res idle sprite fallback
+    const cid = this.config.id === 'placementWarrior' ? 'placement' : (this.config.id === 'sportsStar' ? 'sports' : this.config.id);
+    this.fallbackImg = new Image();
+    this.fallbackImg.src = `assets/characters/${cid}/idle.png`;
   }
 
   get isBlocking() {
@@ -1110,16 +1115,20 @@ export class Fighter {
   renderFallbackModel(ctx, state, isHurt, isBlock, isAttack) {
     const charId = this.config.id === 'placementWarrior' ? 'placement' : (this.config.id === 'sportsStar' ? 'sports' : this.config.id);
     const cvStore = window.CampusVisuals && window.CampusVisuals.store ? window.CampusVisuals.store[charId] : null;
-    const idleImg = cvStore && cvStore.states && cvStore.states.idle && cvStore.states.idle.img;
-    if (idleImg && idleImg.complete && idleImg.naturalWidth > 0) {
-      const targetH = 140;
-      const scale = targetH / idleImg.height;
-      const targetW = (idleImg.width / (cvStore.states.idle.frames || 1)) * scale;
-      ctx.drawImage(idleImg, 0, 0, idleImg.width / (cvStore.states.idle.frames || 1), idleImg.height, -targetW / 2, -targetH, targetW, targetH);
+    const idleImg = (cvStore && cvStore.states && cvStore.states.idle && cvStore.states.idle.img) || this.fallbackImg;
+    if (idleImg && (idleImg.naturalWidth > 0 || (idleImg.complete && idleImg.width > 0))) {
+      const targetH = this.height || 180;
+      const frames = (cvStore && cvStore.states && cvStore.states.idle && cvStore.states.idle.frames) || 1;
+      const imgW = idleImg.naturalWidth || idleImg.width || 1024;
+      const imgH = idleImg.naturalHeight || idleImg.height || 1024;
+      const frameW = imgW / frames;
+      const scale = targetH / imgH;
+      const targetW = frameW * scale;
+      ctx.drawImage(idleImg, 0, 0, frameW, imgH, -targetW / 2, -targetH, targetW, targetH);
       return;
     }
 
-    // Stylized Anime Energy Silhouette Fallback
+    // Secondary emergency fallback (only if sprite image has not arrived yet)
     const primary = this.config.colors?.primary || '#3b82f6';
     const accent = this.config.colors?.accent || '#ffd700';
     ctx.save();
@@ -1127,7 +1136,6 @@ export class Fighter {
     ctx.shadowBlur = isAttack ? 20 : (isBlock ? 15 : 8);
     ctx.fillStyle = primary;
     this.renderBodySilhouette(ctx);
-    // Head aura
     ctx.fillStyle = accent;
     ctx.beginPath();
     ctx.arc(0, -118, 16, 0, Math.PI * 2);

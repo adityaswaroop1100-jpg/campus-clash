@@ -5,9 +5,9 @@
 
 import { CANVAS_WIDTH, CANVAS_HEIGHT, FIGHTER_STATES, INPUT_ACTIONS, ROUND_STATES, COMBO_LEVELS, GAME_MODES } from './utils/constants.js';
 import { GameLoop } from './engine/gameLoop.js';
-import { InputHandler } from './engine/input.js?v=2.7.1';
+import { InputHandler } from './engine/input.js?v=2.7.2';
 import { ParticleSystem } from './engine/particleSystem.js';
-import { SoundManager } from './engine/soundManager.js?v=2.7.1';
+import { SoundManager } from './engine/soundManager.js?v=2.7.2';
 import { ScreenShake } from './engine/screenshake.js';
 import { CollisionSystem } from './engine/collision.js';
 import { BotController } from './ai/botController.js';
@@ -23,7 +23,7 @@ import { CYPHER_CONFIG } from './entities/characters/cypher.js';
 import { GAVEL_CONFIG } from './entities/characters/gavel.js';
 import { BOLT_CONFIG } from './entities/characters/bolt.js';
 import { PALETTE_CONFIG } from './entities/characters/palette.js';
-import { Fighter } from './entities/fighter.js?v=2.7.1';
+import { Fighter } from './entities/fighter.js?v=2.7.2';
 import { VerticalSprawlStage } from './stages/venues/verticalSprawlStage.js';
 import { NeonOctagonStage } from './stages/venues/neonOctagonStage.js';
 import { ServerCoreStage } from './stages/venues/serverCoreStage.js';
@@ -31,14 +31,14 @@ import { ModularArenaStage } from './stages/venues/modularArenaStage.js';
 import { ArchiveVaultStage } from './stages/venues/archiveVaultStage.js';
 import { NexusModifierSystem } from './engine/nexusModifiers.js';
 import { PostProcessing } from './engine/postProcess.js';
-import { LandingScene } from './engine/landingScene.js?v=2.7.1';
-import { CharacterPortraitManager } from './ui/characterPortrait.js?v=2.7.1';
+import { LandingScene } from './engine/landingScene.js?v=2.7.2';
+import { CharacterPortraitManager } from './ui/characterPortrait.js?v=2.7.2';
 import { StageSelectManager } from './ui/stageSelectManager.js';
 import { LeaderboardManager } from './multiplayer/leaderboard.js';
 import { supabaseService } from './database/supabaseClient.js';
 import { EntryPortalManager } from './ui/entryPortalManager.js';
-import './engine/campus-clash-visuals.js?v=2.7.1';
-import './ui/campus-clash-select.js?v=2.7.1';
+import './engine/campus-clash-visuals.js?v=2.7.2';
+import './ui/campus-clash-select.js?v=2.7.2';
 
 export const GAME_SCREENS = {
   LANDING: 'landing',
@@ -280,8 +280,9 @@ class CampusClashGame {
     this.initCharacterSelect();
     if (this.stageSelectManager) this.stageSelectManager.initDOM();
 
-    if (window.CampusVisuals && window.CampusVisuals.preloadAll) {
-      window.CampusVisuals.preloadAll();
+    if (window.CampusVisuals && window.CampusVisuals.loadCharacter) {
+      window.CampusVisuals.loadCharacter('topper');
+      window.CampusVisuals.loadCharacter('backbencher');
     }
 
     // Render first frame immediately so canvas is never left blank
@@ -1021,6 +1022,9 @@ class CampusClashGame {
 
   updateShowcasePreview(index) {
     if (!this.charDetails || index < 0 || index >= this.charDetails.length) return;
+    if (window.CampusVisuals && window.CampusVisuals.loadCharacter && this.roster && this.roster[index]) {
+      window.CampusVisuals.loadCharacter(this.roster[index].config.id);
+    }
     const detail = this.charDetails[index];
     const watermark = document.getElementById('showcase-watermark-num');
     const portraitImg = document.getElementById('showcase-portrait-img');

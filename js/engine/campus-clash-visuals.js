@@ -129,7 +129,7 @@
 
   const loadImage = (src) => new Promise((res) => {
     const i = new Image();
-    i.onload = () => res(autoChromaKey(i));
+    i.onload = () => res(i);
     i.onerror = () => res(null);
     i.src = src;
   });
@@ -148,13 +148,30 @@
         const r = await fetch(`${base}/manifest.json`);
         if (r.ok) manifest = (await r.json())[id] || {};
       } catch (e) { /* file:// or missing manifest — fine */ }
+
+      // 1. Immediately load idle sprite so fighter is instantly ready to render
+      const idleImg = await loadImage(`${base}/${id}/idle.png`);
+      if (idleImg) {
+        const m = manifest.idle || {};
+        const frames = m.frames || 1;
+        entry.states.idle = {
+          img: idleImg, frames, fw: idleImg.width / frames, fh: idleImg.height,
+          fps: m.fps || DEFAULT_ANIM.idle.fps,
+          loop: m.loop !== undefined ? m.loop : DEFAULT_ANIM.idle.loop,
+        };
+        entry.portrait = idleImg;
+        entry.ready = true;
+      }
+
+      // 2. Concurrently load portrait and remaining combat animation states
       const portraitPromise = loadImage(`${base}/${id}/portrait.png`).then((img) => {
         if (img) entry.portrait = img;
         return img;
       });
+
       await Promise.all([
         portraitPromise,
-        ...STATES.map(async (s) => {
+        ...STATES.filter((s) => s !== 'idle').map(async (s) => {
           let img = await loadImage(`${base}/${id}/${s}.png`);
           if (!img) {
             // Automatic state alias fallback for storage optimization (air->jump, dash->run)
@@ -164,35 +181,26 @@
               img = (entry.states.run && entry.states.run.img) || await loadImage(`${base}/${id}/run.png`);
             }
           }
-          if (!img) {
-            return;
-          }
+          if (!img) return;
           const m = manifest[s] || (s === 'air' ? manifest.jump : (s === 'dash' ? manifest.run : {})) || {};
           const frames = m.frames || 1;
           entry.states[s] = {
             img, frames, fw: img.width / frames, fh: img.height,
-            fps: m.fps || DEFAULT_ANIM[s].fps,
-            loop: m.loop !== undefined ? m.loop : DEFAULT_ANIM[s].loop,
+            fps: m.fps || (DEFAULT_ANIM[s] && DEFAULT_ANIM[s].fps) || 8,
+            loop: m.loop !== undefined ? m.loop : ((DEFAULT_ANIM[s] && DEFAULT_ANIM[s].loop) ?? true),
           };
         })
       ]);
+
       if (!entry.portrait && entry.states.idle) {
         entry.portrait = entry.states.idle.img;
       }
-      if (!entry.portrait) {
-        console.warn(`[CampusVisuals] Missing portrait for character "${id}": ${base}/${id}/portrait.png`);
-      }
       entry.ready = !!entry.states.idle;
-      if (!entry.ready) {
-        console.warn(`[CampusVisuals] Character "${id}" is NOT ready (idle.png missing in ${base}/${id}/). Falling back to procedural renderer.`);
-      } else {
-        console.log(`[CampusVisuals] Character "${id}" loaded successfully (${Object.keys(entry.states).length} states ready).`);
-      }
       return entry;
     })();
     return entry.promise;
   }
-  const preloadAll = (ids = Object.keys(CHARACTERS), base) => Promise.all(ids.map((id) => loadCharacter(id, base)));
+  const preloadAll = (ids = ['topper', 'backbencher'], base) => Promise.all(ids.map((id) => loadCharacter(id, base)));
   const getPortrait = (id) => {
     if (id === 'placementWarrior') id = 'placement';
     if (id === 'sportsStar') id = 'sports';
