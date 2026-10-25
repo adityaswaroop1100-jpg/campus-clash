@@ -355,6 +355,7 @@
 .stage-start-btn {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 12px;
   background: linear-gradient(90deg, #ff6b35 0%, #ffd700 100%);
   border: none;
@@ -367,6 +368,11 @@
   cursor: pointer;
   box-shadow: 0 0 22px rgba(255, 107, 53, 0.6);
   transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+  user-select: none;
+}
+
+.stage-start-btn * {
+  pointer-events: none;
 }
 
 .stage-start-btn:hover,
@@ -374,6 +380,11 @@
   transform: scale(1.05);
   box-shadow: 0 0 35px rgba(255, 215, 0, 0.9);
   filter: brightness(1.1);
+}
+
+.stage-start-btn:active {
+  transform: scale(0.96);
+  filter: brightness(1.25);
 }
 
 .stage-random-btn {

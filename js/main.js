@@ -1373,6 +1373,9 @@ class CampusClashGame {
   // MATCH HANDLING & START
   // =========================================================================
   async startMatch() {
+    this.currentScreen = GAME_SCREENS.MATCH;
+    this.closeStageSelect();
+    this.closeCharSelect();
     this.sound.playUltimate();
     const p1Cfg = this.roster[this.p1CharIndex].config;
     const p2Cfg = this.roster[this.p2CharIndex].config;

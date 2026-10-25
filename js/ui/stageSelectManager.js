@@ -100,11 +100,29 @@ export class StageSelectManager {
   }
 
   confirmAndStart() {
+    if (this._isStarting) return;
+    this._isStarting = true;
+
+    if (this.startBtn) {
+      this.startBtn.classList.add('loading');
+      this.startBtn.style.opacity = '0.7';
+      this.startBtn.style.pointerEvents = 'none';
+    }
+
     this.game.currentArenaIndex = this.selectedIndex;
     this.game.sound.playLockIn();
     this.close();
-    // Launch dramatic match countdown with chosen venue!
-    this.game.startMatchCountdown();
+    this.game.currentScreen = 'match';
+
+    // Start match immediately on single click
+    this.game.startMatch().finally(() => {
+      this._isStarting = false;
+      if (this.startBtn) {
+        this.startBtn.classList.remove('loading');
+        this.startBtn.style.opacity = '1';
+        this.startBtn.style.pointerEvents = 'auto';
+      }
+    });
   }
 
   navigate(dir) {
@@ -153,6 +171,12 @@ export class StageSelectManager {
   }
 
   open() {
+    this._isStarting = false;
+    if (this.startBtn) {
+      this.startBtn.classList.remove('loading');
+      this.startBtn.style.opacity = '1';
+      this.startBtn.style.pointerEvents = 'auto';
+    }
     if (this.screenEl) {
       this.screenEl.classList.remove('hidden');
     }
