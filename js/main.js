@@ -674,9 +674,94 @@ class CampusClashGame {
   initCharacterSelect() {
     this.portraitManager = new CharacterPortraitManager(this.roster);
 
+    // 10 SRM Archetypes Detailed Showcase Telemetry
+    this.charDetails = [
+      {
+        num: '01',
+        name: 'THE TOPPER',
+        subtitle: 'ACADEMIC ASSASSIN',
+        quote: '"Syllabus fears me."',
+        power: 60, speed: 80, range: 50, control: 85, diff: 45,
+        img: 'assets/characters/topper/portrait.png'
+      },
+      {
+        num: '02',
+        name: 'BACKBENCHER',
+        subtitle: 'CHAOS BRAWLER',
+        quote: '"Last bench, first place in combat."',
+        power: 85, speed: 75, range: 60, control: 60, diff: 30,
+        img: 'assets/characters/backbencher/portrait.png'
+      },
+      {
+        num: '03',
+        name: 'THE HOSTELER',
+        subtitle: 'TANK GRAPPLER',
+        quote: '"Mess food builds real warriors."',
+        power: 95, speed: 45, range: 55, control: 70, diff: 35,
+        img: 'assets/characters/hosteler/portrait.png'
+      },
+      {
+        num: '04',
+        name: 'THE SENIOR',
+        subtitle: 'CONTROL ZONER',
+        quote: '"Respect the hierarchy, junior."',
+        power: 75, speed: 65, range: 85, control: 80, diff: 60,
+        img: 'assets/characters/senior/portrait.png'
+      },
+      {
+        num: '05',
+        name: 'PLACEMENT WARRIOR',
+        subtitle: 'RUSHDOWN COMBO',
+        quote: '"45 LPA or nothing at all."',
+        power: 80, speed: 95, range: 65, control: 75, diff: 85,
+        img: 'assets/characters/placement/portrait.png'
+      },
+      {
+        num: '06',
+        name: 'SPORTS STAR',
+        subtitle: 'AGILE BRAWLER',
+        quote: '"Sweat in training, victory in the cage."',
+        power: 70, speed: 90, range: 50, control: 80, diff: 55,
+        img: 'assets/characters/sports/portrait.png'
+      },
+      {
+        num: '07',
+        name: 'CYPHER',
+        subtitle: 'CAMPUS HACKER',
+        quote: '"Your firewall has expired."',
+        power: 65, speed: 75, range: 95, control: 90, diff: 90,
+        img: 'assets/characters/cypher/portrait.png'
+      },
+      {
+        num: '08',
+        name: 'GAVEL',
+        subtitle: 'MOOT COURT LEGEND',
+        quote: '"Objection sustained. Case closed."',
+        power: 90, speed: 50, range: 70, control: 85, diff: 65,
+        img: 'assets/characters/gavel/portrait.png'
+      },
+      {
+        num: '09',
+        name: 'BOLT',
+        subtitle: 'THE TRACK STAR',
+        quote: '"Can\'t fight what you can\'t see."',
+        power: 65, speed: 100, range: 75, control: 70, diff: 80,
+        img: 'assets/characters/bolt/portrait.png'
+      },
+      {
+        num: '10',
+        name: 'PALETTE',
+        subtitle: 'FINE ARTS MAJOR',
+        quote: '"Every strike is a brushstroke."',
+        power: 70, speed: 75, range: 85, control: 85, diff: 85,
+        img: 'assets/characters/palette/portrait.png'
+      }
+    ];
+
     // Grab DOM elements
     this.charSelectScreen = document.getElementById('characterSelectScreen');
     this.charCards = Array.from(document.querySelectorAll('.char-card'));
+    this.rosterTabs = Array.from(document.querySelectorAll('.roster-tab'));
     this.charBackBtn = document.getElementById('char-select-back-btn');
     this.p1ProfileName = document.getElementById('p1-profile-name');
     this.p1ProfileTagline = document.getElementById('p1-profile-tagline');
@@ -692,6 +777,10 @@ class CampusClashGame {
     this.charModeText = document.getElementById('char-mode-text');
     this.charVenuePill = document.getElementById('char-venue-pill');
     this.charVenueText = document.getElementById('char-venue-text');
+    this.charModeBtn = document.getElementById('char-mode-indicator');
+    this.charPauseBtn = document.getElementById('char-pause-btn');
+    this.p1LockBtn = document.getElementById('p1-lock-btn');
+    this.p2LockBtn = document.getElementById('p2-lock-btn');
 
     // Venue Quick-Select Button
     this.charVenuePill?.addEventListener('click', () => {
@@ -699,6 +788,47 @@ class CampusClashGame {
       this.closeCharSelect();
       this.openStageSelect();
       this.currentScreen = GAME_SCREENS.STAGE_SELECT;
+    });
+
+    // Game Mode Cycle Button
+    this.charModeBtn?.addEventListener('click', () => {
+      this.sound?.playCharNavTick();
+      if (this.selectedMode === GAME_MODES.PVC) {
+        this.selectedMode = GAME_MODES.PVP;
+      } else if (this.selectedMode === GAME_MODES.PVP) {
+        this.selectedMode = GAME_MODES.TRAINING;
+      } else {
+        this.selectedMode = GAME_MODES.PVC;
+      }
+      this.updateCharSelectUI();
+    });
+
+    // In-Select Pause Button
+    this.charPauseBtn?.addEventListener('click', () => {
+      this.sound?.playCardWhoosh();
+      this.togglePause();
+    });
+
+    // P1 Lock-in Button
+    this.p1LockBtn?.addEventListener('click', () => {
+      if (this.isCountingDown) return;
+      if (!this.p1Locked) {
+        this.lockInCharacter(1, this.p1CharIndex);
+      } else if (!this.p2Locked) {
+        // Unlock P1 to re-choose
+        this.p1Locked = false;
+        this.charSelectStep = 0;
+        this.sound?.playCancel();
+        this.updateCharSelectUI();
+      }
+    });
+
+    // P2 Lock-in Button
+    this.p2LockBtn?.addEventListener('click', () => {
+      if (this.isCountingDown) return;
+      if (this.charSelectStep === 1) {
+        this.lockInCharacter(2, this.p2CharIndex);
+      }
     });
 
     // View Toggle Button (10-Card Deck vs Arcade Grid)
@@ -714,11 +844,13 @@ class CampusClashGame {
         if (isDeckView) {
           this.campusSelectRoot.classList.add('hidden');
           this.charGrid.classList.remove('hidden');
-          if (this.charViewToggleText) this.charViewToggleText.textContent = 'VIEW: 10-CARD DECK';
+          if (this.charViewToggleText) this.charViewToggleText.textContent = 'ARCADE GRID';
+          this.charViewToggleBtn.classList.add('active');
         } else {
           this.charGrid.classList.add('hidden');
           this.campusSelectRoot.classList.remove('hidden');
-          if (this.charViewToggleText) this.charViewToggleText.textContent = 'VIEW: ARCADE GRID';
+          if (this.charViewToggleText) this.charViewToggleText.textContent = '10-CARD DECK';
+          this.charViewToggleBtn.classList.remove('active');
         }
       });
     }
@@ -739,6 +871,7 @@ class CampusClashGame {
               this.p2CharIndex = idx;
             }
             this.sound?.playCardWhoosh();
+            this.updateShowcasePreview(idx);
             this.updateCharSelectUI();
           }
         },
@@ -777,10 +910,37 @@ class CampusClashGame {
       if (this.landingScene) this.landingScene.show();
     });
 
+    // Mini Roster Tabs (01 - 10) Hover & Click Events
+    this.rosterTabs.forEach((tab, index) => {
+      tab.addEventListener('mouseenter', () => {
+        if (this.isCountingDown) return;
+        this.updateShowcasePreview(index);
+        this.portraitManager.setHovered(index);
+        this.sound?.playCardWhoosh();
+      });
+
+      tab.addEventListener('click', () => {
+        if (this.isCountingDown) return;
+        this.updateShowcasePreview(index);
+        if (this.charSelectStep === 0) {
+          this.p1CharIndex = index;
+          this.sound?.playCharNavTick();
+          this.updateCharSelectUI();
+          this.lockInCharacter(1, index);
+        } else if (this.charSelectStep === 1) {
+          this.p2CharIndex = index;
+          this.sound?.playCharNavTick();
+          this.updateCharSelectUI();
+          this.lockInCharacter(2, index);
+        }
+      });
+    });
+
     // Card Hover & Click Events
     this.charCards.forEach((card, index) => {
       card.addEventListener('mouseenter', () => {
         if (this.isCountingDown) return;
+        this.updateShowcasePreview(index);
         this.portraitManager.setHovered(index);
         this.sound.playCardWhoosh();
       });
@@ -806,7 +966,39 @@ class CampusClashGame {
       });
     });
 
+    this.updateShowcasePreview(0);
     this.updateCharSelectUI();
+  }
+
+  updateShowcasePreview(index) {
+    if (!this.charDetails || index < 0 || index >= this.charDetails.length) return;
+    const detail = this.charDetails[index];
+    const watermark = document.getElementById('showcase-watermark-num');
+    const portraitImg = document.getElementById('showcase-portrait-img');
+    const charName = document.getElementById('showcase-char-name');
+    const charSub = document.getElementById('showcase-char-subtitle');
+    const charQuote = document.getElementById('showcase-char-quote');
+    const statPower = document.getElementById('showcase-stat-power');
+    const statSpeed = document.getElementById('showcase-stat-speed');
+    const statRange = document.getElementById('showcase-stat-range');
+    const statCtrl = document.getElementById('showcase-stat-control');
+    const statDiff = document.getElementById('showcase-stat-diff');
+
+    if (watermark) watermark.textContent = detail.num;
+    if (portraitImg) portraitImg.src = detail.img;
+    if (charName) charName.textContent = detail.name;
+    if (charSub) charSub.textContent = `— ${detail.subtitle} —`;
+    if (charQuote) charQuote.textContent = detail.quote;
+    if (statPower) statPower.style.setProperty('--val', `${detail.power}%`);
+    if (statSpeed) statSpeed.style.setProperty('--val', `${detail.speed}%`);
+    if (statRange) statRange.style.setProperty('--val', `${detail.range}%`);
+    if (statCtrl) statCtrl.style.setProperty('--val', `${detail.control}%`);
+    if (statDiff) statDiff.style.setProperty('--val', `${detail.diff}%`);
+
+    // Highlight active mini tab
+    this.rosterTabs?.forEach((tab, i) => {
+      tab.classList.toggle('active', i === index);
+    });
   }
 
   openCharSelect() {
@@ -891,38 +1083,59 @@ class CampusClashGame {
       this.campusSelectInstance.select(selectId);
     }
 
+    // Update Left Showcase Preview
+    this.updateShowcasePreview(this.charSelectStep === 1 ? this.p2CharIndex : this.p1CharIndex);
+
     // Update Player 1 Profile Card
     const p1Item = this.roster[this.p1CharIndex];
     if (this.p1ProfileName) this.p1ProfileName.textContent = p1Item.config.displayName.toUpperCase();
-    if (this.p1ProfileTagline) this.p1ProfileTagline.textContent = `"${p1Item.config.tagline}"`;
+    if (this.p1ProfileTagline) this.p1ProfileTagline.textContent = p1Item.config.tagline || 'Academic Assassin';
     if (this.p1ProfileEmoji) this.p1ProfileEmoji.textContent = p1Item.emoji;
+    const p1Thumb = document.getElementById('p1-profile-thumb');
+    if (p1Thumb) p1Thumb.src = this.charDetails[this.p1CharIndex]?.img || 'assets/characters/topper/portrait.png';
     if (this.p1ProfileStatus) {
       if (this.p1Locked) {
-        this.p1ProfileStatus.innerHTML = '<span class="status-stamp ready">LOCKED IN</span>';
+        this.p1ProfileStatus.innerHTML = '<button class="status-stamp ready p1-lock-action-btn" id="p1-lock-btn">P1 SELECTED ✓</button>';
       } else {
-        this.p1ProfileStatus.innerHTML = '<span class="status-stamp selecting">P1 SELECTING...</span>';
+        this.p1ProfileStatus.innerHTML = '<button class="status-stamp selecting p1-lock-action-btn" id="p1-lock-btn">LOCK IN P1</button>';
       }
+      document.getElementById('p1-lock-btn')?.addEventListener('click', () => {
+        if (!this.p1Locked) this.lockInCharacter(1, this.p1CharIndex);
+        else if (!this.p2Locked) {
+          this.p1Locked = false;
+          this.charSelectStep = 0;
+          this.sound?.playCancel();
+          this.updateCharSelectUI();
+        }
+      });
     }
 
     // Update Player 2 Profile Card
     const p2Item = this.roster[this.p2CharIndex];
     if (this.p2ProfileSlot) {
-      if (this.selectedMode === GAME_MODES.PVC) this.p2ProfileSlot.innerHTML = '🤖 SRM BOT <span style="color:#00f0ff;font-weight:900;">[EXPERT]</span>';
+      if (this.selectedMode === GAME_MODES.PVC) this.p2ProfileSlot.innerHTML = 'BOT [EXPERT]';
       else if (this.selectedMode === GAME_MODES.TRAINING) this.p2ProfileSlot.textContent = 'DOJO DUMMY';
       else this.p2ProfileSlot.textContent = 'PLAYER 2';
     }
     if (this.p2ProfileName) this.p2ProfileName.textContent = p2Item.config.displayName.toUpperCase();
     if (this.p2ProfileTagline) this.p2ProfileTagline.textContent = `"${p2Item.config.tagline}"`;
     if (this.p2ProfileEmoji) this.p2ProfileEmoji.textContent = p2Item.emoji;
+    const p2Thumb = document.getElementById('p2-profile-thumb');
+    if (p2Thumb) p2Thumb.src = this.charDetails[this.p2CharIndex]?.img || 'assets/characters/backbencher/portrait.png';
     if (this.p2ProfileStatus) {
       if (this.p2Locked) {
-        this.p2ProfileStatus.innerHTML = '<span class="status-stamp ready">LOCKED IN</span>';
+        this.p2ProfileStatus.innerHTML = '<button class="status-stamp ready p2-lock-action-btn" id="p2-lock-btn">P2 LOCKED ✓</button>';
       } else if (this.charSelectStep === 1) {
-        const slotLabel = this.selectedMode === GAME_MODES.PVC ? 'CPU' : 'P2';
-        this.p2ProfileStatus.innerHTML = `<span class="status-stamp selecting">${slotLabel} SELECTING...</span>`;
+        const slotLabel = this.selectedMode === GAME_MODES.PVC ? 'BOT READY ⚙️' : 'LOCK IN P2';
+        this.p2ProfileStatus.innerHTML = `<button class="status-stamp selecting p2-lock-action-btn" id="p2-lock-btn">${slotLabel}</button>`;
       } else {
-        this.p2ProfileStatus.innerHTML = '<span class="status-stamp pending">P2 WAITING...</span>';
+        this.p2ProfileStatus.innerHTML = '<button class="status-stamp pending p2-lock-action-btn" id="p2-lock-btn">P2 WAITING... ⚙️</button>';
       }
+      document.getElementById('p2-lock-btn')?.addEventListener('click', () => {
+        if (this.charSelectStep === 1) {
+          this.lockInCharacter(2, this.p2CharIndex);
+        }
+      });
     }
   }
 

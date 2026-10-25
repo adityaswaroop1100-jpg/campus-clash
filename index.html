@@ -48,7 +48,7 @@
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700;800;900&family=Press+Start+2P&family=Rajdhani:wght@600;700;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Orbitron:wght@600;700;800;900&family=Press+Start+2P&family=Rajdhani:wght@600;700;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
 
   <!-- External Stylesheets (v=12 cache bust) -->
   <link rel="stylesheet" href="css/main.css?v=12">
@@ -525,42 +525,147 @@
 
       <!-- Layer 1.5: High-End Retro Arcade Character Select Screen Overlay -->
       <div id="characterSelectScreen" class="char-select-screen hidden" role="region" aria-label="Character Selection">
-        <!-- Top Banner (Matching Arcade Artwork) -->
+        <!-- Top Banner (Matching Reference Artwork) -->
         <header class="char-top-banner">
           <div class="char-banner-left">
-            <button id="char-select-back-btn" class="char-nav-btn" tabindex="0">
-              <span class="btn-icon">←</span> ESC: TITLE
+            <button id="char-select-back-btn" class="char-nav-btn" tabindex="0" title="Return to Main Menu">
+              <span class="btn-hex-icon">⬡</span> <span class="btn-esc-label">ESC</span> MAIN MENU
             </button>
-            <span class="char-banner-sub">/// SRM TECH PARK ARCADE /// v2.0 // CAMPUS CLASH</span>
+            <div class="char-banner-brand">
+              <span class="brand-prefix">// CAMPUS ARCADE v2.0</span>
+              <span class="brand-name">CAMPUS CLASH</span>
+            </div>
           </div>
 
           <div class="char-select-title-wrap">
-            <span class="arcade-chevron chevron-left">&gt;&gt;&gt;</span>
-            <h1 class="char-select-main-title">SELECT YOUR FIGHTER</h1>
-            <span class="arcade-chevron chevron-right">&lt;&lt;&lt;</span>
+            <span class="char-title-small">SELECT YOUR</span>
+            <div class="char-title-main-row">
+              <span class="arcade-chevron chevron-left">///</span>
+              <h1 class="char-select-main-title">FIGHTER</h1>
+              <span class="arcade-chevron chevron-right">\\\</span>
+            </div>
+            <span class="char-banner-quote">DIFFERENT CAMPUSES. SAME WARRIORS. 👑</span>
           </div>
 
           <div class="char-banner-right">
-            <span class="char-banner-quote">SAME CAMPUS. DIFFERENT WARRIORS. 👑</span>
-            <button class="char-mode-pill view-pill-btn" id="char-view-toggle-btn" title="Toggle Select Layout (10-Card Deck vs Arcade Grid)" tabindex="0">
+            <button class="char-mode-pill view-pill-btn active" id="char-view-toggle-btn" title="Toggle Select Layout (Arcade Grid vs 10-Card Deck)" tabindex="0">
               <span class="pill-dot">🎴</span>
-              <span class="pill-text" id="char-view-toggle-text">VIEW: 10-CARD DECK</span>
+              <span class="pill-text" id="char-view-toggle-text">ARCADE GRID</span>
             </button>
             <button class="char-mode-pill venue-pill-btn" id="char-venue-pill" title="Choose Battle Venue" tabindex="0">
               <span class="pill-dot">🏛️</span>
-              <span class="pill-text" id="char-venue-text">VENUE: TECH PARK</span>
+              <span class="pill-text" id="char-venue-text">NEON OCTAGON</span>
             </button>
-            <div class="char-mode-pill" id="char-mode-indicator">
-              <span class="pill-dot">●</span>
-              <span class="pill-text" id="char-mode-text">1 VS 1 LOCAL</span>
-            </div>
+            <button class="char-mode-pill mode-pill-btn" id="char-mode-indicator" title="Toggle Game Mode" tabindex="0">
+              <span class="pill-dot">⚡</span>
+              <span class="pill-text" id="char-mode-text">PLAYER VS BOT [EXPERT]</span>
+            </button>
+            <button class="char-mode-pill pause-pill-btn" id="char-pause-btn" title="Pause Game" tabindex="0">
+              <span class="pill-icon">||</span>
+              <span class="pill-text">PAUSE</span>
+            </button>
           </div>
         </header>
 
-        <!-- Main 5x2 Grid / 10-Card Deck Section -->
-        <section class="char-grid-section" aria-label="Fighter Roster">
-          <div id="campus-select-root" class="hidden" style="width: 100%; max-width: 930px; z-index: 6;"></div>
-          <div id="char-grid" class="char-grid" role="grid">
+        <!-- Main Content: Left Showcase + Right 5x2 Card Grid -->
+        <div class="char-main-layout">
+          <!-- Left Column: Character Showcase Panel -->
+          <aside class="char-showcase-panel" id="char-showcase-panel" aria-label="Character Profile Preview">
+            <!-- 10 Mini Tabs Strip -->
+            <div class="roster-tabs-strip" id="roster-tabs-strip" role="tablist" aria-label="Mini Roster Selection">
+              <button class="roster-tab active" data-index="0" data-id="topper" role="tab" tabindex="0">
+                <span class="tab-num">01</span>
+                <span class="tab-label">THE TOP</span>
+              </button>
+              <button class="roster-tab" data-index="1" data-id="backbencher" role="tab" tabindex="0">
+                <span class="tab-num">02</span>
+                <span class="tab-label">THE BAG</span>
+              </button>
+              <button class="roster-tab" data-index="2" data-id="hosteler" role="tab" tabindex="0">
+                <span class="tab-num">03</span>
+                <span class="tab-label">THE HOD</span>
+              </button>
+              <button class="roster-tab" data-index="3" data-id="senior" role="tab" tabindex="0">
+                <span class="tab-num">04</span>
+                <span class="tab-label">THE SEN</span>
+              </button>
+              <button class="roster-tab" data-index="4" data-id="placementWarrior" role="tab" tabindex="0">
+                <span class="tab-num">05</span>
+                <span class="tab-label">PLA WA</span>
+              </button>
+              <button class="roster-tab" data-index="5" data-id="sportsStar" role="tab" tabindex="0">
+                <span class="tab-num">06</span>
+                <span class="tab-label">SPO STA</span>
+              </button>
+              <button class="roster-tab" data-index="6" data-id="cypher" role="tab" tabindex="0">
+                <span class="tab-num">07</span>
+                <span class="tab-label">CYP CAMP</span>
+              </button>
+              <button class="roster-tab" data-index="7" data-id="gavel" role="tab" tabindex="0">
+                <span class="tab-num">08</span>
+                <span class="tab-label">GAV MOOT</span>
+              </button>
+              <button class="roster-tab" data-index="8" data-id="bolt" role="tab" tabindex="0">
+                <span class="tab-num">09</span>
+                <span class="tab-label">BOL THE T</span>
+              </button>
+              <button class="roster-tab" data-index="9" data-id="palette" role="tab" tabindex="0">
+                <span class="tab-num">10</span>
+                <span class="tab-label">PAL FINE</span>
+              </button>
+            </div>
+
+            <!-- Showcase Box -->
+            <div class="char-showcase-box" id="char-showcase-box">
+              <div class="showcase-watermark" id="showcase-watermark-num">01</div>
+              <div class="showcase-body">
+                <div class="showcase-art-wrap">
+                  <img class="showcase-img" id="showcase-portrait-img" src="assets/characters/topper/portrait.png" alt="Showcase Fighter">
+                  <div class="showcase-magic-aura"></div>
+                </div>
+                <div class="showcase-info-wrap">
+                  <div class="showcase-crown-icon">👑</div>
+                  <h2 class="showcase-title" id="showcase-char-name">THE TOPPER</h2>
+                  <div class="showcase-subtitle" id="showcase-char-subtitle">— ACADEMIC ASSASSIN —</div>
+                  <blockquote class="showcase-quote" id="showcase-char-quote">"Syllabus fears me."</blockquote>
+
+                  <div class="showcase-stats-list">
+                    <div class="showcase-stat-item">
+                      <span class="stat-icon">⚡</span>
+                      <span class="stat-name">POWER</span>
+                      <div class="stat-bar-shell"><div class="stat-bar-glow-fill" id="showcase-stat-power" style="--val: 60%;"></div></div>
+                    </div>
+                    <div class="showcase-stat-item">
+                      <span class="stat-icon">👟</span>
+                      <span class="stat-name">SPEED</span>
+                      <div class="stat-bar-shell"><div class="stat-bar-glow-fill" id="showcase-stat-speed" style="--val: 80%;"></div></div>
+                    </div>
+                    <div class="showcase-stat-item">
+                      <span class="stat-icon">🎯</span>
+                      <span class="stat-name">RANGE</span>
+                      <div class="stat-bar-shell"><div class="stat-bar-glow-fill" id="showcase-stat-range" style="--val: 50%;"></div></div>
+                    </div>
+                    <div class="showcase-stat-item">
+                      <span class="stat-icon">🛡️</span>
+                      <span class="stat-name">CONTROL</span>
+                      <div class="stat-bar-shell"><div class="stat-bar-glow-fill" id="showcase-stat-control" style="--val: 85%;"></div></div>
+                    </div>
+                    <div class="showcase-stat-item">
+                      <span class="stat-icon">💀</span>
+                      <span class="stat-name">DIFFICULTY</span>
+                      <div class="stat-bar-shell"><div class="stat-bar-glow-fill diff-fill" id="showcase-stat-diff" style="--val: 45%;"></div></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </aside>
+
+          <!-- Right Column: Main 5x2 Grid / 10-Card Deck Section -->
+          <section class="char-grid-section" aria-label="Fighter Roster">
+            <div class="char-stage-backdrop" aria-hidden="true"></div>
+            <div id="campus-select-root" class="hidden" style="width: 100%; max-width: 930px; z-index: 6;"></div>
+            <div id="char-grid" class="char-grid" role="grid">
             <!-- Card 0: P1 — THE TOPPER -->
             <article class="char-card selected-p1" data-index="0" data-id="topper" style="--card-primary: #ffd700; --card-accent: #ffd700;" tabindex="0">
               <div class="card-inner">
@@ -981,60 +1086,64 @@
             </article>
           </div>
         </section>
+      </div>
 
-        <!-- Showcase Arcade Rail (Matching Reference Artwork Bottom) -->
-        <div class="char-arcade-rail">
-          <span class="rail-left">CAMPUS CLASH 2.0 ///</span>
-          <div class="rail-pill">BRAWL FOR THE 10 CGPA</div>
-          <span class="rail-right">&gt;&gt;&gt; SRM TECH PARK ARCADE</span>
+      <!-- Bottom Versus Bar (Matching Reference Mockup) -->
+      <footer class="char-bottom-bar">
+        <!-- Player 1 Profile Card (Left) -->
+        <div id="p1-profile-card" class="player-profile-card p1-profile">
+          <div class="player-avatar-box">
+            <img class="player-avatar-img" id="p1-profile-thumb" src="assets/characters/topper/portrait.png" alt="P1">
+            <span class="player-avatar-emoji hidden" id="p1-profile-emoji">🎓</span>
+          </div>
+          <div class="player-info-box">
+            <div class="player-slot-label">PLAYER 1</div>
+            <div class="player-char-name" id="p1-profile-name">THE TOPPER</div>
+            <div class="player-char-tagline" id="p1-profile-tagline">Academic Assassin</div>
+          </div>
+          <div class="player-lock-state" id="p1-profile-status">
+            <button class="status-stamp ready p1-lock-action-btn" id="p1-lock-btn" title="Confirm Player 1 Pick">P1 SELECTED ✓</button>
+          </div>
         </div>
 
-        <!-- Bottom Versus Bar (20% height) -->
-        <footer class="char-bottom-bar">
-          <!-- Player 1 Profile Card (Left) -->
-          <div id="p1-profile-card" class="player-profile-card p1-profile">
-            <div class="player-avatar-box">
-              <span class="player-avatar-emoji" id="p1-profile-emoji">🎓</span>
+        <!-- Dynamic Center "BRAWL FOR GLORY" and "VS" Emblem -->
+        <div class="versus-center-divider">
+          <div class="brawl-banner-wrap">
+            <div class="brawl-flair-row">
+              <span class="brawl-arrow left">&gt;&gt;&gt;</span>
+              <span class="brawl-brand-title">BRAWL</span>
+              <span class="brawl-arrow right">&lt;&lt;&lt;</span>
             </div>
-            <div class="player-info-box">
-              <div class="player-slot-label">PLAYER 1</div>
-              <div class="player-char-name" id="p1-profile-name">THE TOPPER</div>
-              <div class="player-char-tagline" id="p1-profile-tagline">"The Academic Assassin"</div>
-            </div>
-            <div class="player-lock-state" id="p1-profile-status">
-              <span class="status-stamp selecting">P1 SELECTING...</span>
-            </div>
+            <div class="brawl-sub-label">— FOR GLORY —</div>
           </div>
-
-          <!-- Dynamic Center "VS" Emblem with Diagonal Slash -->
-          <div class="versus-center-divider">
+          <div class="vs-emblem-wrap">
             <div class="diagonal-slash slash-left"></div>
-            <div class="vs-emblem-wrap">
-              <div class="vs-emblem">VS</div>
-              <div class="vs-spark-particles">
-                <span class="spark s1">✦</span>
-                <span class="spark s2">★</span>
-                <span class="spark s3">✦</span>
-              </div>
-            </div>
+            <div class="vs-emblem">VS</div>
             <div class="diagonal-slash slash-right"></div>
+            <div class="vs-spark-particles">
+              <span class="spark s1">✦</span>
+              <span class="spark s2">★</span>
+              <span class="spark s3">✦</span>
+            </div>
           </div>
+        </div>
 
-          <!-- Player 2 Profile Card (Right) -->
-          <div id="p2-profile-card" class="player-profile-card p2-profile">
-            <div class="player-lock-state" id="p2-profile-status">
-              <span class="status-stamp pending">P2 WAITING...</span>
-            </div>
-            <div class="player-info-box text-right">
-              <div class="player-slot-label" id="p2-profile-slot">PLAYER 2</div>
-              <div class="player-char-name" id="p2-profile-name">THE BACKBENCHER</div>
-              <div class="player-char-tagline" id="p2-profile-tagline">"The Chaos Agent"</div>
-            </div>
-            <div class="player-avatar-box">
-              <span class="player-avatar-emoji" id="p2-profile-emoji">🔥</span>
-            </div>
+        <!-- Player 2 Profile Card (Right) -->
+        <div id="p2-profile-card" class="player-profile-card p2-profile">
+          <div class="player-lock-state" id="p2-profile-status">
+            <button class="status-stamp selecting p2-lock-action-btn" id="p2-lock-btn" title="Waiting for Player 2 / Bot">P2 WAITING... ⚙️</button>
           </div>
-        </footer>
+          <div class="player-info-box text-right">
+            <div class="player-slot-label" id="p2-profile-slot">BOT [EXPERT]</div>
+            <div class="player-char-name" id="p2-profile-name">THE BACKBENCHER</div>
+            <div class="player-char-tagline" id="p2-profile-tagline">"The Chaos Agent"</div>
+          </div>
+          <div class="player-avatar-box">
+            <img class="player-avatar-img" id="p2-profile-thumb" src="assets/characters/backbencher/portrait.png" alt="P2">
+            <span class="player-avatar-emoji hidden" id="p2-profile-emoji">🔥</span>
+          </div>
+        </div>
+      </footer>
 
         <!-- Dramatic 3-2-1-FIGHT Countdown Modal Overlay -->
         <div id="char-countdown-overlay" class="char-countdown-overlay hidden" aria-live="assertive">
