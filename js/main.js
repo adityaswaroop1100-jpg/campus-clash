@@ -682,7 +682,7 @@ class CampusClashGame {
         subtitle: 'ACADEMIC ASSASSIN',
         quote: '"Syllabus fears me."',
         power: 60, speed: 80, range: 50, control: 85, diff: 45,
-        img: 'assets/characters/topper/portrait.png'
+        img: 'assets/characters/topper/showcase.png'
       },
       {
         num: '02',

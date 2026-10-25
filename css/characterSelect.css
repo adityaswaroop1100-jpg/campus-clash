@@ -15,7 +15,7 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  background: url('../assets/char_select_arena_bg.jpg') center center / cover no-repeat;
+  background: url('../assets/pure_arena_bg.jpg') center center / cover no-repeat;
   color: #ffffff;
   font-family: 'Rajdhani', sans-serif;
   overflow: hidden;
