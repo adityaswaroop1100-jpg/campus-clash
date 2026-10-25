@@ -198,6 +198,8 @@ export class StageSelectManager {
   renderThumbnails(time) {
     for (const item of this.canvasItems) {
       if (!item.ctx || !item.canvas) continue;
+      // If card has high-resolution arena thumbnail image, skip CPU canvas redraw
+      if (item.card && item.card.querySelector('.stage-thumb-img')) continue;
       this.renderVenueThumbnail(item.ctx, item.arena.id, item.canvas.width, item.canvas.height, time);
     }
   }

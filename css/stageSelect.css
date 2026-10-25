@@ -12,7 +12,9 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  background: radial-gradient(circle at 50% 15%, rgba(254, 107, 0, 0.14) 0%, transparent 55%), radial-gradient(circle at 50% 30%, #0d162c 0%, #080f1e 55%, #05070f 100%);
+  background:
+    radial-gradient(ellipse at center, rgba(3, 7, 18, 0.45) 0%, rgba(2, 5, 14, 0.82) 100%),
+    url('../assets/char_select_clean_bg.jpg') center center / cover no-repeat !important;
   color: #ffffff;
   font-family: 'Rajdhani', sans-serif;
   overflow: hidden;
@@ -25,6 +27,16 @@
   display: none !important;
   opacity: 0;
   pointer-events: none;
+}
+
+/* Subtle Ambient CRT Vignette Overlay */
+.stage-select-screen::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, transparent 60%, rgba(0, 0, 0, 0.65) 100%);
+  pointer-events: none;
+  z-index: 1;
 }
 
 /* Subtle Animated Tech Blueprint Grid Pattern */
@@ -57,8 +69,10 @@
   align-items: center;
   justify-content: space-between;
   padding: 0 24px;
-  border-bottom: 2px solid rgba(255, 215, 0, 0.3);
-  background: linear-gradient(180deg, rgba(14, 24, 46, 0.95) 0%, rgba(8, 14, 28, 0.85) 100%);
+  border-bottom: 2px solid rgba(255, 215, 0, 0.35);
+  background: linear-gradient(180deg, rgba(10, 18, 36, 0.88) 0%, rgba(5, 10, 22, 0.94) 100%);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7);
   z-index: 10;
 }
@@ -95,33 +109,34 @@
   box-shadow: 0 0 12px rgba(0, 229, 255, 0.2);
 }
 
-/* Main 3x2 Grid Section */
+/* Main 5-Column Grid Section */
 .stage-grid-section {
   position: relative;
   flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 10px 24px;
+  padding: 10px 20px;
   z-index: 5;
 }
 
 .stage-grid {
   display: grid;
-  grid-template-columns: repeat(5, 172px);
-  grid-template-rows: 200px;
-  gap: 12px;
+  grid-template-columns: repeat(5, 182px);
+  grid-template-rows: 218px;
+  gap: 14px;
   justify-content: center;
 }
 
 /* Venue Cards */
 .stage-card {
   position: relative;
-  width: 172px;
-  height: 192px;
+  width: 182px;
+  height: 218px;
   box-sizing: border-box;
-  background: linear-gradient(135deg, rgba(14, 22, 38, 0.95) 0%, rgba(8, 14, 26, 0.98) 100%);
-  border: 2px solid rgba(255, 255, 255, 0.12);
+  background: linear-gradient(135deg, rgba(14, 22, 38, 0.94) 0%, rgba(8, 14, 26, 0.98) 100%);
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  border-radius: 6px;
   clip-path: polygon(
     12px 0,
     100% 0,
@@ -131,39 +146,41 @@
     0 12px
   );
   cursor: pointer;
-  transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), border-color 0.2s ease, box-shadow 0.2s ease;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(0, 0, 0, 0.8);
+  transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275), border-color 0.2s ease, box-shadow 0.25s ease;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6), inset 0 0 20px rgba(0, 0, 0, 0.7);
   outline: none;
 }
 
 .stage-card:hover,
 .stage-card:focus-visible {
-  transform: scale(1.05) translateY(-3px);
+  transform: scale(1.05) translateY(-4px);
   border-color: var(--venue-accent, #ffd700);
   box-shadow:
-    0 0 22px var(--venue-accent, #ffd700),
-    0 12px 30px rgba(0, 0, 0, 0.7),
-    inset 0 0 25px rgba(255, 255, 255, 0.15);
+    0 0 24px var(--venue-accent, #ffd700),
+    0 14px 32px rgba(0, 0, 0, 0.8),
+    inset 0 0 25px rgba(255, 255, 255, 0.18);
   z-index: 10;
 }
 
 .stage-card.selected {
-  border-color: #ffd700;
-  box-shadow: 0 0 24px rgba(255, 215, 0, 0.85), inset 0 0 15px rgba(255, 215, 0, 0.25);
+  border-color: var(--venue-accent, #ffd700);
+  box-shadow: 0 0 28px var(--venue-accent, #ffd700), inset 0 0 18px rgba(255, 255, 255, 0.22);
+  transform: translateY(-4px) scale(1.04);
+  z-index: 9;
 }
 
 .stage-card.selected::after {
-  content: '★ SELECT';
+  content: '★ ACTIVE';
   position: absolute;
   top: 6px;
   right: 6px;
   font-family: 'Press Start 2P', monospace;
   font-size: 6.5px;
-  background: #ffd700;
+  background: var(--venue-accent, #ffd700);
   color: #061124;
   padding: 3px 6px;
   border-radius: 2px;
-  box-shadow: 0 0 10px #ffd700;
+  box-shadow: 0 0 12px var(--venue-accent, #ffd700);
   z-index: 15;
 }
 
@@ -174,7 +191,7 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 6px 7px 5px 7px;
+  padding: 6px 7px 6px 7px;
   box-sizing: border-box;
   z-index: 2;
 }
@@ -183,11 +200,42 @@
 .stage-thumb-wrap {
   position: relative;
   width: 100%;
-  height: 96px;
+  height: 114px;
   overflow: hidden;
   border-radius: 4px;
   background: #060c16;
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.stage-thumb-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: 3px;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), filter 0.35s ease;
+}
+
+.stage-card:hover .stage-thumb-img,
+.stage-card:focus-visible .stage-thumb-img,
+.stage-card.selected .stage-thumb-img {
+  transform: scale(1.08);
+  filter: brightness(1.15) contrast(1.05);
+}
+
+/* Subtle holographic scanline across thumbnail */
+.stage-thumb-wrap::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, transparent 40%, rgba(0, 0, 0, 0.4) 100%);
+  pointer-events: none;
+}
+
+.stage-card.selected .stage-thumb-wrap {
+  border-color: var(--venue-accent, #ffd700);
+  box-shadow: 0 0 16px var(--venue-accent, #ffd700);
 }
 
 .stage-thumb-canvas {
@@ -246,9 +294,11 @@
   align-items: center;
   justify-content: space-between;
   padding: 0 28px;
-  border-top: 2px solid rgba(255, 215, 0, 0.3);
-  background: linear-gradient(180deg, rgba(8, 14, 28, 0.95) 0%, rgba(5, 10, 20, 0.98) 100%);
-  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.8);
+  border-top: 2px solid rgba(255, 215, 0, 0.35);
+  background: linear-gradient(180deg, rgba(8, 14, 28, 0.88) 0%, rgba(4, 8, 18, 0.96) 100%);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.7);
   z-index: 10;
 }
 
