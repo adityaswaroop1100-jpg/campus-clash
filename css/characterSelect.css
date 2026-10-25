@@ -15,7 +15,7 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  background: url('../assets/pure_arena_bg.jpg') center center / cover no-repeat;
+  background: url('../assets/char_select_clean_bg.jpg') center center / cover no-repeat;
   color: #ffffff;
   font-family: 'Rajdhani', sans-serif;
   overflow: hidden;
@@ -71,7 +71,9 @@
   align-items: center;
   justify-content: space-between;
   padding: 0 18px;
-  background: linear-gradient(180deg, rgba(8, 14, 28, 0.95) 0%, rgba(6, 10, 20, 0.85) 100%);
+  background: linear-gradient(180deg, rgba(8, 14, 28, 0.92) 0%, rgba(6, 10, 20, 0.78) 100%);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   border-bottom: 2px solid rgba(0, 229, 255, 0.4);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7), 0 1px 0 rgba(255, 215, 0, 0.25);
   z-index: 10;
@@ -389,7 +391,9 @@
 .char-showcase-box {
   flex: 1;
   position: relative;
-  background: linear-gradient(150deg, rgba(10, 20, 42, 0.92) 0%, rgba(6, 12, 26, 0.96) 100%);
+  background: linear-gradient(150deg, rgba(8, 16, 36, 0.88) 0%, rgba(5, 10, 22, 0.94) 100%);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
   border: 2px solid #00e5ff;
   border-radius: 4px;
   clip-path: polygon(
@@ -601,7 +605,9 @@
   width: 110px;
   height: 172px;
   box-sizing: border-box;
-  background: linear-gradient(145deg, rgba(12, 20, 36, 0.88) 0%, rgba(6, 12, 24, 0.94) 100%);
+  background: linear-gradient(145deg, rgba(12, 20, 36, 0.82) 0%, rgba(6, 12, 24, 0.9) 100%);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
   border: 1.5px solid rgba(255, 255, 255, 0.16);
   clip-path: polygon(
     9px 0,
@@ -972,7 +978,9 @@
 .char-bottom-bar {
   position: relative;
   height: 88px;
-  background: linear-gradient(0deg, rgba(6, 10, 20, 0.98) 0%, rgba(10, 18, 32, 0.92) 100%);
+  background: linear-gradient(0deg, rgba(6, 10, 20, 0.95) 0%, rgba(10, 18, 32, 0.84) 100%);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   border-top: 2px solid rgba(255, 215, 0, 0.35);
   box-shadow: 0 -6px 24px rgba(0, 0, 0, 0.85);
   display: flex;
