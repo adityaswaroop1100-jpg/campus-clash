@@ -1,10 +1,10 @@
 /* ==========================================================================
    Campus Clash 2D — High-End Retro Arcade Character Select Screen Styles
-   Pixel-Perfect Match to SRM Campus Clash 2.0 Reference Mockup
+   Pixel-Perfect Match to SRM Campus Clash 2.0 Reference Mockup (IMG 2)
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
-   1. Screen Shell & Cyber Ambient Background
+   1. Screen Shell & Full Arena Background
    -------------------------------------------------------------------------- */
 .char-select-screen {
   position: absolute;
@@ -15,11 +15,7 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  background:
-    radial-gradient(circle at 50% 15%, rgba(254, 107, 0, 0.12) 0%, transparent 55%),
-    radial-gradient(circle at 15% 50%, rgba(0, 229, 255, 0.08) 0%, transparent 45%),
-    radial-gradient(circle at 85% 50%, rgba(255, 64, 129, 0.08) 0%, transparent 45%),
-    radial-gradient(circle at 50% 40%, #0d162c 0%, #080f1e 50%, #04060d 100%);
+  background: url('../assets/char_select_arena_bg.jpg') center center / cover no-repeat;
   color: #ffffff;
   font-family: 'Rajdhani', sans-serif;
   overflow: hidden;
@@ -34,36 +30,35 @@
   pointer-events: none;
 }
 
-/* Subtle Animated Tech Blueprint Grid Pattern */
-.char-select-screen::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-image:
-    linear-gradient(rgba(0, 229, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 229, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(rgba(255, 215, 0, 0.015) 2px, transparent 2px),
-    linear-gradient(90deg, rgba(255, 215, 0, 0.015) 2px, transparent 2px);
-  background-size: 32px 32px, 32px 32px, 128px 128px, 128px 128px;
-  background-position: center center;
-  pointer-events: none;
-  animation: grid-circuit-drift 30s linear infinite;
-  z-index: 0;
-}
-
-@keyframes grid-circuit-drift {
-  0% { background-position: 0 0, 0 0, 0 0, 0 0; }
-  100% { background-position: 64px 64px, 64px 64px, 128px 128px, 128px 128px; }
-}
-
-/* CRT Ambient Vignette */
+/* Subtle Ambient CRT Vignette Overlay */
 .char-select-screen::after {
   content: '';
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse at center, transparent 65%, rgba(0, 0, 0, 0.75) 100%);
+  background: radial-gradient(ellipse at center, transparent 65%, rgba(0, 0, 0, 0.6) 100%);
   pointer-events: none;
   z-index: 1;
+}
+
+/* Hide alternative deck view by default */
+#campus-select-root {
+  display: none !important;
+}
+
+#campus-select-root:not(.hidden) {
+  display: flex !important;
+  position: absolute;
+  inset: 0;
+  background: rgba(6, 12, 24, 0.96);
+  z-index: 30;
+  padding: 20px;
+  box-sizing: border-box;
+  overflow: auto;
+}
+
+/* Stage backdrop is already baked into full-screen background */
+.char-stage-backdrop {
+  display: none;
 }
 
 /* --------------------------------------------------------------------------
@@ -71,18 +66,18 @@
    -------------------------------------------------------------------------- */
 .char-top-banner {
   position: relative;
-  height: 54px;
+  height: 52px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 20px;
-  background: linear-gradient(180deg, rgba(10, 18, 36, 0.98) 0%, rgba(6, 12, 24, 0.92) 100%);
-  border-bottom: 2px solid rgba(0, 229, 255, 0.35);
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.7), 0 1px 0 rgba(255, 215, 0, 0.2);
+  padding: 0 18px;
+  background: linear-gradient(180deg, rgba(8, 14, 28, 0.95) 0%, rgba(6, 10, 20, 0.85) 100%);
+  border-bottom: 2px solid rgba(0, 229, 255, 0.4);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7), 0 1px 0 rgba(255, 215, 0, 0.25);
   z-index: 10;
 }
 
-/* Left Brand & ESC Button */
+/* Left: ESC Button + Brand Title */
 .char-banner-left {
   display: flex;
   align-items: center;
@@ -90,21 +85,21 @@
 }
 
 .char-nav-btn {
-  background: rgba(12, 22, 42, 0.9);
+  background: rgba(10, 20, 38, 0.9);
   border: 1.5px solid #00e5ff;
   color: #ffffff;
   font-family: 'Orbitron', monospace;
   font-size: 9px;
   font-weight: 700;
-  padding: 6px 12px;
+  padding: 5px 12px;
   cursor: pointer;
-  border-radius: 18px;
+  border-radius: 16px;
   letter-spacing: 0.5px;
   display: flex;
   align-items: center;
   gap: 6px;
   transition: all 0.2s ease;
-  box-shadow: 0 0 10px rgba(0, 229, 255, 0.25);
+  box-shadow: 0 0 10px rgba(0, 229, 255, 0.3);
   outline: none;
 }
 
@@ -119,9 +114,9 @@
 }
 
 .char-nav-btn:hover {
-  background: rgba(0, 229, 255, 0.2);
+  background: rgba(0, 229, 255, 0.25);
   border-color: #00e5ff;
-  box-shadow: 0 0 18px rgba(0, 229, 255, 0.6);
+  box-shadow: 0 0 16px rgba(0, 229, 255, 0.6);
   transform: translateX(-2px);
 }
 
@@ -132,7 +127,7 @@
 
 .brand-prefix {
   font-family: 'Rajdhani', sans-serif;
-  font-size: 9px;
+  font-size: 8.5px;
   font-weight: 700;
   color: #00e5ff;
   letter-spacing: 1px;
@@ -140,7 +135,7 @@
 
 .brand-name {
   font-family: 'Orbitron', sans-serif;
-  font-size: 13px;
+  font-size: 12.5px;
   font-weight: 900;
   color: #ffffff;
   letter-spacing: 1.5px;
@@ -153,7 +148,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 1px;
+  gap: 0;
 }
 
 .char-title-small {
@@ -161,7 +156,7 @@
   font-size: 8px;
   font-weight: 800;
   color: #00e5ff;
-  letter-spacing: 3px;
+  letter-spacing: 2.5px;
   text-transform: uppercase;
   text-shadow: 0 0 6px rgba(0, 229, 255, 0.6);
 }
@@ -169,18 +164,18 @@
 .char-title-main-row {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
 }
 
 .char-select-main-title {
   margin: 0;
   font-family: 'Permanent Marker', 'Orbitron', cursive, sans-serif;
-  font-size: 26px;
+  font-size: 24px;
   color: #ffd700;
-  letter-spacing: 3px;
+  letter-spacing: 2px;
   text-shadow:
     0 0 10px #ff6b00,
-    0 0 24px rgba(255, 215, 0, 0.8),
+    0 0 22px rgba(255, 215, 0, 0.8),
     2px 2px 0 #000;
   line-height: 1;
   transform: skewX(-4deg);
@@ -188,7 +183,7 @@
 
 .arcade-chevron {
   font-family: 'Orbitron', monospace;
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 900;
   color: #ff9100;
   text-shadow: 0 0 8px #ff9100;
@@ -216,14 +211,14 @@
 
 .char-banner-quote {
   font-family: 'Rajdhani', sans-serif;
-  font-size: 9px;
+  font-size: 8.5px;
   font-weight: 700;
-  color: rgba(255, 215, 0, 0.85);
+  color: rgba(255, 215, 0, 0.9);
   letter-spacing: 1.5px;
   text-transform: uppercase;
 }
 
-/* Right Header Buttons */
+/* Right Header Control Pills */
 .char-banner-right {
   display: flex;
   align-items: center;
@@ -233,13 +228,13 @@
 .char-mode-pill {
   display: flex;
   align-items: center;
-  gap: 6px;
-  background: rgba(10, 18, 34, 0.85);
-  border: 1px solid rgba(255, 255, 255, 0.18);
+  gap: 5px;
+  background: rgba(10, 18, 34, 0.88);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 14px;
-  padding: 5px 11px;
+  padding: 4px 10px;
   font-family: 'Orbitron', monospace;
-  font-size: 8.5px;
+  font-size: 8px;
   font-weight: 700;
   color: #ffffff;
   letter-spacing: 0.5px;
@@ -251,18 +246,13 @@
 
 .char-mode-pill:hover {
   transform: translateY(-1px);
-  filter: brightness(1.2);
+  filter: brightness(1.25);
 }
 
 .view-pill-btn {
   border-color: #ffd700;
   color: #ffd700;
   box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
-}
-
-.view-pill-btn.active {
-  background: rgba(255, 215, 0, 0.15);
-  box-shadow: 0 0 14px rgba(255, 215, 0, 0.5);
 }
 
 .venue-pill-btn {
@@ -285,47 +275,45 @@
   font-weight: 800;
 }
 
-.pill-dot {
-  font-size: 8px;
-}
-
-.pill-icon {
-  font-size: 9px;
-  font-weight: 900;
-}
+.pill-dot { font-size: 8px; }
+.pill-icon { font-size: 9px; font-weight: 900; }
 
 /* --------------------------------------------------------------------------
-   3. Main Layout Container: Left Showcase + Right Card Grid
+   3. Main Content Container: Left Showcase + Right Card Grid
    -------------------------------------------------------------------------- */
 .char-main-layout {
   position: relative;
   flex: 1;
   display: flex;
-  align-items: stretch;
-  padding: 6px 14px 4px 14px;
-  gap: 12px;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 18px 0 18px;
+  gap: 16px;
   z-index: 5;
   overflow: hidden;
   box-sizing: border-box;
 }
 
 /* --------------------------------------------------------------------------
-   4. Left Column: Character Showcase Panel (~36% width)
+   4. Left Column: Character Showcase Panel (~360px width)
    -------------------------------------------------------------------------- */
 .char-showcase-panel {
-  flex: 0 0 350px;
-  width: 350px;
+  flex: 0 0 365px;
+  width: 365px;
+  height: 420px;
+  max-height: 100%;
   display: flex;
   flex-direction: column;
   gap: 6px;
   z-index: 6;
 }
 
-/* Mini Roster Tabs (01 - 10) */
+/* 10 Mini Roster Tabs Strip (01 - 10) */
 .roster-tabs-strip {
   display: grid;
   grid-template-columns: repeat(10, 1fr);
-  gap: 3px;
+  gap: 2.5px;
   width: 100%;
 }
 
@@ -334,18 +322,19 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 3px 1px;
-  background: rgba(10, 18, 36, 0.85);
-  border: 1px solid rgba(0, 229, 255, 0.25);
+  height: 38px;
+  background: rgba(10, 18, 36, 0.9);
+  border: 1.5px solid rgba(0, 229, 255, 0.3);
   border-radius: 3px;
   cursor: pointer;
   outline: none;
+  padding: 2px 1px;
   transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .roster-tab .tab-num {
   font-family: 'Orbitron', monospace;
-  font-size: 8.5px;
+  font-size: 8px;
   font-weight: 900;
   color: #ffffff;
   line-height: 1;
@@ -363,15 +352,15 @@
 }
 
 .roster-tab:hover {
-  transform: translateY(-1px);
+  transform: translateY(-2px);
   border-color: #ffd700;
-  box-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
+  box-shadow: 0 0 8px rgba(255, 215, 0, 0.5);
 }
 
 .roster-tab.active {
-  background: linear-gradient(180deg, rgba(255, 215, 0, 0.28) 0%, rgba(10, 18, 36, 0.95) 100%);
+  background: linear-gradient(180deg, rgba(255, 215, 0, 0.3) 0%, rgba(10, 18, 36, 0.95) 100%);
   border-color: #ffd700;
-  box-shadow: 0 0 12px rgba(255, 215, 0, 0.6), inset 0 0 6px rgba(255, 215, 0, 0.3);
+  box-shadow: 0 0 14px rgba(255, 215, 0, 0.7), inset 0 0 6px rgba(255, 215, 0, 0.3);
   transform: translateY(-2px);
 }
 
@@ -384,23 +373,23 @@
   color: #ffffff;
 }
 
-/* Individual tab header accent highlights matching each character */
-.roster-tab[data-index="0"] { border-top: 2px solid #ffd700; }
-.roster-tab[data-index="1"] { border-top: 2px solid #00f0ff; }
-.roster-tab[data-index="2"] { border-top: 2px solid #ff3333; }
-.roster-tab[data-index="3"] { border-top: 2px solid #00e676; }
-.roster-tab[data-index="4"] { border-top: 2px solid #b388ff; }
-.roster-tab[data-index="5"] { border-top: 2px solid #ff9100; }
-.roster-tab[data-index="6"] { border-top: 2px solid #00e5ff; }
-.roster-tab[data-index="7"] { border-top: 2px solid #ffb300; }
-.roster-tab[data-index="8"] { border-top: 2px solid #00b0ff; }
-.roster-tab[data-index="9"] { border-top: 2px solid #ff4081; }
+/* Individual tab header accent highlights */
+.roster-tab[data-index="0"] { border-top: 2.5px solid #ffd700; }
+.roster-tab[data-index="1"] { border-top: 2.5px solid #00f0ff; }
+.roster-tab[data-index="2"] { border-top: 2.5px solid #ff3333; }
+.roster-tab[data-index="3"] { border-top: 2.5px solid #00e676; }
+.roster-tab[data-index="4"] { border-top: 2.5px solid #b388ff; }
+.roster-tab[data-index="5"] { border-top: 2.5px solid #ff9100; }
+.roster-tab[data-index="6"] { border-top: 2.5px solid #00e5ff; }
+.roster-tab[data-index="7"] { border-top: 2.5px solid #ffb300; }
+.roster-tab[data-index="8"] { border-top: 2.5px solid #00b0ff; }
+.roster-tab[data-index="9"] { border-top: 2.5px solid #ff4081; }
 
 /* Main Character Showcase Box */
 .char-showcase-box {
   flex: 1;
   position: relative;
-  background: linear-gradient(145deg, rgba(12, 22, 44, 0.95) 0%, rgba(6, 12, 24, 0.98) 100%);
+  background: linear-gradient(150deg, rgba(10, 20, 42, 0.92) 0%, rgba(6, 12, 26, 0.96) 100%);
   border: 2px solid #00e5ff;
   border-radius: 4px;
   clip-path: polygon(
@@ -412,9 +401,9 @@
     0 14px
   );
   box-shadow:
-    0 0 20px rgba(0, 229, 255, 0.35),
+    0 0 20px rgba(0, 229, 255, 0.4),
     0 8px 30px rgba(0, 0, 0, 0.8),
-    inset 0 0 25px rgba(0, 229, 255, 0.08);
+    inset 0 0 25px rgba(0, 229, 255, 0.1);
   overflow: hidden;
   display: flex;
 }
@@ -425,29 +414,31 @@
   top: 6px;
   left: 12px;
   font-family: 'Orbitron', monospace;
-  font-size: 78px;
+  font-size: 74px;
   font-weight: 900;
-  color: rgba(0, 229, 255, 0.12);
+  color: rgba(0, 229, 255, 0.16);
   line-height: 0.85;
   pointer-events: none;
   z-index: 1;
-  text-shadow: 0 0 20px rgba(0, 229, 255, 0.2);
+  text-shadow: 0 0 16px rgba(0, 229, 255, 0.3);
 }
 
 .showcase-body {
   position: relative;
   z-index: 2;
   display: flex;
+  flex-direction: row;
+  align-items: stretch;
   width: 100%;
   height: 100%;
-  padding: 8px 10px;
-  gap: 8px;
+  padding: 10px;
+  gap: 10px;
   box-sizing: border-box;
 }
 
 /* Left side of showcase: Character art */
 .showcase-art-wrap {
-  flex: 0 0 145px;
+  flex: 0 0 155px;
   height: 100%;
   display: flex;
   align-items: flex-end;
@@ -460,7 +451,7 @@
   max-height: 100%;
   object-fit: contain;
   object-position: bottom center;
-  filter: drop-shadow(0 0 16px rgba(0, 229, 255, 0.7));
+  filter: drop-shadow(0 0 18px rgba(0, 229, 255, 0.75));
   transition: transform 0.25s ease, filter 0.25s ease;
 }
 
@@ -471,7 +462,7 @@
   right: 10%;
   height: 6px;
   background: radial-gradient(ellipse at center, #00e5ff 0%, transparent 70%);
-  box-shadow: 0 0 20px #00e5ff;
+  box-shadow: 0 0 22px #00e5ff;
 }
 
 /* Right side of showcase: Details & Stats */
@@ -499,7 +490,7 @@
   line-height: 1.05;
   text-shadow:
     0 0 10px #ff6b00,
-    0 0 22px rgba(255, 215, 0, 0.7),
+    0 0 22px rgba(255, 215, 0, 0.75),
     2px 2px 0 #000;
   white-space: nowrap;
   overflow: hidden;
@@ -513,17 +504,17 @@
   color: #00e5ff;
   letter-spacing: 2px;
   text-transform: uppercase;
-  margin: 3px 0 5px 0;
+  margin: 2px 0 4px 0;
   text-shadow: 0 0 6px rgba(0, 229, 255, 0.6);
 }
 
 .showcase-quote {
   margin: 0 0 8px 0;
   font-family: 'Rajdhani', sans-serif;
-  font-size: 12px;
+  font-size: 11.5px;
   font-style: italic;
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.85);
+  color: rgba(255, 255, 255, 0.9);
   line-height: 1.2;
 }
 
@@ -537,29 +528,29 @@
 .showcase-stat-item {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 5px;
 }
 
 .showcase-stat-item .stat-icon {
-  font-size: 10px;
+  font-size: 9.5px;
   width: 14px;
   text-align: center;
 }
 
 .showcase-stat-item .stat-name {
   font-family: 'Orbitron', monospace;
-  font-size: 7.5px;
+  font-size: 7px;
   font-weight: 700;
   color: #90a4ae;
-  width: 65px;
+  width: 62px;
   letter-spacing: 0.5px;
 }
 
 .stat-bar-shell {
   flex: 1;
   height: 5.5px;
-  background: rgba(0, 0, 0, 0.65);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(0, 0, 0, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 3px;
   overflow: hidden;
 }
@@ -579,40 +570,26 @@
 }
 
 /* --------------------------------------------------------------------------
-   5. Right Column: 5x2 Card Grid Section (~64% width)
+   5. Right Column: 5x2 Card Grid Section (~580px width)
    -------------------------------------------------------------------------- */
 .char-grid-section {
   position: relative;
-  flex: 1;
+  flex: 0 0 580px;
+  width: 580px;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0 4px;
   z-index: 5;
   overflow: visible;
-}
-
-/* Cyber Stage Backdrop with silhouettes */
-.char-stage-backdrop {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 140px;
-  background: url('../assets/char_select_stage_strip.png') center bottom / contain no-repeat;
-  opacity: 0.65;
-  pointer-events: none;
-  z-index: 0;
-  filter: drop-shadow(0 0 24px rgba(255, 107, 0, 0.5));
 }
 
 .char-grid {
   position: relative;
   z-index: 2;
   display: grid;
-  grid-template-columns: repeat(5, 118px);
-  grid-template-rows: repeat(2, 178px);
-  gap: 7px 8px;
+  grid-template-columns: repeat(5, 110px);
+  grid-template-rows: repeat(2, 172px);
+  gap: 6px 8px;
   justify-content: center;
 }
 
@@ -621,22 +598,22 @@
    -------------------------------------------------------------------------- */
 .char-card {
   position: relative;
-  width: 118px;
-  height: 178px;
+  width: 110px;
+  height: 172px;
   box-sizing: border-box;
-  background: linear-gradient(145deg, rgba(14, 22, 38, 0.94) 0%, rgba(8, 14, 26, 0.98) 100%);
-  border: 1.5px solid rgba(255, 255, 255, 0.15);
+  background: linear-gradient(145deg, rgba(12, 20, 36, 0.88) 0%, rgba(6, 12, 24, 0.94) 100%);
+  border: 1.5px solid rgba(255, 255, 255, 0.16);
   clip-path: polygon(
-    10px 0,
+    9px 0,
     100% 0,
-    100% calc(100% - 10px),
-    calc(100% - 10px) 100%,
+    100% calc(100% - 9px),
+    calc(100% - 9px) 100%,
     0 100%,
-    0 10px
+    0 9px
   );
   cursor: pointer;
   transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), border-color 0.2s ease, box-shadow 0.2s ease;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6), inset 0 0 15px rgba(0, 0, 0, 0.7);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.6), inset 0 0 15px rgba(0, 0, 0, 0.7);
   outline: none;
 }
 
@@ -658,7 +635,7 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 5px 6px 4px 6px;
+  padding: 4px 5px 3px 5px;
   box-sizing: border-box;
   z-index: 2;
 }
@@ -669,9 +646,9 @@
   transform: scale(1.04) translateY(-3px);
   border-color: var(--card-accent, #ffd700);
   box-shadow:
-    0 0 20px var(--card-accent, #ffd700),
-    0 10px 28px rgba(0, 0, 0, 0.8),
-    inset 0 0 20px rgba(255, 255, 255, 0.15);
+    0 0 18px var(--card-accent, #ffd700),
+    0 10px 26px rgba(0, 0, 0, 0.8),
+    inset 0 0 18px rgba(255, 255, 255, 0.15);
   z-index: 10;
 }
 
@@ -723,11 +700,11 @@
   left: 50%;
   transform: translate(-50%, -50%) rotate(-12deg);
   font-family: 'Press Start 2P', monospace;
-  font-size: 11px;
+  font-size: 10px;
   color: #00e676;
   background: rgba(0, 0, 0, 0.88);
   border: 2px solid #00e676;
-  padding: 5px 12px;
+  padding: 4px 10px;
   border-radius: 4px;
   box-shadow: 0 0 18px #00e676;
   text-shadow: 0 0 8px #00e676;
@@ -748,9 +725,9 @@
 
 .card-num-badge {
   font-family: 'Press Start 2P', monospace;
-  font-size: 6.5px;
+  font-size: 6px;
   font-weight: 900;
-  padding: 2px 4px;
+  padding: 2px 3.5px;
   border-radius: 2px;
   display: inline-flex;
   align-items: center;
@@ -779,7 +756,7 @@
 
 .card-slogan {
   font-family: 'Rajdhani', sans-serif;
-  font-size: 5.5px;
+  font-size: 5px;
   font-weight: 700;
   line-height: 1.15;
   color: rgba(255, 255, 255, 0.85);
@@ -789,23 +766,23 @@
 }
 
 .slogan-crown {
-  font-size: 7px;
+  font-size: 6.5px;
   line-height: 1;
   filter: drop-shadow(0 0 4px #ffd700);
 }
 
 .card-decor-icon {
-  font-size: 7px;
+  font-size: 6.5px;
   line-height: 1;
 }
 
 /* Pick Badges */
 .card-badge {
   position: absolute;
-  top: 22px;
-  padding: 2px 6px;
+  top: 20px;
+  padding: 2px 5px;
   font-family: 'Press Start 2P', monospace;
-  font-size: 6px;
+  font-size: 5.5px;
   font-weight: 900;
   border-radius: 3px;
   display: none;
@@ -815,14 +792,14 @@
 }
 
 .p1-badge {
-  left: 6px;
+  left: 5px;
   background: #ffd700;
   color: #061124;
   box-shadow: 0 0 10px #ffd700, 0 2px 6px rgba(0, 0, 0, 0.8);
 }
 
 .p2-badge {
-  right: 6px;
+  right: 5px;
   background: #00e5ff;
   color: #061124;
   box-shadow: 0 0 10px #00e5ff, 0 2px 6px rgba(0, 0, 0, 0.8);
@@ -847,7 +824,7 @@
 .card-portrait-wrap {
   position: relative;
   width: 100%;
-  height: 86px;
+  height: 84px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -900,7 +877,7 @@
 /* Card Nameplate */
 .card-nameplate {
   text-align: center;
-  padding: 2px 4px;
+  padding: 2px 3px;
   background: linear-gradient(180deg, rgba(8, 14, 28, 0.95) 0%, rgba(14, 24, 46, 0.98) 100%);
   border-top: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 0 0 2px 2px;
@@ -908,24 +885,24 @@
 
 .char-name {
   font-family: 'Press Start 2P', monospace;
-  font-size: 6.5px;
+  font-size: 6px;
   color: #ffffff;
   letter-spacing: 0.2px;
   text-shadow: 0 0 6px var(--card-accent, #ffd700);
-  margin-bottom: 1.5px;
+  margin-bottom: 1px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: clip;
 }
 
 .char-card[data-id="placementWarrior"] .char-name {
-  font-size: 5px;
+  font-size: 4.8px;
   letter-spacing: -0.2px;
 }
 
 .char-subtitle {
   font-family: 'Rajdhani', sans-serif;
-  font-size: 8px;
+  font-size: 7.5px;
   font-weight: 700;
   color: var(--card-accent, #ffd700);
   letter-spacing: 0.8px;
@@ -937,7 +914,7 @@
   display: flex;
   flex-direction: column;
   gap: 2px;
-  margin: 2px 0 1px 0;
+  margin: 1.5px 0 1px 0;
   padding: 0 2px;
 }
 
@@ -948,16 +925,16 @@
 }
 
 .stat-label {
-  width: 22px;
+  width: 20px;
   font-family: 'Press Start 2P', monospace;
-  font-size: 5.5px;
+  font-size: 5px;
   color: #90a4ae;
   letter-spacing: 0.2px;
 }
 
 .stat-bar-track {
   flex: 1;
-  height: 4px;
+  height: 3.5px;
   background: #080e1b;
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 2px;
@@ -994,14 +971,14 @@
    -------------------------------------------------------------------------- */
 .char-bottom-bar {
   position: relative;
-  height: 96px;
-  background: linear-gradient(0deg, rgba(6, 11, 20, 0.99) 0%, rgba(12, 20, 36, 0.94) 100%);
-  border-top: 2px solid rgba(255, 215, 0, 0.3);
+  height: 88px;
+  background: linear-gradient(0deg, rgba(6, 10, 20, 0.98) 0%, rgba(10, 18, 32, 0.92) 100%);
+  border-top: 2px solid rgba(255, 215, 0, 0.35);
   box-shadow: 0 -6px 24px rgba(0, 0, 0, 0.85);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 20px;
+  padding: 0 18px;
   z-index: 10;
 }
 
@@ -1011,8 +988,8 @@
   align-items: center;
   gap: 12px;
   width: 330px;
-  height: 74px;
-  padding: 8px 14px;
+  height: 72px;
+  padding: 6px 12px;
   box-sizing: border-box;
   background: rgba(10, 18, 34, 0.9);
   border: 1.5px solid rgba(255, 255, 255, 0.15);
@@ -1036,8 +1013,8 @@
 
 /* Avatar Round Box */
 .player-avatar-box {
-  width: 52px;
-  height: 52px;
+  width: 50px;
+  height: 50px;
   background: radial-gradient(circle, rgba(255, 255, 255, 0.12) 0%, rgba(0, 0, 0, 0.7) 100%);
   border: 2px solid #ffd700;
   border-radius: 50%;
@@ -1062,7 +1039,7 @@
 }
 
 .player-avatar-emoji {
-  font-size: 26px;
+  font-size: 24px;
 }
 
 .player-info-box {
@@ -1076,7 +1053,7 @@
 
 .player-slot-label {
   font-family: 'Orbitron', monospace;
-  font-size: 8px;
+  font-size: 7.5px;
   font-weight: 700;
   color: #90a4ae;
   margin-bottom: 2px;
@@ -1098,7 +1075,7 @@
   color: #ffffff;
   letter-spacing: 0.5px;
   text-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
-  margin-bottom: 2px;
+  margin-bottom: 1.5px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -1106,7 +1083,7 @@
 
 .player-char-tagline {
   font-family: 'Rajdhani', sans-serif;
-  font-size: 11px;
+  font-size: 10.5px;
   font-weight: 600;
   font-style: italic;
   color: #b0bec5;
@@ -1125,7 +1102,7 @@
   font-family: 'Orbitron', monospace;
   font-size: 8px;
   font-weight: 800;
-  padding: 6px 10px;
+  padding: 5px 9px;
   border-radius: 4px;
   letter-spacing: 0.5px;
   text-align: center;
@@ -1169,7 +1146,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 2px;
+  gap: 1px;
   width: 160px;
 }
 
@@ -1209,7 +1186,7 @@
 
 .brawl-sub-label {
   font-family: 'Rajdhani', sans-serif;
-  font-size: 9px;
+  font-size: 8.5px;
   font-weight: 800;
   color: #00e5ff;
   letter-spacing: 2px;
@@ -1222,12 +1199,12 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  margin-top: 2px;
+  margin-top: 1px;
 }
 
 .diagonal-slash {
-  width: 26px;
-  height: 2.5px;
+  width: 24px;
+  height: 2px;
   background: linear-gradient(90deg, #ffd700, #ff1744);
   transform: skewX(-35deg);
   box-shadow: 0 0 8px #ff1744;
@@ -1240,7 +1217,7 @@
 
 .vs-emblem {
   font-family: 'Orbitron', monospace;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 900;
   color: #ffd700;
   text-shadow: 0 0 10px #ffd700, 0 0 20px #ff6b00;
@@ -1254,7 +1231,7 @@
 
 .spark {
   position: absolute;
-  font-size: 9px;
+  font-size: 8px;
   color: #ffd700;
   text-shadow: 0 0 6px #ffd700;
   animation: spark-orbit 2.4s linear infinite;

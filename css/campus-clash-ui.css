@@ -25,6 +25,12 @@
 }
 
 /* ------------------------------------------------ CHARACTER SELECT */
+.hidden,
+#campus-select-root.hidden,
+.cc-select.hidden {
+  display: none !important;
+}
+
 .cc-select { color: #eaf2ff; font-family: var(--cc-font-ui); display: grid; gap: 14px; padding: 16px;
   background: radial-gradient(120% 90% at 50% 0%, #0d1f4d 0%, var(--cc-bg) 60%); }
 
