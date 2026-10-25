@@ -53,7 +53,7 @@
   <!-- External Stylesheets (v=22 cache bust) -->
   <link rel="stylesheet" href="css/main.css?v=22">
   <link rel="stylesheet" href="css/landing.css?v=21">
-  <link rel="stylesheet" href="css/characterSelect.css?v=21">
+  <link rel="stylesheet" href="css/characterSelect.css?v=2.7.1">
   <link rel="stylesheet" href="css/stageSelect.css?v=21">
   <link rel="stylesheet" href="css/game.css?v=21">
   <link rel="stylesheet" href="css/leaderboard.css?v=21">
@@ -682,7 +682,6 @@
                 <div class="card-badge p2-badge">P2 PICK</div>
                 <div class="card-portrait-wrap">
                   <img class="char-portrait-img" src="assets/characters/topper/portrait.png" alt="The Topper" onerror="this.style.display='none'">
-                  <canvas class="char-portrait-canvas" width="200" height="230"></canvas>
                   <div class="portrait-glow"></div>
                 </div>
                 <div class="card-nameplate">
@@ -723,7 +722,6 @@
                 <div class="card-badge p2-badge">P2 PICK</div>
                 <div class="card-portrait-wrap">
                   <img class="char-portrait-img" src="assets/characters/backbencher/portrait.png" alt="Backbencher" onerror="this.style.display='none'">
-                  <canvas class="char-portrait-canvas" width="200" height="230"></canvas>
                   <div class="portrait-glow"></div>
                 </div>
                 <div class="card-nameplate">
@@ -764,7 +762,6 @@
                 <div class="card-badge p2-badge">P2 PICK</div>
                 <div class="card-portrait-wrap">
                   <img class="char-portrait-img" src="assets/characters/hosteler/portrait.png" alt="Hosteler" onerror="this.style.display='none'">
-                  <canvas class="char-portrait-canvas" width="200" height="230"></canvas>
                   <div class="portrait-glow"></div>
                 </div>
                 <div class="card-nameplate">
@@ -806,7 +803,6 @@
                 <div class="card-badge p2-badge">P2 PICK</div>
                 <div class="card-portrait-wrap">
                   <img class="char-portrait-img" src="assets/characters/senior/portrait.png" alt="The Senior" onerror="this.style.display='none'">
-                  <canvas class="char-portrait-canvas" width="200" height="230"></canvas>
                   <div class="portrait-glow"></div>
                 </div>
                 <div class="card-nameplate">
@@ -848,7 +844,6 @@
                 <div class="card-badge p2-badge">P2 PICK</div>
                 <div class="card-portrait-wrap">
                   <img class="char-portrait-img" src="assets/characters/placement/portrait.png" alt="Placement Warrior" onerror="this.style.display='none'">
-                  <canvas class="char-portrait-canvas" width="200" height="230"></canvas>
                   <div class="portrait-glow"></div>
                 </div>
                 <div class="card-nameplate">
@@ -890,7 +885,6 @@
                 <div class="card-badge p2-badge">P2 PICK</div>
                 <div class="card-portrait-wrap">
                   <img class="char-portrait-img" src="assets/characters/sports/portrait.png" alt="Sports Star" onerror="this.style.display='none'">
-                  <canvas class="char-portrait-canvas" width="200" height="230"></canvas>
                   <div class="portrait-glow"></div>
                 </div>
                 <div class="card-nameplate">
@@ -932,7 +926,6 @@
                 <div class="card-badge p2-badge">P2 PICK</div>
                 <div class="card-portrait-wrap">
                   <img class="char-portrait-img" src="assets/characters/bolt/portrait.png" alt="Bolt" onerror="this.style.display='none'">
-                  <canvas class="char-portrait-canvas" width="200" height="230"></canvas>
                   <div class="portrait-glow"></div>
                 </div>
                 <div class="card-nameplate">
@@ -974,7 +967,6 @@
                 <div class="card-badge p2-badge">P2 PICK</div>
                 <div class="card-portrait-wrap">
                   <img class="char-portrait-img" src="assets/characters/palette/portrait.png" alt="Palette" onerror="this.style.display='none'">
-                  <canvas class="char-portrait-canvas" width="200" height="230"></canvas>
                   <div class="portrait-glow"></div>
                 </div>
                 <div class="card-nameplate">
@@ -1462,11 +1454,11 @@
 </main>
 
   <!-- High-Clarity Studio Soundtrack (Campus Clash Theme) -->
-  <audio id="campus-clash-bgm" src="assets/audio/music/title_theme.mp3?v=2.7.0" loop preload="auto"></audio>
+  <audio id="campus-clash-bgm" src="assets/audio/music/title_theme.mp3?v=2.7.1" loop preload="auto"></audio>
 
   <!-- Dynamic ES6 Module Entry Point (Zero Stale Cache Guarantee) -->
   <script type="module">
-    import(`./js/main.js?v=2.7.0&t=${Date.now()}`).catch(err => {
+    import(`./js/main.js?v=2.7.1&t=${Date.now()}`).catch(err => {
       console.error('[CampusClash Module Load Error]', err);
     });
   </script>

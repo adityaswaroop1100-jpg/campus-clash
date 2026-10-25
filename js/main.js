@@ -5,9 +5,9 @@
 
 import { CANVAS_WIDTH, CANVAS_HEIGHT, FIGHTER_STATES, INPUT_ACTIONS, ROUND_STATES, COMBO_LEVELS, GAME_MODES } from './utils/constants.js';
 import { GameLoop } from './engine/gameLoop.js';
-import { InputHandler } from './engine/input.js?v=2.4.3';
+import { InputHandler } from './engine/input.js?v=2.7.1';
 import { ParticleSystem } from './engine/particleSystem.js';
-import { SoundManager } from './engine/soundManager.js?v=2.6.0';
+import { SoundManager } from './engine/soundManager.js?v=2.7.1';
 import { ScreenShake } from './engine/screenshake.js';
 import { CollisionSystem } from './engine/collision.js';
 import { BotController } from './ai/botController.js';
@@ -23,7 +23,7 @@ import { CYPHER_CONFIG } from './entities/characters/cypher.js';
 import { GAVEL_CONFIG } from './entities/characters/gavel.js';
 import { BOLT_CONFIG } from './entities/characters/bolt.js';
 import { PALETTE_CONFIG } from './entities/characters/palette.js';
-import { Fighter } from './entities/fighter.js?v=2.5.0';
+import { Fighter } from './entities/fighter.js?v=2.7.1';
 import { VerticalSprawlStage } from './stages/venues/verticalSprawlStage.js';
 import { NeonOctagonStage } from './stages/venues/neonOctagonStage.js';
 import { ServerCoreStage } from './stages/venues/serverCoreStage.js';
@@ -31,14 +31,14 @@ import { ModularArenaStage } from './stages/venues/modularArenaStage.js';
 import { ArchiveVaultStage } from './stages/venues/archiveVaultStage.js';
 import { NexusModifierSystem } from './engine/nexusModifiers.js';
 import { PostProcessing } from './engine/postProcess.js';
-import { LandingScene } from './engine/landingScene.js?v=2.6.0';
-import { CharacterPortraitManager } from './ui/characterPortrait.js';
+import { LandingScene } from './engine/landingScene.js?v=2.7.1';
+import { CharacterPortraitManager } from './ui/characterPortrait.js?v=2.7.1';
 import { StageSelectManager } from './ui/stageSelectManager.js';
 import { LeaderboardManager } from './multiplayer/leaderboard.js';
 import { supabaseService } from './database/supabaseClient.js';
 import { EntryPortalManager } from './ui/entryPortalManager.js';
-import './engine/campus-clash-visuals.js';
-import './ui/campus-clash-select.js';
+import './engine/campus-clash-visuals.js?v=2.7.1';
+import './ui/campus-clash-select.js?v=2.7.1';
 
 export const GAME_SCREENS = {
   LANDING: 'landing',
