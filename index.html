@@ -50,15 +50,15 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Orbitron:wght@600;700;800;900&family=Press+Start+2P&family=Rajdhani:wght@600;700;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
 
-  <!-- External Stylesheets (v=15 cache bust) -->
-  <link rel="stylesheet" href="css/main.css?v=15">
-  <link rel="stylesheet" href="css/landing.css?v=15">
-  <link rel="stylesheet" href="css/characterSelect.css?v=15">
-  <link rel="stylesheet" href="css/stageSelect.css?v=15">
-  <link rel="stylesheet" href="css/game.css?v=15">
-  <link rel="stylesheet" href="css/leaderboard.css?v=15">
-  <link rel="stylesheet" href="css/entryPortal.css?v=15">
-  <link rel="stylesheet" href="css/campus-clash-ui.css?v=3">
+  <!-- External Stylesheets (v=16 cache bust) -->
+  <link rel="stylesheet" href="css/main.css?v=16">
+  <link rel="stylesheet" href="css/landing.css?v=16">
+  <link rel="stylesheet" href="css/characterSelect.css?v=16">
+  <link rel="stylesheet" href="css/stageSelect.css?v=16">
+  <link rel="stylesheet" href="css/game.css?v=16">
+  <link rel="stylesheet" href="css/leaderboard.css?v=16">
+  <link rel="stylesheet" href="css/entryPortal.css?v=16">
+  <link rel="stylesheet" href="css/campus-clash-ui.css?v=4">
   <link rel="stylesheet" href="css/pauseMenu.css?v=1">
   <link rel="stylesheet" href="css/touchControls.css?v=1">
   <link rel="manifest" href="manifest.webmanifest">
@@ -571,7 +571,7 @@
         <div class="char-main-layout">
           <!-- Left Column: Character Showcase Panel -->
           <aside class="char-showcase-panel" id="char-showcase-panel" aria-label="Character Profile Preview">
-            <!-- 10 Mini Tabs Strip -->
+            <!-- 8 Mini Tabs Strip -->
             <div class="roster-tabs-strip" id="roster-tabs-strip" role="tablist" aria-label="Mini Roster Selection">
               <button class="roster-tab active" data-index="0" data-id="topper" role="tab" tabindex="0">
                 <span class="tab-num">01</span>
@@ -583,7 +583,7 @@
               </button>
               <button class="roster-tab" data-index="2" data-id="hosteler" role="tab" tabindex="0">
                 <span class="tab-num">03</span>
-                <span class="tab-label">THE HOD</span>
+                <span class="tab-label">THE HOS</span>
               </button>
               <button class="roster-tab" data-index="3" data-id="senior" role="tab" tabindex="0">
                 <span class="tab-num">04</span>
@@ -591,26 +591,18 @@
               </button>
               <button class="roster-tab" data-index="4" data-id="placementWarrior" role="tab" tabindex="0">
                 <span class="tab-num">05</span>
-                <span class="tab-label">PLA WA</span>
+                <span class="tab-label">PLA WAR</span>
               </button>
               <button class="roster-tab" data-index="5" data-id="sportsStar" role="tab" tabindex="0">
                 <span class="tab-num">06</span>
                 <span class="tab-label">SPO STA</span>
               </button>
-              <button class="roster-tab" data-index="6" data-id="cypher" role="tab" tabindex="0">
+              <button class="roster-tab" data-index="6" data-id="bolt" role="tab" tabindex="0">
                 <span class="tab-num">07</span>
-                <span class="tab-label">CYP CAMP</span>
-              </button>
-              <button class="roster-tab" data-index="7" data-id="gavel" role="tab" tabindex="0">
-                <span class="tab-num">08</span>
-                <span class="tab-label">GAV MOOT</span>
-              </button>
-              <button class="roster-tab" data-index="8" data-id="bolt" role="tab" tabindex="0">
-                <span class="tab-num">09</span>
                 <span class="tab-label">BOL THE T</span>
               </button>
-              <button class="roster-tab" data-index="9" data-id="palette" role="tab" tabindex="0">
-                <span class="tab-num">10</span>
+              <button class="roster-tab" data-index="7" data-id="palette" role="tab" tabindex="0">
+                <span class="tab-num">08</span>
                 <span class="tab-label">PAL FINE</span>
               </button>
             </div>
@@ -916,95 +908,11 @@
               </div>
             </article>
 
-            <!-- Card 6: P7 — CYPHER -->
-            <article class="char-card" data-index="6" data-id="cypher" style="--card-primary: #00e5ff; --card-accent: #00e5ff;" tabindex="0">
+            <!-- Card 6: P7 — BOLT -->
+            <article class="char-card" data-index="6" data-id="bolt" style="--card-primary: #00b0ff; --card-accent: #00b0ff;" tabindex="0">
               <div class="card-inner">
                 <div class="card-top-row">
                   <span class="card-num-badge badge-p7">P7</span>
-                  <div class="card-slogan-wrap">
-                    <span class="card-slogan">HACK<br>ANALYZE<br>OVERRIDE</span>
-                    <span class="card-decor-icon">🧊</span>
-                  </div>
-                </div>
-                <div class="card-badge p1-badge">P1 PICK</div>
-                <div class="card-badge p2-badge">P2 PICK</div>
-                <div class="card-portrait-wrap">
-                  <img class="char-portrait-img" src="assets/characters/cypher/portrait.png" alt="Cypher" onerror="this.style.display='none'">
-                  <canvas class="char-portrait-canvas" width="200" height="230"></canvas>
-                  <div class="portrait-glow"></div>
-                </div>
-                <div class="card-nameplate">
-                  <div class="char-name">CYPHER</div>
-                  <div class="char-subtitle">CAMPUS HACKER</div>
-                </div>
-                <div class="card-stats">
-                  <div class="stat-bar-row">
-                    <span class="stat-label">ATK</span>
-                    <div class="stat-bar-track"><div class="stat-bar-fill atk" style="--val: 80%;"></div></div>
-                  </div>
-                  <div class="stat-bar-row">
-                    <span class="stat-label">DEF</span>
-                    <div class="stat-bar-track"><div class="stat-bar-fill def" style="--val: 40%;"></div></div>
-                  </div>
-                  <div class="stat-bar-row">
-                    <span class="stat-label">SPD</span>
-                    <div class="stat-bar-track"><div class="stat-bar-fill spd" style="--val: 60%;"></div></div>
-                  </div>
-                  <div class="stat-bar-row">
-                    <span class="stat-label">RCH</span>
-                    <div class="stat-bar-track"><div class="stat-bar-fill rch" style="--val: 100%;"></div></div>
-                  </div>
-                </div>
-              </div>
-            </article>
-
-            <!-- Card 7: P8 — GAVEL -->
-            <article class="char-card" data-index="7" data-id="gavel" style="--card-primary: #ffb300; --card-accent: #ffb300;" tabindex="0">
-              <div class="card-inner">
-                <div class="card-top-row">
-                  <span class="card-num-badge badge-p8">P8</span>
-                  <div class="card-slogan-wrap">
-                    <span class="card-slogan">MEMES<br>MOOT<br>MAYHEM</span>
-                    <span class="card-decor-icon">⚖️</span>
-                  </div>
-                </div>
-                <div class="card-badge p1-badge">P1 PICK</div>
-                <div class="card-badge p2-badge">P2 PICK</div>
-                <div class="card-portrait-wrap">
-                  <img class="char-portrait-img" src="assets/characters/gavel/portrait.png" alt="Gavel" onerror="this.style.display='none'">
-                  <canvas class="char-portrait-canvas" width="200" height="230"></canvas>
-                  <div class="portrait-glow"></div>
-                </div>
-                <div class="card-nameplate">
-                  <div class="char-name">GAVEL</div>
-                  <div class="char-subtitle">MOOT COURT LEGEND</div>
-                </div>
-                <div class="card-stats">
-                  <div class="stat-bar-row">
-                    <span class="stat-label">ATK</span>
-                    <div class="stat-bar-track"><div class="stat-bar-fill atk" style="--val: 80%;"></div></div>
-                  </div>
-                  <div class="stat-bar-row">
-                    <span class="stat-label">DEF</span>
-                    <div class="stat-bar-track"><div class="stat-bar-fill def" style="--val: 60%;"></div></div>
-                  </div>
-                  <div class="stat-bar-row">
-                    <span class="stat-label">SPD</span>
-                    <div class="stat-bar-track"><div class="stat-bar-fill spd" style="--val: 60%;"></div></div>
-                  </div>
-                  <div class="stat-bar-row">
-                    <span class="stat-label">RCH</span>
-                    <div class="stat-bar-track"><div class="stat-bar-fill rch" style="--val: 60%;"></div></div>
-                  </div>
-                </div>
-              </div>
-            </article>
-
-            <!-- Card 8: P9 — BOLT -->
-            <article class="char-card" data-index="8" data-id="bolt" style="--card-primary: #00b0ff; --card-accent: #00b0ff;" tabindex="0">
-              <div class="card-inner">
-                <div class="card-top-row">
-                  <span class="card-num-badge badge-p9">P9</span>
                   <div class="card-slogan-wrap">
                     <span class="card-slogan">BUILD<br>TINKER<br>INNOVATE</span>
                     <span class="card-decor-icon">⚙️</span>
@@ -1042,11 +950,11 @@
               </div>
             </article>
 
-            <!-- Card 9: P10 — PALETTE -->
-            <article class="char-card" data-index="9" data-id="palette" style="--card-primary: #ff4081; --card-accent: #ff4081;" tabindex="0">
+            <!-- Card 7: P8 — PALETTE -->
+            <article class="char-card" data-index="7" data-id="palette" style="--card-primary: #ff4081; --card-accent: #ff4081;" tabindex="0">
               <div class="card-inner">
                 <div class="card-top-row">
-                  <span class="card-num-badge badge-p10">P10</span>
+                  <span class="card-num-badge badge-p8">P8</span>
                   <div class="card-slogan-wrap">
                     <span class="card-slogan">CREATE<br>EXPRESS<br>INSPIRE</span>
                     <span class="card-decor-icon">🎨</span>

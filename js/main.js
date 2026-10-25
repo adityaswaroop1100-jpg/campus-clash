@@ -224,8 +224,6 @@ class CampusClashGame {
       { config: SENIOR_CONFIG, emoji: '☕', archetype: 'Control / Zoner', difficulty: 'Medium', speed: 4, power: 4, defense: 4 },
       { config: PLACEMENT_WARRIOR_CONFIG, emoji: '💼', archetype: 'Rushdown / Combo', difficulty: 'Hard', speed: 5, power: 4, defense: 3 },
       { config: SPORTS_STAR_CONFIG, emoji: '⚡', archetype: 'Agile / Brawler', difficulty: 'Medium', speed: 5, power: 4, defense: 4 },
-      { config: CYPHER_CONFIG, emoji: '💻', archetype: 'Trap / Zoner', difficulty: 'Hard', speed: 6, power: 3, defense: 3 },
-      { config: GAVEL_CONFIG, emoji: '⚖️', archetype: 'Heavy Counter', difficulty: 'Medium', speed: 3, power: 6, defense: 5 },
       { config: BOLT_CONFIG, emoji: '🏃', archetype: 'Rushdown Mix-up', difficulty: 'Hard', speed: 6, power: 4, defense: 3 },
       { config: PALETTE_CONFIG, emoji: '🎨', archetype: 'Tricky Projectile', difficulty: 'Hard', speed: 5, power: 4, defense: 4 }
     ];
@@ -732,24 +730,6 @@ class CampusClashGame {
       },
       {
         num: '07',
-        name: 'CYPHER',
-        subtitle: 'CAMPUS HACKER',
-        quote: '"Your firewall has expired."',
-        power: 65, speed: 75, range: 95, control: 90, diff: 90,
-        img: 'assets/characters/cypher/showcase.png',
-        portrait: 'assets/characters/cypher/portrait.png'
-      },
-      {
-        num: '08',
-        name: 'GAVEL',
-        subtitle: 'MOOT COURT LEGEND',
-        quote: '"Objection sustained. Case closed."',
-        power: 90, speed: 50, range: 70, control: 85, diff: 65,
-        img: 'assets/characters/gavel/showcase.png',
-        portrait: 'assets/characters/gavel/portrait.png'
-      },
-      {
-        num: '09',
         name: 'BOLT',
         subtitle: 'THE TRACK STAR',
         quote: '"Can\'t fight what you can\'t see."',
@@ -758,7 +738,7 @@ class CampusClashGame {
         portrait: 'assets/characters/bolt/portrait.png'
       },
       {
-        num: '10',
+        num: '08',
         name: 'PALETTE',
         subtitle: 'FINE ARTS MAJOR',
         quote: '"Every strike is a brushstroke."',
@@ -768,7 +748,7 @@ class CampusClashGame {
       }
     ];
 
-    // Preload all 10 showcase images to guarantee instant zero-flicker transitions
+    // Preload all 8 showcase images to guarantee instant zero-flicker transitions
     this.charDetails.forEach(d => {
       if (d.img) {
         const img = new Image();
@@ -1295,7 +1275,7 @@ class CampusClashGame {
       }
     }
 
-    const cols = 5;
+    const cols = 4;
     const rows = 2;
     const navigate = (currIndex, dir) => {
       let row = Math.floor(currIndex / cols);
