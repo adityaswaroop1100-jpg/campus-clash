@@ -37,8 +37,8 @@ import { StageSelectManager } from './ui/stageSelectManager.js';
 import { LeaderboardManager } from './multiplayer/leaderboard.js';
 import { supabaseService } from './database/supabaseClient.js';
 import { EntryPortalManager } from './ui/entryPortalManager.js';
-import './engine/campus-clash-visuals.js?v=3.0.0';
-import './ui/campus-clash-select.js?v=3.0.0';
+import './engine/campus-clash-visuals.js?v=3.1.0';
+import './ui/campus-clash-select.js?v=3.1.0';
 
 export const GAME_SCREENS = {
   LANDING: 'landing',
@@ -2015,8 +2015,9 @@ class CampusClashGame {
           this.particles.spawnCharacterSparks(attacker.config.id, impactX, impactY, ringColor, isHeavyHit);
 
           if (window.CampusVisuals) {
-            const meta = window.CampusVisuals.CHARACTERS[attacker.charId] || window.CampusVisuals.CHARACTERS.topper;
-            window.CampusVisuals.onHit(impactX, impactY, isHeavyHit, meta);
+            const charId = attacker.charId || (attacker.config && attacker.config.id) || 'topper';
+            const meta = window.CampusVisuals.CHARACTERS[charId] || window.CampusVisuals.CHARACTERS.topper;
+            window.CampusVisuals.onHit(impactX, impactY, isHeavyHit, meta, attacker.facing);
           }
 
           // Screen shake & hit flash based on attack type
