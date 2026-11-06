@@ -69,7 +69,26 @@ The game unites **relatable college student archetypes** with emerging cyber tec
 
 ---
 
-## 🚀 Local Development
+## 🚀 Deploy & Play Online
+
+### Option 1: GitHub Pages (Live)
+The game is automatically deployed and hosted via GitHub Pages:
+**[https://adityaswaroop1100-jpg.github.io/campus-clash/](https://adityaswaroop1100-jpg.github.io/campus-clash/)**
+
+### Option 2: 1-Click Fast Hosting on Vercel
+Because `vercel.json` is included, you can deploy to Vercel's global Edge CDN:
+1. Go to [vercel.com](https://vercel.com/) and click **Add New Project**.
+2. Select `adityaswaroop1100-jpg/campus-clash`.
+3. Click **Deploy**. Vercel will immediately deploy and cache all WebP sprites and audio on edge nodes.
+
+### Option 3: Cloudflare Pages
+Pre-configured with `_headers` for immutable asset caching:
+1. Go to [pages.cloudflare.com](https://pages.cloudflare.com/).
+2. Connect `adityaswaroop1100-jpg/campus-clash` and deploy.
+
+---
+
+## 💻 Local Development
 
 Simply serve the root directory using any local web server:
 

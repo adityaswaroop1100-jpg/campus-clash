@@ -5,9 +5,9 @@
 
 import { CANVAS_WIDTH, CANVAS_HEIGHT, FIGHTER_STATES, INPUT_ACTIONS, ROUND_STATES, COMBO_LEVELS, GAME_MODES } from './utils/constants.js';
 import { GameLoop } from './engine/gameLoop.js';
-import { InputHandler } from './engine/input.js?v=2.8.0';
+import { InputHandler } from './engine/input.js?v=3.0.0';
 import { ParticleSystem } from './engine/particleSystem.js';
-import { SoundManager } from './engine/soundManager.js?v=2.8.0';
+import { SoundManager } from './engine/soundManager.js?v=3.0.0';
 import { ScreenShake } from './engine/screenshake.js';
 import { CollisionSystem } from './engine/collision.js';
 import { BotController } from './ai/botController.js';
@@ -23,7 +23,7 @@ import { CYPHER_CONFIG } from './entities/characters/cypher.js';
 import { GAVEL_CONFIG } from './entities/characters/gavel.js';
 import { BOLT_CONFIG } from './entities/characters/bolt.js';
 import { PALETTE_CONFIG } from './entities/characters/palette.js';
-import { Fighter } from './entities/fighter.js?v=2.8.0';
+import { Fighter } from './entities/fighter.js?v=3.0.0';
 import { VerticalSprawlStage } from './stages/venues/verticalSprawlStage.js';
 import { NeonOctagonStage } from './stages/venues/neonOctagonStage.js';
 import { ServerCoreStage } from './stages/venues/serverCoreStage.js';
@@ -31,14 +31,14 @@ import { ModularArenaStage } from './stages/venues/modularArenaStage.js';
 import { ArchiveVaultStage } from './stages/venues/archiveVaultStage.js';
 import { NexusModifierSystem } from './engine/nexusModifiers.js';
 import { PostProcessing } from './engine/postProcess.js';
-import { LandingScene } from './engine/landingScene.js?v=2.8.0';
-import { CharacterPortraitManager } from './ui/characterPortrait.js?v=2.8.0';
+import { LandingScene } from './engine/landingScene.js?v=3.0.0';
+import { CharacterPortraitManager } from './ui/characterPortrait.js?v=3.0.0';
 import { StageSelectManager } from './ui/stageSelectManager.js';
 import { LeaderboardManager } from './multiplayer/leaderboard.js';
 import { supabaseService } from './database/supabaseClient.js';
 import { EntryPortalManager } from './ui/entryPortalManager.js';
-import './engine/campus-clash-visuals.js?v=2.8.0';
-import './ui/campus-clash-select.js?v=2.8.0';
+import './engine/campus-clash-visuals.js?v=3.0.0';
+import './ui/campus-clash-select.js?v=3.0.0';
 
 export const GAME_SCREENS = {
   LANDING: 'landing',
@@ -715,7 +715,7 @@ class CampusClashGame {
   initCharacterSelect() {
     this.portraitManager = new CharacterPortraitManager(this.roster);
 
-    // 10 Fighter Archetypes Detailed Showcase Telemetry
+    // 8 Fighter Archetypes Detailed Showcase Telemetry (High-Speed WebP)
     this.charDetails = [
       {
         num: '01',
@@ -723,8 +723,8 @@ class CampusClashGame {
         subtitle: 'ACADEMIC ASSASSIN',
         quote: '"Syllabus fears me."',
         power: 60, speed: 80, range: 50, control: 85, diff: 45,
-        img: 'assets/characters/topper/showcase.png',
-        portrait: 'assets/characters/topper/portrait.png'
+        img: 'assets/characters/topper/showcase.webp',
+        portrait: 'assets/characters/topper/portrait.webp'
       },
       {
         num: '02',
@@ -732,8 +732,8 @@ class CampusClashGame {
         subtitle: 'CHAOS BRAWLER',
         quote: '"Last bench, first place in combat."',
         power: 85, speed: 75, range: 60, control: 60, diff: 30,
-        img: 'assets/characters/backbencher/showcase.png',
-        portrait: 'assets/characters/backbencher/portrait.png'
+        img: 'assets/characters/backbencher/showcase.webp',
+        portrait: 'assets/characters/backbencher/portrait.webp'
       },
       {
         num: '03',
@@ -741,8 +741,8 @@ class CampusClashGame {
         subtitle: 'TANK GRAPPLER',
         quote: '"Mess food builds real warriors."',
         power: 95, speed: 45, range: 55, control: 70, diff: 35,
-        img: 'assets/characters/hosteler/showcase.png',
-        portrait: 'assets/characters/hosteler/portrait.png'
+        img: 'assets/characters/hosteler/showcase.webp',
+        portrait: 'assets/characters/hosteler/portrait.webp'
       },
       {
         num: '04',
@@ -750,8 +750,8 @@ class CampusClashGame {
         subtitle: 'CONTROL ZONER',
         quote: '"Respect the hierarchy, junior."',
         power: 75, speed: 65, range: 85, control: 80, diff: 60,
-        img: 'assets/characters/senior/showcase.png',
-        portrait: 'assets/characters/senior/portrait.png'
+        img: 'assets/characters/senior/showcase.webp',
+        portrait: 'assets/characters/senior/portrait.webp'
       },
       {
         num: '05',
@@ -759,8 +759,8 @@ class CampusClashGame {
         subtitle: 'RUSHDOWN COMBO',
         quote: '"45 LPA or nothing at all."',
         power: 80, speed: 95, range: 65, control: 75, diff: 85,
-        img: 'assets/characters/placement/showcase.png',
-        portrait: 'assets/characters/placement/portrait.png'
+        img: 'assets/characters/placement/showcase.webp',
+        portrait: 'assets/characters/placement/portrait.webp'
       },
       {
         num: '06',
@@ -768,8 +768,8 @@ class CampusClashGame {
         subtitle: 'AGILE BRAWLER',
         quote: '"Sweat in training, victory in the cage."',
         power: 70, speed: 90, range: 50, control: 80, diff: 55,
-        img: 'assets/characters/sports/showcase.png',
-        portrait: 'assets/characters/sports/portrait.png'
+        img: 'assets/characters/sports/showcase.webp',
+        portrait: 'assets/characters/sports/portrait.webp'
       },
       {
         num: '07',
@@ -777,8 +777,8 @@ class CampusClashGame {
         subtitle: 'THE TRACK STAR',
         quote: '"Can\'t fight what you can\'t see."',
         power: 65, speed: 100, range: 75, control: 70, diff: 80,
-        img: 'assets/characters/bolt/showcase.png',
-        portrait: 'assets/characters/bolt/portrait.png'
+        img: 'assets/characters/bolt/showcase.webp',
+        portrait: 'assets/characters/bolt/portrait.webp'
       },
       {
         num: '08',
@@ -786,8 +786,8 @@ class CampusClashGame {
         subtitle: 'FINE ARTS MAJOR',
         quote: '"Every strike is a brushstroke."',
         power: 70, speed: 75, range: 85, control: 85, diff: 85,
-        img: 'assets/characters/palette/showcase.png',
-        portrait: 'assets/characters/palette/portrait.png'
+        img: 'assets/characters/palette/showcase.webp',
+        portrait: 'assets/characters/palette/portrait.webp'
       }
     ];
 
@@ -1155,7 +1155,7 @@ class CampusClashGame {
     if (this.p1ProfileTagline) this.p1ProfileTagline.textContent = p1Item.config.tagline || 'Academic Assassin';
     if (this.p1ProfileEmoji) this.p1ProfileEmoji.textContent = p1Item.emoji;
     const p1Thumb = document.getElementById('p1-profile-thumb');
-    if (p1Thumb) p1Thumb.src = this.charDetails[this.p1CharIndex]?.portrait || this.charDetails[this.p1CharIndex]?.img || 'assets/characters/topper/portrait.png';
+    if (p1Thumb) p1Thumb.src = this.charDetails[this.p1CharIndex]?.portrait || this.charDetails[this.p1CharIndex]?.img || 'assets/characters/topper/portrait.webp';
     if (this.p1ProfileStatus) {
       if (this.p1Locked) {
         this.p1ProfileStatus.innerHTML = '<button class="status-stamp ready p1-lock-action-btn" id="p1-lock-btn">P1 SELECTED ✓</button>';
@@ -1184,7 +1184,7 @@ class CampusClashGame {
     if (this.p2ProfileTagline) this.p2ProfileTagline.textContent = `"${p2Item.config.tagline}"`;
     if (this.p2ProfileEmoji) this.p2ProfileEmoji.textContent = p2Item.emoji;
     const p2Thumb = document.getElementById('p2-profile-thumb');
-    if (p2Thumb) p2Thumb.src = this.charDetails[this.p2CharIndex]?.portrait || this.charDetails[this.p2CharIndex]?.img || 'assets/characters/backbencher/portrait.png';
+    if (p2Thumb) p2Thumb.src = this.charDetails[this.p2CharIndex]?.portrait || this.charDetails[this.p2CharIndex]?.img || 'assets/characters/backbencher/portrait.webp';
     if (this.p2ProfileStatus) {
       if (this.p2Locked) {
         this.p2ProfileStatus.innerHTML = '<button class="status-stamp ready p2-lock-action-btn" id="p2-lock-btn">P2 LOCKED ✓</button>';

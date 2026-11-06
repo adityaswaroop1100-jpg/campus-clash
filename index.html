@@ -53,7 +53,7 @@
   <!-- External Stylesheets (v=22 cache bust) -->
   <link rel="stylesheet" href="css/main.css?v=22">
   <link rel="stylesheet" href="css/landing.css?v=21">
-  <link rel="stylesheet" href="css/characterSelect.css?v=2.7.1">
+  <link rel="stylesheet" href="css/characterSelect.css?v=3.0.0">
   <link rel="stylesheet" href="css/stageSelect.css?v=21">
   <link rel="stylesheet" href="css/game.css?v=21">
   <link rel="stylesheet" href="css/leaderboard.css?v=21">
@@ -1002,7 +1002,7 @@
         <!-- Player 1 Profile Card (Left) -->
         <div id="p1-profile-card" class="player-profile-card p1-profile">
           <div class="player-avatar-box">
-            <img class="player-avatar-img" id="p1-profile-thumb" src="assets/characters/topper/portrait.png" alt="P1">
+            <img class="player-avatar-img" id="p1-profile-thumb" src="assets/characters/topper/portrait.webp" alt="P1" onerror="this.src='assets/characters/topper/portrait.png'">
             <span class="player-avatar-emoji hidden" id="p1-profile-emoji">🎓</span>
           </div>
           <div class="player-info-box">
@@ -1048,7 +1048,7 @@
             <div class="player-char-tagline" id="p2-profile-tagline">"The Chaos Agent"</div>
           </div>
           <div class="player-avatar-box">
-            <img class="player-avatar-img" id="p2-profile-thumb" src="assets/characters/backbencher/portrait.png" alt="P2">
+            <img class="player-avatar-img" id="p2-profile-thumb" src="assets/characters/backbencher/portrait.webp" alt="P2" onerror="this.src='assets/characters/backbencher/portrait.png'">
             <span class="player-avatar-emoji hidden" id="p2-profile-emoji">🔥</span>
           </div>
         </div>
@@ -1455,13 +1455,13 @@
 
   <!-- High-Clarity Studio Soundtrack (Campus Clash Theme) -->
   <audio id="campus-clash-bgm" loop preload="auto">
-    <source src="assets/audio/music/title_theme_web.m4a?v=2.8.0" type="audio/mp4">
-    <source src="assets/audio/music/title_theme.mp3?v=2.8.0" type="audio/mpeg">
+    <source src="assets/audio/music/title_theme_web.m4a?v=3.0.0" type="audio/mp4">
+    <source src="assets/audio/music/title_theme.mp3?v=3.0.0" type="audio/mpeg">
   </audio>
 
   <!-- Dynamic ES6 Module Entry Point (Zero Stale Cache Guarantee) -->
   <script type="module">
-    import(`./js/main.js?v=2.8.0&t=${Date.now()}`).catch(err => {
+    import(`./js/main.js?v=3.0.0&t=${Date.now()}`).catch(err => {
       console.error('[CampusClash Module Load Error]', err);
     });
   </script>

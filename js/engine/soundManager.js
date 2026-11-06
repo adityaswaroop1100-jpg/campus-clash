@@ -38,7 +38,7 @@ export class SoundManager {
 
     // Studio Title & Gameplay Soundtrack (Official Suno Campus Clash Track)
     this.titleAudio = null;
-    this.titleTrackUrl = 'assets/audio/music/title_theme.mp3';
+    this.titleTrackUrl = 'assets/audio/music/title_theme_web.m4a';
     this.bindUserGestureUnlock();
   }
 

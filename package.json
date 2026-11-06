@@ -1,0 +1,12 @@
+{
+  "name": "campus-clash",
+  "version": "2.8.0",
+  "description": "Campus Clash 2D Arcade Fighting Game",
+  "scripts": {
+    "start": "npx serve .",
+    "dev": "npx serve ."
+  },
+  "keywords": ["fighting-game", "arcade", "canvas", "javascript", "game"],
+  "author": "Campus Clash Team",
+  "license": "MIT"
+}
